@@ -1,0 +1,26 @@
+YYH
+"今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+泛化issue情况：
+Clock_info03b 
+1.CDC-GEN-B-167 develop了但现场仍有漏报 涉及条数12条
+2.CDC-GEN-B-194 develop了 但现场仍有漏报 涉及条数102条
+3.CDC-GEN-B-188还没有develop，涉及msg 122 （随机性问题，可能数量会变）
+4.CDC-GEN-B-208 需要reopen
+
+Setup_bbox01
+1.CDC-GEN-B-172 develop了但现场仍然有漏报。涉及条数1条,和CDC-GEN-B-188有关，涉及回路mux电路的常值推导问题
+
+conv部分目前还在标最新的差异
+"
+ZWL:
+"今日分析msg数：
+今日发现issue数：2
+今日回传case数：3
+日报：
+1、复现大泛化中propagated_clock报line_no不固定的问题：在大泛化中的体现为3个clocklist，一条msg报第一obj的line_no，一条msg报第二个obj的line_no；SG则是都报最后一个obj的line_no，希望我们也能固定报某个obj的line_no；SG对于line_no目前看来有两种报法，一是报在clock信号的顶层，而是设在blankbox上的clock，就只会报连接这个pin的位置；issue为CDC-GEN-B-213
+、CDC-GEN-B-214
+2、review客户认为Ar标记不合理的Diff；手动标记的diff都是由于只标记了主要diff，次要diff没有标记导致客户认为不合理，已在old csv中增加漏掉的次要diff；脚本不合理的diff明天再和艺豪一起确认
+3、回归CDC-GEN-S-211，已修复；并反馈小泛化的性能数据，有提升"
