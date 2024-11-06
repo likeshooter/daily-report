@@ -1,0 +1,36 @@
+YYH
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.处理ac,setup客户第一批质疑的遗留问题，包括脚本diff，手标diff增加。
+2.今日泛化新增3个issue:CDC-GEN-B-220 -CDC-GEN-B-222
+分别为setupbbox，setuptiedtoconst和netlist问题
+
+  ZWL:
+"今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1、复现漏报SetupDataTiedToConst的问题，现场发现设置参数会影响rule的报告，比如设置set_param cdc.ar_unconstrained_clock_crossing true，就会报SetupDataTiedToConst，不设置就不会报；但家里没有因为参数影响，稳定的不报SetupDataTiedToConst---CDC-GEN-B-220
+2、和瑞风一起看setup_black01的问题，是由于module被多次例化时，带的参数不一致导致module被重命名导致多报"
+
+LRF：
+今日分析msg数：22
+今日发现issue数：1
+今日回传case数：
+日报：
+1.继续对客户提出的差异疑惑进行分析，其中发现一个关于blackbox的问题
+a.对于带参数的模块例化，enno会将SYNC_TOP(DW=1)和SYNC_TOP(DW=2)认为是两个module,而sg只会认为都是SYNC_TOP,从而导致如果是SYNC_TOP是blackbox的话，将参数cdc.only_report_first_inst_of_bbox设为true的情况下，enno会报SYNC_TOP(DW=1)和SYNC_TOP(DW=2),其实应该只报SYNC_TOP,不应该当成2个module来使用
+2.分析Ac_conv01的误报，发现csv的误报在tool中无法找到,已反馈给景硕
+3.讨论Setup的误报是否合理
+  
+CXY：
+"今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.日常跑包，统计数据，分析数据
+2.给setup昨天新增的差异贴图，写分析
+3.在现场跑康凯对于diff192的修改后的代码
+4.看大泛化反标失败的case"
