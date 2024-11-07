@@ -1,36 +1,45 @@
-YYH
-今日分析msg数：
+ZCH：
+"今日分析msg数：80
+今日发现issue数：3
+今日回传case数：
+日报：1. 分析sgdc2sdc新脚本跑出来的结果，提出三个脚本issue：CDC-3603 CDC-3604 CDC-3605
+2. 和客户评审差异：Diff500-built_in-058"
+
+YYH：
+
+ZWL:
+"今日分析msg数：
 今日发现issue数：
+今日回传case数：1
+日报：
+1、复现CDC-GEN-B-222的case，已完成
+2、和客户确认“10.31-电路图-1”的问题点，一是增量原理图需要增强，二是向客户解释误报SetupDataTiedToConst的原因是对于回路flop，enno会推断为常值
+3、LEC验证CDC-GEN-B-220 case中的value_input[1][4:0]这四个instance被驱动/赋值为0时，是否能验证成功；结论是可以验证成功"
+
+
+LRF：
+"今日分析msg数：32
+今日发现issue数：1
 今日回传case数：
 日报：
-1.处理ac,setup客户第一批质疑的遗留问题，包括脚本diff，手标diff增加。
-2.今日泛化新增3个issue:CDC-GEN-B-220 -CDC-GEN-B-222
-分别为setupbbox，setuptiedtoconst和netlist问题
+1.继续对客户提出的差异疑惑进行分析，对其中有一个差异疑惑感到疑惑，与客户进行沟通后，发现是客户那边分析错了。对其中一个关于常值推导的差异疑惑进行分析，发现enno的常值是从其上层传下来的
+2.分析Ac_conv01的新增误报，发现在工具中无法找到其信息，询问景硕得知，是工具随机性的问题，研发那边已在解决
+3.提了一个bus合并的issue,对于一个32位的信号data,只将其低8位赋常值“0”，enno的报告方式位data[0]、data[1]、data[2]......，期望enno的报告方式为data[7:0]"
 
-  ZWL:
+JR：
 "今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1、复现漏报SetupDataTiedToConst的问题，现场发现设置参数会影响rule的报告，比如设置set_param cdc.ar_unconstrained_clock_crossing true，就会报SetupDataTiedToConst，不设置就不会报；但家里没有因为参数影响，稳定的不报SetupDataTiedToConst---CDC-GEN-B-220
-2、和瑞风一起看setup_black01的问题，是由于module被多次例化时，带的参数不一致导致module被重命名导致多报"
-
-LRF：
-今日分析msg数：22
-今日发现issue数：1
-今日回传case数：
-日报：
-1.继续对客户提出的差异疑惑进行分析，其中发现一个关于blackbox的问题
-a.对于带参数的模块例化，enno会将SYNC_TOP(DW=1)和SYNC_TOP(DW=2)认为是两个module,而sg只会认为都是SYNC_TOP,从而导致如果是SYNC_TOP是blackbox的话，将参数cdc.only_report_first_inst_of_bbox设为true的情况下，enno会报SYNC_TOP(DW=1)和SYNC_TOP(DW=2),其实应该只报SYNC_TOP,不应该当成2个module来使用
-2.分析Ac_conv01的误报，发现csv的误报在tool中无法找到,已反馈给景硕
-3.讨论Setup的误报是否合理
+1.向客户解释大泛化中setup部分的差异标记的疑问；
+2.分析setup最新的csv，除了受SetupDataTiedToConst的随机性影响的message每次跑出来都会变，所以无法标记，其他新增未标记的message都分析标记了，都是unamcth的，且是差异，将标记为CDC-GEN-B-194和CDC-GEN-B-167的message更新为CDC-GEN-B-220；
+3.和RD讨论CDC-GEN-B-220和CDC-GEN-B-219的复现问题"
   
 CXY：
 "今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.日常跑包，统计数据，分析数据
-2.给setup昨天新增的差异贴图，写分析
-3.在现场跑康凯对于diff192的修改后的代码
-4.看大泛化反标失败的case"
+1.日常跑包，统计数据
+2.debug大泛化发现的脚本问题，将修改传回家里
+3.适配现场read_sgdc环境，在适配过程中发现，目前的脚本对于sgdc中有ip_block的约束时，运行runsgdc会卡在sgdc转换sdc的步骤，导致程序运行时间过长，terminal被杀掉"
