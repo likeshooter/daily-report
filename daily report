@@ -1,45 +1,56 @@
 ZCH：
-"今日分析msg数：80
-今日发现issue数：3
+"今日分析msg数：210
+今日发现issue数：1
 今日回传case数：
-日报：1. 分析sgdc2sdc新脚本跑出来的结果，提出三个脚本issue：CDC-3603 CDC-3604 CDC-3605
-2. 和客户评审差异：Diff500-built_in-058"
+日报：1.刷新builtin差异，按照客户要求给差异增加分类；
+2. review 门禁测例差异及结果，确保下周门禁测例验收无误；
+3. reopen两个issue：CDC3392,#32601；
+4. 新写了两个builtin差异；"
 
 YYH：
+
+HQ：
+"今日分析msg数：111
+今日发现issue数：
+今日回传case数：
+日报：
+1.分析并贴图111条Buildin停与不停的剩余部分，（CDC-2296已修复）
+重新检查并标记Buildin标记的差异（有些差异是被客户拒绝的）"
 
 ZWL:
 "今日分析msg数：
 今日发现issue数：
-今日回传case数：1
-日报：
-1、复现CDC-GEN-B-222的case，已完成
-2、和客户确认“10.31-电路图-1”的问题点，一是增量原理图需要增强，二是向客户解释误报SetupDataTiedToConst的原因是对于回路flop，enno会推断为常值
-3、LEC验证CDC-GEN-B-220 case中的value_input[1][4:0]这四个instance被驱动/赋值为0时，是否能验证成功；结论是可以验证成功"
-
-
-LRF：
-"今日分析msg数：32
-今日发现issue数：1
 今日回传case数：
 日报：
-1.继续对客户提出的差异疑惑进行分析，对其中有一个差异疑惑感到疑惑，与客户进行沟通后，发现是客户那边分析错了。对其中一个关于常值推导的差异疑惑进行分析，发现enno的常值是从其上层传下来的
-2.分析Ac_conv01的新增误报，发现在工具中无法找到其信息，询问景硕得知，是工具随机性的问题，研发那边已在解决
-3.提了一个bus合并的issue,对于一个32位的信号data,只将其低8位赋常值“0”，enno的报告方式位data[0]、data[1]、data[2]......，期望enno的报告方式为data[7:0]"
+1、验证GUI已经develop的问题，有4条需要再继续跟踪，11条验证OK
+2、使用新包跑小泛化数据，无新增
+3、参加泛化周会以及差异澄清的会议"
+
+LRF：
+"今日分析msg数：12
+今日发现issue数：
+今日回传case数：
+日报：
+1.参加泛化周会
+2.参加泛化差异澄清会
+3.分析泛化相关message"
 
 JR：
 "今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.向客户解释大泛化中setup部分的差异标记的疑问；
-2.分析setup最新的csv，除了受SetupDataTiedToConst的随机性影响的message每次跑出来都会变，所以无法标记，其他新增未标记的message都分析标记了，都是unamcth的，且是差异，将标记为CDC-GEN-B-194和CDC-GEN-B-167的message更新为CDC-GEN-B-220；
-3.和RD讨论CDC-GEN-B-220和CDC-GEN-B-219的复现问题"
+1.参加泛化周会；
+2.参加大泛化差异澄清会，和客户确认，有10条message需要修改差异编号，已经在最新的setup的csv里修改完成"
+
   
 CXY：
 "今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.日常跑包，统计数据
-2.debug大泛化发现的脚本问题，将修改传回家里
-3.适配现场read_sgdc环境，在适配过程中发现，目前的脚本对于sgdc中有ip_block的约束时，运行runsgdc会卡在sgdc转换sdc的步骤，导致程序运行时间过长，terminal被杀掉"
+1.日常跑包，分析数据，统计数据
+2.和客户方对齐参数配置以及case集合
+3.和海洋讨论，适配builtin跑case使用read_sgdc的方式。目前用read_sgdc的方式跑现场case，大部分case都可以正常运行，但是今天的脚本对于sgdc中有ip_block约束时，仍然会因为程序运行时间过长杀掉terminal，和王涵确认，家里已经定位到原因
+"
+
