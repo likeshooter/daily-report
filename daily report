@@ -1,56 +1,38 @@
 ZCH：
-"今日分析msg数：210
-今日发现issue数：1
-今日回传case数：
-日报：1.刷新builtin差异，按照客户要求给差异增加分类；
-2. review 门禁测例差异及结果，确保下周门禁测例验收无误；
-3. reopen两个issue：CDC3392,#32601；
-4. 新写了两个builtin差异；"
 
 YYH：
 
 HQ：
-"今日分析msg数：111
-今日发现issue数：
-今日回传case数：
-日报：
-1.分析并贴图111条Buildin停与不停的剩余部分，（CDC-2296已修复）
-重新检查并标记Buildin标记的差异（有些差异是被客户拒绝的）"
 
 ZWL:
 "今日分析msg数：
-今日发现issue数：
+今日发现issue数：3
 今日回传case数：
 日报：
-1、验证GUI已经develop的问题，有4条需要再继续跟踪，11条验证OK
-2、使用新包跑小泛化数据，无新增
-3、参加泛化周会以及差异澄清的会议"
+1、提了三个GUI的issue，CDC-3614是crash
+2、总结复现clock_info03b的if else语句不完整的情况；目前完成50%
+3、ar新增误报漏报的原因在于db.use_hier_name_include_top这个参数不存在，但是工具也不报错导致"
 
 LRF：
-"今日分析msg数：12
-今日发现issue数：
-今日回传case数：
-日报：
-1.参加泛化周会
-2.参加泛化差异澄清会
-3.分析泛化相关message"
 
 JR：
 "今日分析msg数：
-今日发现issue数：
-今日回传case数：
+今日发现issue数：1
+今日回传case数：1
 日报：
-1.参加泛化周会；
-2.参加大泛化差异澄清会，和客户确认，有10条message需要修改差异编号，已经在最新的setup的csv里修改完成"
+1.分析最新大泛化csv中的SetupDataTiedToConst;
+2.在分析过程中发现一个SetupDataTiedToConst的问题，SG和ECDC综合相同，ECDC报了SetupDataTiedToConst，而SG未报，已复现并提issue：CDC-GEN-B-226；
+3.和RD讨论CDC-GEN-B-220，加上set_run_flag db_force_driver_for_unconnected_nets 0后，虽然ECDC能报出SG报的SetupDataTiedToConst，但因为ECDC会把undriven signal设为常值，而SG中undriven signal还是变量，所以ECDC比SG多报了SetupDataTiedToConst"
 
   
 CXY：
 "今日分析msg数：
-今日发现issue数：
-今日回传case数：
+今日发现issue数：2
+今日回传case数：1
 日报：
-1.日常跑包，分析数据，统计数据
-2.和客户方对齐参数配置以及case集合
-3.和海洋讨论，适配builtin跑case使用read_sgdc的方式。目前用read_sgdc的方式跑现场case，大部分case都可以正常运行，但是今天的脚本对于sgdc中有ip_block约束时，仍然会因为程序运行时间过长杀掉terminal，和王涵确认，家里已经定位到原因
-"
+1.日常跑包，分析数据，统计数据。今天的daily_build包数据反弹严重，因为使用get_param db.use_hier_name_include_top没有返回值，导致脚本没有正确处理获取的obj。同时在工具中使用set_param db.use_hier_name_include_top true命令工具也不出现报错或者提示信息。已回传issue
+2.CDC分支的包门禁case误报漏报率清零
+3.适配现场read_sgdc环境，目前解决了上周约束中有ip_block会导致程序运行时间过长的问题。但是用read_sgdc的方式还有case的约束转换不正确，会出现新的误报漏报，正在分析中
+4.总结builtin目前通过脚本实现匹配的rule-msg对，和当前的spec对比有些关系不在spec中，已反馈给川皓"
+
 
