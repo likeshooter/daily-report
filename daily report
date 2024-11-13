@@ -5,65 +5,36 @@ YYH：
 HQ：
 
 ZWL:
-"今日分析msg数：
+"今日分析msg数：3
 今日发现issue数：1
-今日回传case数：5
+今日回传case数：
 日报：
-1、总结复现clock_info03b的相关问题；得到部分结论：当d pin只有一个常值输入时，SG无论综合的是enable ff还是mux回路+ff，都会报clock_info03b；但当flop和d pin成回路，或者是d pin前不只是有常值输入的可能，SG则不会报clock_info03b；
-2、回传5个case，提1个issue"
+1、分析Ar新增误报的msg，是由于clock_propagated传播导致的，issue为CDC-3621；这两个case分别对应的diff还有冲突，需要重新审视
+2、使用验收包跑小泛化的数据，没有问题新增，性能数据有优化
+3，看常值传播的问题；回路mux还是与输入有关；mux+enable_ff形成回路，如果另外一个输入为指定常值，那SG会报clock_info03b；如果选择端和输入是一致的，那SG则不会报clock_info03b"
+
 
 LRF：
 "今日分析msg数：
-今日发现issue数：
+今日发现issue数：1
 今日回传case数：
 日报：
-1.分析常值传播的相关问题：
-.v:
-assign en = 1'b0;
-always @(posedge clk)begin
-    if (en)begin
-        dout <= 1'b1;
-    end
-    else begin
-        dout <= dout;
-    end
-end
-对于这段代码而言，sg的行为取决于参数infer_enabled_flop：
-a.set_option infer_enabled_flop true时,sg将dout综合为带enable pin的DFF,dout的D pin为常值“1”，Q pin不为常值
-b.set_option infer_enabled_flop false时,sg将dout综合为带recirculation mux的DFF,dout的D pin和Q pin都不为常值
-enno的行为：
-将dout综合为带recirculation mux的DFF，
-dout的D pin和Q pin都为常值“0”
-疑问：为啥enno认为dout为常值“0”而不是不定态“X”
-2.分析新包跑出的setupbalck_01的漏报，经分析，发现是enno和sg不能选取到相同的instance
-3.提了一个bus合并的问题 -- CDC-GEN-B-227
-4.解决builtin表格中冲突的部分
-5.回溯CDC-GEN-B-188 -- enno漏报SetupDataTiedToConst -- 常值在传播途中未成功传播"
+1.已确认昨天enno报的常值和邱远总结的规律一致
+2.继续分析CDC-GEN-B-188，已发现有两种场景导致常值无法传播，复现其中一个场景后发现在提取中的小case上常值能成功传播，但在泛化case上常值无法成功传播 - - 可能需要RD现场支持
+3.在复现常值传播的case过程中，发现了一个lint的issue - - CDC-3619
+4.11_13的包都存在跑泛化case跑不动的情况"
+
 
 JR：
 "今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.回归大泛化setup中的issue；
-2.分析最新大泛化setup的SetupDataTiedToConst，目前分析的SetupDataTiedToConst都是因为ECDC综合出的mux_dff回路,有的MUX的input的常值不能传播到MUX的output，则报不出SetupDataTiedToConst，从而出现误报漏报；
-3.分析发现，以下写法SG综合出的mux_enable回路，会报clock_info03b：
-always @(*)begin
-case(rst)
-1'b0:dout1 = 1'b0;
-1'b1:dout1 = dout;
-endcase
-end
-
-always @(posedge clk or negedge rst1)begin
-if(!rst1)
-dout<=1'b0;
-else
-if(rst2)
-dout<=dout1;
-end
-，所以对于mux_enable回路这种场景，SG会不会报clock_info03b可能和写法有关
+1.分析完成大泛化交付csv里未分析的message；
+2.CDC-GEN-B-226现场跑LEC能通过，所以是差异Diff192-diff35-logic_optimization；
+3.和RD讨论CDC-GEN-B-220，给value_input[1][0]、value_input[1][1]、value_input[1][2]、value_input[1][3]都assign了primary input,SG还是会报clock_info03b，但ECDC就不报SetupDataTiedToConst了
 "
+
 
   
 CXY：
@@ -71,10 +42,15 @@ CXY：
 今日发现issue数：1
 今日回传case数：1
 日报：
-1.日常跑包，统计数据
-2.解决builtin有case报的obj含特殊字符导致反标客户log以及oldcsv反标不上的情况
-3.分析今天daily_build包的部分新增
-4.修改部分sdc转换有问题的约束文件"
+"今日分析msg数：
+今日发现issue数：
+今日回传case数：7
+日报：
+1.日常跑包，统计数据，分析数据
+2.和万林一起分析sg报常值的行为
+3.检查builtin已匹配的msg-rule对中，告警级别不一致的情况。总结情况传典型case回家。出现告警级别不一致的情况，主要原因是，enno的一条msg会对应sg多条rule，这些rule的告警级别本身就不同。但是enno的msg只有一个告警程度
+4.check builtin新spec中和现场不一致的对应关系，反馈给川皓"
+
 
 
 
