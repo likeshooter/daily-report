@@ -6,33 +6,75 @@ HQ：
 
 ZWL:
 "今日分析msg数：
-今日发现issue数：3
-今日回传case数：
+今日发现issue数：1
+今日回传case数：5
 日报：
-1、提了三个GUI的issue，CDC-3614是crash
-2、总结复现clock_info03b的if else语句不完整的情况；目前完成50%
-3、ar新增误报漏报的原因在于db.use_hier_name_include_top这个参数不存在，但是工具也不报错导致"
+1、总结复现clock_info03b的相关问题；得到部分结论：当d pin只有一个常值输入时，SG无论综合的是enable ff还是mux回路+ff，都会报clock_info03b；但当flop和d pin成回路，或者是d pin前不只是有常值输入的可能，SG则不会报clock_info03b；
+2、回传5个case，提1个issue"
 
 LRF：
+"今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.分析常值传播的相关问题：
+.v:
+assign en = 1'b0;
+always @(posedge clk)begin
+    if (en)begin
+        dout <= 1'b1;
+    end
+    else begin
+        dout <= dout;
+    end
+end
+对于这段代码而言，sg的行为取决于参数infer_enabled_flop：
+a.set_option infer_enabled_flop true时,sg将dout综合为带enable pin的DFF,dout的D pin为常值“1”，Q pin不为常值
+b.set_option infer_enabled_flop false时,sg将dout综合为带recirculation mux的DFF,dout的D pin和Q pin都不为常值
+enno的行为：
+将dout综合为带recirculation mux的DFF，
+dout的D pin和Q pin都为常值“0”
+疑问：为啥enno认为dout为常值“0”而不是不定态“X”
+2.分析新包跑出的setupbalck_01的漏报，经分析，发现是enno和sg不能选取到相同的instance
+3.提了一个bus合并的问题 -- CDC-GEN-B-227
+4.解决builtin表格中冲突的部分
+5.回溯CDC-GEN-B-188 -- enno漏报SetupDataTiedToConst -- 常值在传播途中未成功传播"
 
 JR：
 "今日分析msg数：
-今日发现issue数：1
-今日回传case数：1
+今日发现issue数：
+今日回传case数：
 日报：
-1.分析最新大泛化csv中的SetupDataTiedToConst;
-2.在分析过程中发现一个SetupDataTiedToConst的问题，SG和ECDC综合相同，ECDC报了SetupDataTiedToConst，而SG未报，已复现并提issue：CDC-GEN-B-226；
-3.和RD讨论CDC-GEN-B-220，加上set_run_flag db_force_driver_for_unconnected_nets 0后，虽然ECDC能报出SG报的SetupDataTiedToConst，但因为ECDC会把undriven signal设为常值，而SG中undriven signal还是变量，所以ECDC比SG多报了SetupDataTiedToConst"
+1.回归大泛化setup中的issue；
+2.分析最新大泛化setup的SetupDataTiedToConst，目前分析的SetupDataTiedToConst都是因为ECDC综合出的mux_dff回路,有的MUX的input的常值不能传播到MUX的output，则报不出SetupDataTiedToConst，从而出现误报漏报；
+3.分析发现，以下写法SG综合出的mux_enable回路，会报clock_info03b：
+always @(*)begin
+case(rst)
+1'b0:dout1 = 1'b0;
+1'b1:dout1 = dout;
+endcase
+end
+
+always @(posedge clk or negedge rst1)begin
+if(!rst1)
+dout<=1'b0;
+else
+if(rst2)
+dout<=dout1;
+end
+，所以对于mux_enable回路这种场景，SG会不会报clock_info03b可能和写法有关
+"
 
   
 CXY：
 "今日分析msg数：
-今日发现issue数：2
+今日发现issue数：1
 今日回传case数：1
 日报：
-1.日常跑包，分析数据，统计数据。今天的daily_build包数据反弹严重，因为使用get_param db.use_hier_name_include_top没有返回值，导致脚本没有正确处理获取的obj。同时在工具中使用set_param db.use_hier_name_include_top true命令工具也不出现报错或者提示信息。已回传issue
-2.CDC分支的包门禁case误报漏报率清零
-3.适配现场read_sgdc环境，目前解决了上周约束中有ip_block会导致程序运行时间过长的问题。但是用read_sgdc的方式还有case的约束转换不正确，会出现新的误报漏报，正在分析中
-4.总结builtin目前通过脚本实现匹配的rule-msg对，和当前的spec对比有些关系不在spec中，已反馈给川皓"
+1.日常跑包，统计数据
+2.解决builtin有case报的obj含特殊字符导致反标客户log以及oldcsv反标不上的情况
+3.分析今天daily_build包的部分新增
+4.修改部分sdc转换有问题的约束文件"
+
 
 
