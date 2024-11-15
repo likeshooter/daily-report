@@ -5,24 +5,25 @@ YYH：
 HQ：
 
 ZWL:
-"今日分析msg数：3
-今日发现issue数：1
-今日回传case数：
-日报：
-1、分析Ar新增误报的msg，是由于clock_propagated传播导致的，issue为CDC-3621；这两个case分别对应的diff还有冲突，需要重新审视
-2、使用验收包跑小泛化的数据，没有问题新增，性能数据有优化
-3，看常值传播的问题；回路mux还是与输入有关；mux+enable_ff形成回路，如果另外一个输入为指定常值，那SG会报clock_info03b；如果选择端和输入是一致的，那SG则不会报clock_info03b"
-
-
-LRF：
 "今日分析msg数：
 今日发现issue数：1
 今日回传case数：
 日报：
-1.已确认昨天enno报的常值和邱远总结的规律一致
-2.继续分析CDC-GEN-B-188，已发现有两种场景导致常值无法传播，复现其中一个场景后发现在提取中的小case上常值能成功传播，但在泛化case上常值无法成功传播 - - 可能需要RD现场支持
-3.在复现常值传播的case过程中，发现了一个lint的issue - - CDC-3619
-4.11_13的包都存在跑泛化case跑不动的情况"
+1.写小泛化的验收报告，包括issue数量、diff数量、总体msg数量等等
+2.测试GUI crash问题，在GUI 中read_design后read_cdc步骤crash，小泛化PNT_CNT1能复现问题；建议家里测GUI时，所有步骤在GUI界面操作；issue CDC-GEN-B-229
+3.和蒋蕊一起看常值传播的问题，貌似SG只会关注d pin前是不是一定为常值，如果一直为常值，那会报clock_info03b，如果只是推断有可能是常值，则不会报clock_info03b"
+
+
+LRF：
+"今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.用daily_build的包分析Ac_conv01的随机性问题，发现其中一条Ac_conv01的converge net一直在变化(导致脚本处理反标时每次都标记不上)，和子奇讨论后，用11_13的何琴的分支包跑两次工具，发现Ac_conv01不会存在随机问题，但SetupDataTiedToConst存在随机问题
+2.继续分析CDC-GEN-B-188的常值传播失败的issue,目前已发现4种场景导致传播失败，准备明天与来现场支持的RD一起分析一下
+3.检查CDC-3485是否在现场解决 -- issue尚未解决，但不在CA的交付目标中（内部issue）
+4.处理客户csv中未反标上的message
+"
 
 
 JR：
@@ -31,26 +32,23 @@ JR：
 今日回传case数：
 日报：
 1.分析完成大泛化交付csv里未分析的message；
-2.CDC-GEN-B-226现场跑LEC能通过，所以是差异Diff192-diff35-logic_optimization；
-3.和RD讨论CDC-GEN-B-220，给value_input[1][0]、value_input[1][1]、value_input[1][2]、value_input[1][3]都assign了primary input,SG还是会报clock_info03b，但ECDC就不报SetupDataTiedToConst了
-"
+2.按message统计大泛化issue数量；
+3.实验分析发现SG中enable_ff报clock_info03b的规律,如果enable pin是0，input是常值，SG就会报clock_info03b，报的value是与input相同的常值，
+不受reset/set pin的影响，比如当enable pin是0，input是1，reset端一直有效时，即输出为0，或者reset为变量，SG还是会报clock_info03b，且报的value是1；
+如果enable pin是变量，reset/set一直有效，输入为常值，SG会报clock_info03b，报的value是与input相同的常值，比如输入为1，enable pin是变量，reset一直有效，即输出为0，则SG会报clock_info03b，报的value为1；
+如果enable pin是变量，reset/set也是变量，当input为1时，set是变量,或者input为0时，reset是变量，SG会报clock_info03b"
 
 
   
 CXY：
 "今日分析msg数：
-今日发现issue数：1
-今日回传case数：1
-日报：
-"今日分析msg数：
 今日发现issue数：
-今日回传case数：7
+今日回传case数：
 日报：
-1.日常跑包，统计数据，分析数据
-2.和万林一起分析sg报常值的行为
-3.检查builtin已匹配的msg-rule对中，告警级别不一致的情况。总结情况传典型case回家。出现告警级别不一致的情况，主要原因是，enno的一条msg会对应sg多条rule，这些rule的告警级别本身就不同。但是enno的msg只有一个告警程度
-4.check builtin新spec中和现场不一致的对应关系，反馈给川皓"
-
+1.日常跑包，分析数据，统计数据
+2.给家里的部分自测case跑lec验证常值
+3.总结目前builtin的spec中有些rule-msg对severity不一致的情况，总结不匹配的类型以及提供case场景给家里，供家里和CA写解释
+4.跑TOP/以及read_sgdc适配的包"
 
 
 
