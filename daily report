@@ -6,49 +6,38 @@ HQ：
 
 ZWL:
 "今日分析msg数：
-今日发现issue数：1
+今日发现issue数：2
 今日回传case数：
 日报：
-1.写小泛化的验收报告，包括issue数量、diff数量、总体msg数量等等
-2.测试GUI crash问题，在GUI 中read_design后read_cdc步骤crash，小泛化PNT_CNT1能复现问题；建议家里测GUI时，所有步骤在GUI界面操作；issue CDC-GEN-B-229
-3.和蒋蕊一起看常值传播的问题，貌似SG只会关注d pin前是不是一定为常值，如果一直为常值，那会报clock_info03b，如果只是推断有可能是常值，则不会报clock_info03b"
-
+1、追加测试报告数据，包含增加bug数量、builtin数据
+2、回归GUI crash，多次check时间长等问题，均已修复，只是多次check会增加十多分钟remove的时间
+3、发了2个GUI issue"
 
 LRF：
 "今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.用daily_build的包分析Ac_conv01的随机性问题，发现其中一条Ac_conv01的converge net一直在变化(导致脚本处理反标时每次都标记不上)，和子奇讨论后，用11_13的何琴的分支包跑两次工具，发现Ac_conv01不会存在随机问题，但SetupDataTiedToConst存在随机问题
-2.继续分析CDC-GEN-B-188的常值传播失败的issue,目前已发现4种场景导致传播失败，准备明天与来现场支持的RD一起分析一下
-3.检查CDC-3485是否在现场解决 -- issue尚未解决，但不在CA的交付目标中（内部issue）
-4.处理客户csv中未反标上的message
-"
-
+1.跑冯敏的debug包，协助冯敏一起分析随机性的问题
+2.和心雨一起看enno read_sgdc模式下的sgdc_proc的问题"
 
 JR：
 "今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.分析完成大泛化交付csv里未分析的message；
-2.按message统计大泛化issue数量；
-3.实验分析发现SG中enable_ff报clock_info03b的规律,如果enable pin是0，input是常值，SG就会报clock_info03b，报的value是与input相同的常值，
-不受reset/set pin的影响，比如当enable pin是0，input是1，reset端一直有效时，即输出为0，或者reset为变量，SG还是会报clock_info03b，且报的value是1；
-如果enable pin是变量，reset/set一直有效，输入为常值，SG会报clock_info03b，报的value是与input相同的常值，比如输入为1，enable pin是变量，reset一直有效，即输出为0，则SG会报clock_info03b，报的value为1；
-如果enable pin是变量，reset/set也是变量，当input为1时，set是变量,或者input为0时，reset是变量，SG会报clock_info03b"
+1跑冯敏的mf_debug_depend分支的包，协助冯敏分析依赖问题，发现漏报的ff没有依赖，说明漏报的ff比它前面的ff先检查，所以导致了没有推出漏报的ff；
+2.分析enno read_sgdc模式下的sgdc_proc的问题"
 
-
-  
 CXY：
 "今日分析msg数：
-今日发现issue数：
-今日回传case数：
+今日发现issue数：6
+今日回传case数：1
 日报：
-1.日常跑包，分析数据，统计数据
-2.给家里的部分自测case跑lec验证常值
-3.总结目前builtin的spec中有些rule-msg对severity不一致的情况，总结不匹配的类型以及提供case场景给家里，供家里和CA写解释
-4.跑TOP/以及read_sgdc适配的包"
+1.日常跑包，统计数据，分析数据
+2.跑TOP.改成TOP/分支的工具包和对比脚本，分析跑出来的builtin的结果
+3.修改read_sgdc环境下的对比脚本，适配现场的反标等问题
+4.对接家里的diff修改，和家里确认diff状态，以及不适配的case具体情况"
 
 
 
