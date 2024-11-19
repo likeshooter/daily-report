@@ -12,7 +12,7 @@ ZWL:
 1、写跑小泛化的数据流程，交接给景烁
 2、帮RD验证多次check会增加runtime的原因，打开debug模式，找ClearCdcCheckData、ClearSymbolPathCheckData、ClearCtrlClusters这三个函数，并没有找到，因此卡住
 3、开泛化周会和GUI会议
-4、回传5个case，2个issue"
+4、回传5个case，因为现在所有数据都已清零，因此建议所有的case都有全部msgid和数量作为golden，2个issue"
 
 LRF：
 
