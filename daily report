@@ -7,37 +7,20 @@ HQ：
 ZWL:
 "今日分析msg数：
 今日发现issue数：2
-今日回传case数：
+今日回传case数：5
 日报：
-1、追加测试报告数据，包含增加bug数量、builtin数据
-2、回归GUI crash，多次check时间长等问题，均已修复，只是多次check会增加十多分钟remove的时间
-3、发了2个GUI issue"
+1、写跑小泛化的数据流程，交接给景烁
+2、帮RD验证多次check会增加runtime的原因，打开debug模式，找ClearCdcCheckData、ClearSymbolPathCheckData、ClearCtrlClusters这三个函数，并没有找到，因此卡住
+3、开泛化周会和GUI会议
+4、回传5个case，2个issue"
 
 LRF：
-"今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：
-1.跑冯敏的debug包，协助冯敏一起分析随机性的问题
-2.和心雨一起看enno read_sgdc模式下的sgdc_proc的问题"
+
 
 JR：
-"今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：
-1跑冯敏的mf_debug_depend分支的包，协助冯敏分析依赖问题，发现漏报的ff没有依赖，说明漏报的ff比它前面的ff先检查，所以导致了没有推出漏报的ff；
-2.分析enno read_sgdc模式下的sgdc_proc的问题"
+
 
 CXY：
-"今日分析msg数：
-今日发现issue数：6
-今日回传case数：1
-日报：
-1.日常跑包，统计数据，分析数据
-2.跑TOP.改成TOP/分支的工具包和对比脚本，分析跑出来的builtin的结果
-3.修改read_sgdc环境下的对比脚本，适配现场的反标等问题
-4.对接家里的diff修改，和家里确认diff状态，以及不适配的case具体情况"
 
 
 
