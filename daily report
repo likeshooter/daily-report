@@ -3,16 +3,22 @@ ZCH：
 YYH：
 
 HQ：
+"今日分析msg数：
+今日发现issue数：
+今日回传case数：13
+日报：
+1、回传13个DTS的case
+2、改进回传脚本，如果此case已回传则提示警告，要求检查"
 
 ZWL:
 "今日分析msg数：
-今日发现issue数：2
-今日回传case数：5
+今日发现issue数：
+今日回传case数：25
 日报：
-1、写跑小泛化的数据流程，交接给景烁
-2、帮RD验证多次check会增加runtime的原因，打开debug模式，找ClearCdcCheckData、ClearSymbolPathCheckData、ClearCtrlClusters这三个函数，并没有找到，因此卡住
-3、开泛化周会和GUI会议
-4、回传5个case，因为现在所有数据都已清零，因此建议所有的case都有全部msgid和数量作为golden，2个issue"
+1、回传25个case，并和一航一起确认抄写过程不一致的地方，建议两边都使用vscode验证
+2、为RD验证点击msgid和点击message help活crash的原因，在于现场环境的qt文件缺少导致，需要研发解决，打包需要自带，避免出现用户环境缺少配置导致crash
+3、发一个issue CDC-3632：启动GUI后退出会导致终端乱码以及vim被改变窗口大小"
+
 
 LRF：
 
