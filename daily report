@@ -1,26 +1,38 @@
 ZCH：
+1. 和客户评审builtin差异（详见差异评审纪要邮件）；
 
 YYH：
 
 HQ：
-"今日分析msg数：
-今日发现issue数：
-今日回传case数：13
+"今日分析msg数：20
+今日发现issue数：1
+今日回传case数：1
 日报：
-1、回传13个DTS的case
-2、改进回传脚本，如果此case已回传则提示警告，要求检查"
+1、分析Ac在merge时产生的差异冲突问题，已解决
+2、分析Buildin新增的ClkNotPropagated漏报问题，已提issue：CDC-3636
+3、调查DTS的case中没有约束文件或约束文件为空的case，一共有六个这样的case，已交给刘玲进行分析"
 
 ZWL:
 "今日分析msg数：
-今日发现issue数：
-今日回传case数：25
+今日发现issue数：2
+今日回传case数：
 日报：
-1、回传25个case，并和一航一起确认抄写过程不一致的地方，建议两边都使用vscode验证
-2、为RD验证点击msgid和点击message help活crash的原因，在于现场环境的qt文件缺少导致，需要研发解决，打包需要自带，避免出现用户环境缺少配置导致crash
-3、发一个issue CDC-3632：启动GUI后退出会导致终端乱码以及vim被改变窗口大小"
-
+1.确认大泛化跑出来的csv中的diff差异已经按照优化来填写：有一条message未优化，已让景烁确认并修改，保证下次跑包时，old csv使用正确，而是propagated_clocks的结果在result列是match，但是diff_basis列却有pass-diff的差异标记，发了issue CDC-GEN-B-238
+2.使用debug包验证GUI中点击message help会crash的问题，目前尚未解决
+3.发了一个关于debug参数增强的issue--CDC-GEN-B-237"
 
 LRF：
+"今日分析msg数：45
+今日发现issue数：2
+今日回传case数：1
+日报：
+1.分析泛化case跑出的Ac_conv01的误报
+CDC-GEN-B-236:对于在同一条converge_net上汇聚的ctrl_path,enno分别报了两条Ac_conv01的message,正常的check应该只报一条Ac_conv01的message
+2.分析Builtin新增Unmatch共32条，提了一个issue
+CDC-3637 -- enno的报OutputPortUndriven和sg报的SGDC_cdc_false_path01(SyncCellSetup、checkSGDC_together02、QualifierSetup、SGDC_reset_synchronizer04、SGDC_abstract_port01和SGDC_IP_block01)通过脚本匹配成了Unmatch,Unmatch的原因为文件报的不一致，enno报的.v,sg报的.sgdc。需确认这样对比
+是否合理
+3.分析泛化新增的6条SetupDataTiedToConst的漏报，已逐一确认，为随机性的问题
+4.解决builtin表格中8条冲突的message"
 
 
 JR：
