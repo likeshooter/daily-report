@@ -4,35 +4,33 @@ ZCH：
 YYH：
 
 HQ：
-"今日分析msg数：20
-今日发现issue数：1
-今日回传case数：1
+"今日分析msg数：76
+今日发现issue数：
+今日回传case数：
 日报：
-1、分析Ac在merge时产生的差异冲突问题，已解决
-2、分析Buildin新增的ClkNotPropagated漏报问题，已提issue：CDC-3636
-3、调查DTS的case中没有约束文件或约束文件为空的case，一共有六个这样的case，已交给刘玲进行分析"
+1、帮家里检查case的运行结果
+2、关于常值推导相关的case，跑lec结果，并贴图，完成76条"
 
 ZWL:
 "今日分析msg数：
-今日发现issue数：2
-今日回传case数：
-日报：
-1.确认大泛化跑出来的csv中的diff差异已经按照优化来填写：有一条message未优化，已让景烁确认并修改，保证下次跑包时，old csv使用正确，而是propagated_clocks的结果在result列是match，但是diff_basis列却有pass-diff的差异标记，发了issue CDC-GEN-B-238
-2.使用debug包验证GUI中点击message help会crash的问题，目前尚未解决
-3.发了一个关于debug参数增强的issue--CDC-GEN-B-237"
-
-LRF：
-"今日分析msg数：45
-今日发现issue数：2
+今日发现issue数：1
 今日回传case数：1
 日报：
-1.分析泛化case跑出的Ac_conv01的误报
-CDC-GEN-B-236:对于在同一条converge_net上汇聚的ctrl_path,enno分别报了两条Ac_conv01的message,正常的check应该只报一条Ac_conv01的message
-2.分析Builtin新增Unmatch共32条，提了一个issue
-CDC-3637 -- enno的报OutputPortUndriven和sg报的SGDC_cdc_false_path01(SyncCellSetup、checkSGDC_together02、QualifierSetup、SGDC_reset_synchronizer04、SGDC_abstract_port01和SGDC_IP_block01)通过脚本匹配成了Unmatch,Unmatch的原因为文件报的不一致，enno报的.v,sg报的.sgdc。需确认这样对比
-是否合理
-3.分析泛化新增的6条SetupDataTiedToConst的漏报，已逐一确认，为随机性的问题
-4.解决builtin表格中8条冲突的message"
+1、协助RD检查点击message help会crash的问题，排除部分可能性
+2、验证GUI的问题，一个是set operation中的内容太大时，之前使用放大缩小都感觉没有图形一样，现在没有问题，30w+的内容能显示清楚
+3、统计大泛化中diff数量以及标记的msg数量
+4、参加泛化周会，提一个issue CDC-3638"
+
+LRF：
+"今日分析msg数：71
+今日发现issue数：
+今日回传case数：
+日报：
+1.协助子奇和何琴分析CDC-GEN-B-236 -- 相关问题在现场泛化case上已定位 -- 未提取切分case
+2.验证CDC-GEN-B-218是否已解决 -- 11_22的daily_built包已解决
+3.验证11_22的daily_built包是否存在SetupDataTiedToConst的随机性问题，和何琦分别用tcl脚本和shell跑共跑300+次,其message数量为5056条，暂未发现存在随机性问题
+4.对于标记常值推导差异的case，用Formality工具进行验证，并在表格中附上相应截图
+5.参加泛化周会"
 
 
 JR：
