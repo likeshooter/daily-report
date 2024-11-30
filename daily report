@@ -1,47 +1,41 @@
 ZCH：
-"1. 提issue：CDC-3648 在gui中点击rule: CmdOptionValueInvalid的文档，工具crash
-2. 完成导入平台demo case;"
+
 
 
 YYH：
+"今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.diff191已开发完成；小case验证完毕；待大泛化验证
+2.diff174开发完成；门禁通过；泛化上测出工具bug；需要suli辅助定位
+3.ar脚本调整优化
+4.两拍的情况测出来脚本问题 ac_conv03,debug后发现不是脚本问题，而是当：clock是被set_abstract_port -port xxx -clock vclk -module abcd;这种形式创建时，其实是一个虚拟时钟，三方对于这个时钟的名字是TOP.u_abcd_vclk，(这里的u_abcd是abcd这个module实例化出来的inst name)而ecdc就叫TOP.vclk;"
 
 HQ：
-"今日分析msg数：96
+"今日分析msg数：72
 今日发现issue数：
 今日回传case数：
 日报：
-1、关于常值推导相关的case，跑lec结果，并贴图，完成96条，已完成全部的setup部分的贴图
-2、辅助瑞风检查SetupDataTiedToConst的随机性问题
-3、分析今日新增的setup数据，提了一个GUI的issue：CDC-3661
-4、集成改写增加lec参数的行为到脚本里"
+1、分析今日门禁新增漏报误报，以及解决差异冲突，setup、builtin有sdc修改导致的新增，为差异，ac有一条MissingSynchronizer的Obj顺序不一样导致差异反标失败（11月28号的包和11月29号的包obj顺序不一致），已提issue:CDC-3688
+2、分析Builtin里标Diff197的差异，发现这个Diff197标的有两类现象：
+1. sgdc约束语法错误，SG只做了clock检查，未做reset相关检查，导致我们误报reset相关报错
+2. Enno对于sgdc fatal及ERROR所有检查都不做，导致Propagated clock的漏报
+看上去没有进行统一，这两种现象都存在，问了研发做到统一比较麻烦，且客户之前没有提出异议，后面再和川皓他们对这个问题进行评估
+3、帮助解决门禁case图片丢失问题
+4、帮助心雨分析Diff150 proc的逻辑
+5、自动取包脚本里改进自动删除逻辑，各路径内超过一定时间的包，自动删除，防止占满空间内存"
 
 ZWL:
-"今日分析msg数：
-今日发现issue数：2
-今日回传case数：
+"今日分析msg数：18
+今日发现issue数：1
+今日回传case数：1
 日报：
-1、协助RD检查点击message help会crash的问题，排除3种可能性（）
-2、验证GUI会闪退的两个问题，均已修复；提出两个GUI的issue CDC-3652、CDC-3655
-3、验证SG在读file文件时，遇见文件里有变量时的设置方法，目前只发现在运行SG之前设置变量名能成功读写file文件；启动SG后在去set变量，会报错变量无定义
-4、关注大泛化的性能问题，runtime在11-12分钟，memory在16-17G之间，暂不满足交付条件"
+1、帮家里RD确认GUI的搜索问题（11.11-trace-two-points-5），SG支持多比特的搜索，比如：TOP.dout[3:0]/q，SG会搜索到TOP.dout[3]/q，是按照哪一个比特位写在前面，就搜索哪一位
+2、分析大泛化漏报误报Setup_prot01；已提issue CDC-GEN-B-2-249；和comb、虚拟时钟有关
+3、参加泛化会议"
 
 LRF：
-"今日分析msg数：71
-今日发现issue数：
-今日回传case数：
-日报：
-1.查看SetupDataTiedToConst的随机性问题，脚本共跑1000+次，数量稳定在5056,未出现随机性，已反馈给冯敏
-2.对比daily_build包和性能优化包conv_continue包的性能数据，时间减少2min30s,内存减小1G+,但message数量有所减少，已反馈给何琴
-3.解决Built表格相应冲突
-4.对于标了常值传播的相关差异，用Formality工具进行lec验证，其中发现有两种场景未能通过lec验证
-a.CDC-3654 -- 对于将U_TOP_1/U_TOP_2/clk设为常值'1',
-enno认为TOP/clk和TOP/U_TOP_1/clk都为常值'1'(即差异Diff181),而spyglass和Formality都只认为U_TOP_1/U_TOP_2/clk为常值'1',导致
-lec比对无法通过,现场和李丹讨论后，需确认如果在实际的设计中存在这样的约束，常值是否会跨层次往上层传？ecdc工具的做法是否合理？
-b.Diff149的case运行现场Formality工具，lec不通过,现场运行DC工具，其中的mux_sel[1]不为常值
-5.分析新包跑出的不匹配
-a. clk1和clk2通过加法器汇聚报了SetupAsyncClkConvOnComb
-，ecdc以前的版本未报SetupAsyncClkConvOnComb
-"
 
 
 
@@ -49,14 +43,15 @@ JR：
 
 
 CXY：
-"今日分析msg数：
-今日发现issue数：14
-今日回传case数：2
+"今日分析msg数：80
+今日发现issue数：
+今日回传case数：
 日报：
-1.跑TOP.改成TOP/分支的工具包和对比脚本，分析跑出来的ac的结果,ac新增主要是因为对于sgdc中有虚拟时钟约束时，proc_sgdc转换时，会给虚拟时钟也加上TOP/导致对比脚本匹配不上，以及两条Ac误报，已提issueCDC-3658、CDC-3659
-2.TOP/包因为参数db.use_hier_name_include_top拿不到返回值，会对setup和builtin反标影响比较大，分析量比较大，暂时还未投入分析
-3.对接家里的diff150。diff124的修改，确认上周家里上库的diff178，Diff123-diff19-clock_info01-01、Diff123-diff19-clock_info01-02、Diff168-irregular9-clock_info05-converge的正确性，对于不适配的场景提issue
-4.帮助景烁跑大泛化以及门禁case"
+1.跑TOP.改成TOP/分支的工具包和对比脚本，分析跑出来的setup的结果，目前TOP/包 setup部分没有脚本问题，工具问题同Ac
+2.修复TOP/包中setup部分的脚本问题CDC-3687
+3.对接diff150,diff178的修改
+4.确认ac修改的diff正确性"
+
 
 
 
