@@ -1,45 +1,48 @@
 ZCH：
 
-
-
 YYH：
-"今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：
-1.diff191已开发完成；小case验证完毕；待大泛化验证
-2.diff174开发完成；门禁通过；泛化上测出工具bug；需要suli辅助定位
-3.ar脚本调整优化
-4.两拍的情况测出来脚本问题 ac_conv03,debug后发现不是脚本问题，而是当：clock是被set_abstract_port -port xxx -clock vclk -module abcd;这种形式创建时，其实是一个虚拟时钟，三方对于这个时钟的名字是TOP.u_abcd_vclk，(这里的u_abcd是abcd这个module实例化出来的inst name)而ecdc就叫TOP.vclk;"
 
 HQ：
-"今日分析msg数：72
+"今日分析msg数：20
 今日发现issue数：
 今日回传case数：
 日报：
-1、分析今日门禁新增漏报误报，以及解决差异冲突，setup、builtin有sdc修改导致的新增，为差异，ac有一条MissingSynchronizer的Obj顺序不一样导致差异反标失败（11月28号的包和11月29号的包obj顺序不一致），已提issue:CDC-3688
-2、分析Builtin里标Diff197的差异，发现这个Diff197标的有两类现象：
-1. sgdc约束语法错误，SG只做了clock检查，未做reset相关检查，导致我们误报reset相关报错
-2. Enno对于sgdc fatal及ERROR所有检查都不做，导致Propagated clock的漏报
-看上去没有进行统一，这两种现象都存在，问了研发做到统一比较麻烦，且客户之前没有提出异议，后面再和川皓他们对这个问题进行评估
-3、帮助解决门禁case图片丢失问题
-4、帮助心雨分析Diff150 proc的逻辑
-5、自动取包脚本里改进自动删除逻辑，各路径内超过一定时间的包，自动删除，防止占满空间内存"
+1、分析门禁每日新增漏报误报
+2、将新泛化对比结果里的obj通过base64转化的过程加入到对比脚本中，每次生成时自动转化，今日已将转化后的csv成功传出到黄区
+3、和伟豪分析批量跑lec的脚本
+4、和家荣分析ClockGilitch涉及的版本差异问题"
 
 ZWL:
-"今日分析msg数：18
-今日发现issue数：1
-今日回传case数：1
+"今日分析msg数：20
+今日发现issue数：5
+今日回传case数：4
 日报：
-1、帮家里RD确认GUI的搜索问题（11.11-trace-two-points-5），SG支持多比特的搜索，比如：TOP.dout[3:0]/q，SG会搜索到TOP.dout[3]/q，是按照哪一个比特位写在前面，就搜索哪一位
-2、分析大泛化漏报误报Setup_prot01；已提issue CDC-GEN-B-2-249；和comb、虚拟时钟有关
-3、参加泛化会议"
+复现cfg1_2中由于enable_generated_clocks导致漏报ArSync和Reset_sync02的case；复现了4个case，发了5个issue
+CDC-GEN-B-cfg1_2-310--漏报reset_sync02
+CDC-GEN-B-cfg1_2-311--漏报ArSync
+CDC-3814--Ar的source不对
+CDC-3815--漏报Ar_unsync01
+CDC-3816--打开enable_generated_clocks后的属性变化"
 
 LRF：
-
+"今日分析msg数：26
+今日发现issue数：1
+今日回传case数：
+日报：
+1.已完成新泛化DDR_SUB的Ac的分析，均为差异 -- Diff59/Diff63/Diff8
+2.分析泛化两拍的Ac_conv的新增误报漏报，标记差异Diff206
+3.提了一个Enhance
+CDC-3813 -- 目前QualMergesOtherSrc/QualMergesSameSrc的增量原理图中不会显示other source/same source,希望能在原理图中
+加上这个信息，以便帮助用户更好的debug(spyglass的增量原理图中会显示other source/same source)"
 
 
 JR：
+"今日分析msg数：
+今日发现issue数：1
+今日回传case数：
+日报：
+1.分析新泛化TOP_LGC中的SetupDataTiedToConst，目前分析到的都是差异，有一些漏报是因为UDP第三方综合出来的是FF，而verific综合出来的是blackbox，所以ECDC漏报了SetupDataTiedToConst；
+2.在分析中发现，在SG中，双击一个message，在module/instance/file tree中会自动定位到这个message对应的module/instance/file，同样在module tree中找到一个module并打开对应的verilog文件或者原理图，在instance/file tree中也会自动定位到对应的instance/file，instance和file同理，建议ECDC也增加自动定位的功能：CDC-GEN-N-gui-309"
 
 
 CXY：
@@ -51,6 +54,18 @@ CXY：
 2.修复TOP/包中setup部分的脚本问题CDC-3687
 3.对接diff150,diff178的修改
 4.确认ac修改的diff正确性"
+
+CJR：
+"今日分析msg数：
+今日发现issue数：1
+今日回传case数：1
+日报：
+1.分析RF泛化在不同cfg1_2下的误报漏报
+1.1.cfg1_2中Setupclockglitch误报漏报242条属于脚本问题
+1.2.Integrityclockconverge：误报漏报各1条，在配置cfg1_2下，时钟Z经过fanout再汇聚，汇聚路径存在多条，但是ECDC选择了一条推断出常值的路径报出，导致和SG报的路径（汇聚点）不同。
+1.3.Clock_converge01：漏报11条（时钟信息没有穿透FF，导致无法识别为clock），类似于CDC-GEN-B-cfg1_2-285的情况，目前暂标此issue号。
+2.分析RF泛化在不同cfg1_1下的误报漏报
+2.1 分析SetupClockGlitch，549条属于脚本问题，待解决脚本问题，再后续分析"
 
 
 
