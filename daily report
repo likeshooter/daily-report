@@ -2,71 +2,70 @@ ZCH：
 
 YYH：
 
-HQ：
-"今日分析msg数：20
+XLL：
+"今日分析msg数：
 今日发现issue数：
 今日回传case数：
+日报：1.与海洋一起调试Diff71，在现场做验证，并分析Diff71的标记情况，发现有误标和漏标的情况，误标的场景也解决，漏标的情况已请何琦帮忙提issue：CDC3836
+2.调试Diff71逻辑的时候，发现了ac的severity和desttype的逻辑不正确，进行了修改。"
+
+HQ：
+"今日分析msg数：51
+今日发现issue数：6
+今日回传case数：6
 日报：
-1、分析门禁每日新增漏报误报
-2、将新泛化对比结果里的obj通过base64转化的过程加入到对比脚本中，每次生成时自动转化，今日已将转化后的csv成功传出到黄区
-3、和伟豪分析批量跑lec的脚本
-4、和家荣分析ClockGilitch涉及的版本差异问题"
+1、分析客户提出的质疑，一共有9条，分析6条，有5条是对于case，停与不停，Enno和SG不一致，所以这些message也认为没有匹配，客户不太清楚；还有一条是sdc文件转化的问题：clock后面不加-domain，我们就会认为domain是加TOP/的，但是如果加了-doamin，且指定为TOP.xxx，我们就不会把这个TOP.转化为TOP/，导致出现了问题
+2、分析今日门禁漏报误报：builtin提出issue：CDC-3826，setup为脚本问题，和心雨探讨修复；今日有167个case crash，提了两个issue：CDC-3829,CDC-3830
+3、帮助刘玲分析Diff71的proc逻辑，并提issue：CDC-3836"
 
 ZWL:
-"今日分析msg数：20
-今日发现issue数：5
-今日回传case数：4
+"今日分析msg数：24
+今日发现issue数：7
+今日回传case数：
 日报：
-复现cfg1_2中由于enable_generated_clocks导致漏报ArSync和Reset_sync02的case；复现了4个case，发了5个issue
-CDC-GEN-B-cfg1_2-310--漏报reset_sync02
-CDC-GEN-B-cfg1_2-311--漏报ArSync
-CDC-3814--Ar的source不对
-CDC-3815--漏报Ar_unsync01
-CDC-3816--打开enable_generated_clocks后的属性变化"
+1、继续复现CDC-GEN-N-312，还未能复现，可能需要研发的支持
+2、在泛化中复现问题过程中提了几个gui问题；CDC-gui-3825是弹窗overlapping objects，建议取消这个弹窗，用提高灵敏度以及放大选中来解决可能点击会选中多个obj的情况；CDC-gui-3827是增强增量原理图，取消展示无关信息；CDC-gui-3831是展开下层时，目前是刷新所有操作，但建议保留之前操作
+3、分析cdc.reduce_mux_with_constant_input为false时，Ar新增的误报漏报；CDC-3828是输入都为常值的mux sel不会被推断为reset信号，导致reset_synchronizer的命令失效，但是mux sel端的clock信息又会被传到flop的reset上，导致reset上的clock与flop的clock不一致，我们就会报path_begin到do_1[0]的Arunsync，但path_begin又不是reset信号，这会给用户误解；而SG是综合为buf，正常推断reset，reset_synchronizer命令生效报Arsync；CDC-3834 clock推断导致的误报ArUnsyncCtrlPath
+CDC-3835 报在了verific定义的obj上
+CDC-3837 常值推断导致误报ArUnsyncCtrlPath"
+
 
 LRF：
-"今日分析msg数：26
+"今日分析msg数：28
 今日发现issue数：1
 今日回传case数：
 日报：
-1.已完成新泛化DDR_SUB的Ac的分析，均为差异 -- Diff59/Diff63/Diff8
-2.分析泛化两拍的Ac_conv的新增误报漏报，标记差异Diff206
-3.提了一个Enhance
-CDC-3813 -- 目前QualMergesOtherSrc/QualMergesSameSrc的增量原理图中不会显示other source/same source,希望能在原理图中
-加上这个信息，以便帮助用户更好的debug(spyglass的增量原理图中会显示other source/same source)"
+1.整理泛化射频case的中标Diff206的message,将ecdc误报的Ac_conv01/02的电路图用sg的电路图展示出来,已将3拍的的整理完成,整理过程中尝试寻找sg为啥不报的原因（持续调研中）,整理过程中发现当电路图很大时，ecdc很难操作，问题与CDC-gui-3810相关，希望能尽快实现
+2.提了一个gui的issue"
 
 
 JR：
 "今日分析msg数：
 今日发现issue数：1
-今日回传case数：
+今日回传case数：1
 日报：
-1.分析新泛化TOP_LGC中的SetupDataTiedToConst，目前分析到的都是差异，有一些漏报是因为UDP第三方综合出来的是FF，而verific综合出来的是blackbox，所以ECDC漏报了SetupDataTiedToConst；
-2.在分析中发现，在SG中，双击一个message，在module/instance/file tree中会自动定位到这个message对应的module/instance/file，同样在module tree中找到一个module并打开对应的verilog文件或者原理图，在instance/file tree中也会自动定位到对应的instance/file，instance和file同理，建议ECDC也增加自动定位的功能：CDC-GEN-N-gui-309"
+1.处理客户提出的差异标记不合理的message；
+2.分析新泛化TOP_LGC中的SetupDataTiedToConst，目前分析到的都是差异；
+3.分析关闭cdc.reduce_mux_with_constant_input后新增的message，目前分析到的都是综合差异导致的误报漏报，有mux_and的综合差异，还有其他综合差异，其中有个case，ECDC综合为输入是常值的mux，SG综合为inverter，导致误报漏报，已提issue：CDC-3832"
 
 
 CXY：
-"今日分析msg数：80
+"今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.跑TOP.改成TOP/分支的工具包和对比脚本，分析跑出来的setup的结果，目前TOP/包 setup部分没有脚本问题，工具问题同Ac
-2.修复TOP/包中setup部分的脚本问题CDC-3687
-3.对接diff150,diff178的修改
-4.确认ac修改的diff正确性"
+1.测试参数cdc.reduce_mux_with_constant_input设为false后的结果，统计数据
+2.帮助蒋蕊处理部分客户认为标记diff不合理的case
+3.随包脚本中有一些diff修改和增加，验证这部分diff是否合理（diff167，diff124，diff108）。验证家里写的diff proc，diff72，diff132。
+4.修改统计脚本，适配在统计数据中展示去掉issue后的误报漏报率"
+
 
 CJR：
 "今日分析msg数：
-今日发现issue数：1
+今日发现issue数：
 今日回传case数：1
-日报：
-1.分析RF泛化在不同cfg1_2下的误报漏报
-1.1.cfg1_2中Setupclockglitch误报漏报242条属于脚本问题
-1.2.Integrityclockconverge：误报漏报各1条，在配置cfg1_2下，时钟Z经过fanout再汇聚，汇聚路径存在多条，但是ECDC选择了一条推断出常值的路径报出，导致和SG报的路径（汇聚点）不同。
-1.3.Clock_converge01：漏报11条（时钟信息没有穿透FF，导致无法识别为clock），类似于CDC-GEN-B-cfg1_2-285的情况，目前暂标此issue号。
-2.分析RF泛化在不同cfg1_1下的误报漏报
-2.1 分析SetupClockGlitch，549条属于脚本问题，待解决脚本问题，再后续分析"
-
+日报：1.分析两拍泛化新增漏报误报，已标注为差异
+2.复现CDC-GEN-B-cfg1_2-307、CDC-GEN-B-cfg1_2-308"
 
 
 
