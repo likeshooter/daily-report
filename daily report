@@ -6,47 +6,42 @@ XLL：
 "今日分析msg数：
 今日发现issue数：
 今日回传case数：
-日报：1.与海洋一起调试Diff71，在现场做验证，并分析Diff71的标记情况，发现有误标和漏标的情况，误标的场景也解决，漏标的情况已请何琦帮忙提issue：CDC3836
-2.调试Diff71逻辑的时候，发现了ac的severity和desttype的逻辑不正确，进行了修改。"
+日报：1.与海洋确认相同名字的现场case与inhouse的差异，将Inhouse的case修改为与现场一致
+2.熟悉Python统计脚本，并实现了在diffbasis列填了内容的都作为match，并新增两列展示这个数据对应的误报漏报率；且修复了一个bug，如果Unmatch但是在running flag列有diff id的情况，不能算match。"
 
 HQ：
-"今日分析msg数：51
-今日发现issue数：6
-今日回传case数：6
-日报：
-1、分析客户提出的质疑，一共有9条，分析6条，有5条是对于case，停与不停，Enno和SG不一致，所以这些message也认为没有匹配，客户不太清楚；还有一条是sdc文件转化的问题：clock后面不加-domain，我们就会认为domain是加TOP/的，但是如果加了-doamin，且指定为TOP.xxx，我们就不会把这个TOP.转化为TOP/，导致出现了问题
-2、分析今日门禁漏报误报：builtin提出issue：CDC-3826，setup为脚本问题，和心雨探讨修复；今日有167个case crash，提了两个issue：CDC-3829,CDC-3830
-3、帮助刘玲分析Diff71的proc逻辑，并提issue：CDC-3836"
+
 
 ZWL:
-"今日分析msg数：24
-今日发现issue数：7
-今日回传case数：
+"今日分析msg数：
+今日发现issue数：3
+今日回传case数：1
 日报：
-1、继续复现CDC-GEN-N-312，还未能复现，可能需要研发的支持
-2、在泛化中复现问题过程中提了几个gui问题；CDC-gui-3825是弹窗overlapping objects，建议取消这个弹窗，用提高灵敏度以及放大选中来解决可能点击会选中多个obj的情况；CDC-gui-3827是增强增量原理图，取消展示无关信息；CDC-gui-3831是展开下层时，目前是刷新所有操作，但建议保留之前操作
-3、分析cdc.reduce_mux_with_constant_input为false时，Ar新增的误报漏报；CDC-3828是输入都为常值的mux sel不会被推断为reset信号，导致reset_synchronizer的命令失效，但是mux sel端的clock信息又会被传到flop的reset上，导致reset上的clock与flop的clock不一致，我们就会报path_begin到do_1[0]的Arunsync，但path_begin又不是reset信号，这会给用户误解；而SG是综合为buf，正常推断reset，reset_synchronizer命令生效报Arsync；CDC-3834 clock推断导致的误报ArUnsyncCtrlPath
-CDC-3835 报在了verific定义的obj上
-CDC-3837 常值推断导致误报ArUnsyncCtrlPath"
+1、参加周会
+2、参加GUI的业务对齐会议
+3、提了两个Reset_info01的issue CDC-3851 是文档问题，message中应该是变量的，但是文档中是固定值；CDC-3852是关于报的message，type与Candidate sync reset/set不对应，可能会产生误解
+4、CDC-3853关于在gui中在使用start_gui命令，应该报一条info信息提示用户"
 
 
 LRF：
-"今日分析msg数：28
+"今日分析msg数：26
 今日发现issue数：1
 今日回传case数：
 日报：
-1.整理泛化射频case的中标Diff206的message,将ecdc误报的Ac_conv01/02的电路图用sg的电路图展示出来,已将3拍的的整理完成,整理过程中尝试寻找sg为啥不报的原因（持续调研中）,整理过程中发现当电路图很大时，ecdc很难操作，问题与CDC-gui-3810相关，希望能尽快实现
-2.提了一个gui的issue"
+1.参加周会
+2.参加常值推导抽样方案讨论会
+3.分析TOP_LGC的Ac的误报漏报，并与高强讨论，发现同样是常值问题"
 
 
 JR：
-"今日分析msg数：
+"今日分析msg数：67
 今日发现issue数：1
-今日回传case数：1
+今日回传case数：
 日报：
-1.处理客户提出的差异标记不合理的message；
-2.分析新泛化TOP_LGC中的SetupDataTiedToConst，目前分析到的都是差异；
-3.分析关闭cdc.reduce_mux_with_constant_input后新增的message，目前分析到的都是综合差异导致的误报漏报，有mux_and的综合差异，还有其他综合差异，其中有个case，ECDC综合为输入是常值的mux，SG综合为inverter，导致误报漏报，已提issue：CDC-3832"
+1.参加周会；
+2.参加常值推导抽样方案讨论会；
+3.分析完成门禁新增误报漏报，目前影响误报漏报的issue只有一个：CDC-3847；
+4.在分析过程中发现，有SetupAsyncClkConvOnMux的原理图显示有问题，有一条SetupAsyncClkConvOnMux报了5个clock，但是打开原理图只显示了3个clock，原理图中应该把5个clock都显示出来更合理，已提issue：CDC-3849"
 
 
 CXY：
@@ -54,18 +49,20 @@ CXY：
 今日发现issue数：
 今日回传case数：
 日报：
-1.测试参数cdc.reduce_mux_with_constant_input设为false后的结果，统计数据
-2.帮助蒋蕊处理部分客户认为标记diff不合理的case
-3.随包脚本中有一些diff修改和增加，验证这部分diff是否合理（diff167，diff124，diff108）。验证家里写的diff proc，diff72，diff132。
-4.修改统计脚本，适配在统计数据中展示去掉issue后的误报漏报率"
+1.修复新泛化case TSSC_WRAP上有Reset_info01漏抓的问题，分析发现原因是在解析sg rule时，脚本首先会把sg的more_simple的每一行两个以上的空格转换为一个空格，但是因为sg报告多个module内部的信号时，会给信号加一个空格，例如TOP.UQIC_TSSC.U_QIC_RT0_TOP.\G_RT.NODE这种格式的信号，这个信号在sg报告中，信号名最后一个字符就是空格。所以对比脚本的解析时，对于这种信号，需要另外处理
+2.修改门禁跑新参数的脚本"
 
 
 CJR：
-"今日分析msg数：
-今日发现issue数：
+"今日分析msg数：800
+今日发现issue数：1
 今日回传case数：1
-日报：1.分析两拍泛化新增漏报误报，已标注为差异
-2.复现CDC-GEN-B-cfg1_2-307、CDC-GEN-B-cfg1_2-308"
+日报：
+1.参加周会
+2.分析泛化cfg1_1,cfg1_2,cfg2的setupclockglitch误报漏报，属于差异Diff115。
+3.分析泛化cfg1_1,误报ArUnsyncCtrlPath，为ISSUE CDC-GEN-B-cfg1_1-318，复现成功已回传。
+4.参加常值传播分析计划讨论会议。"
+
 
 
 
