@@ -6,42 +6,35 @@ XLL：
 "今日分析msg数：
 今日发现issue数：
 今日回传case数：
-日报：1.与海洋确认相同名字的现场case与inhouse的差异，将Inhouse的case修改为与现场一致
-2.熟悉Python统计脚本，并实现了在diffbasis列填了内容的都作为match，并新增两列展示这个数据对应的误报漏报率；且修复了一个bug，如果Unmatch但是在running flag列有diff id的情况，不能算match。"
+日报：1.讨论waiver功能工具现有实现，比对脚本和导入平台该怎么处理现有实现
+2.学习了Setup_port的具体表现，结合case理解和分析，并与现场同事讨论case里的场景"
 
 HQ：
 
 
 ZWL:
 "今日分析msg数：
-今日发现issue数：3
-今日回传case数：1
+今日发现issue数：2
+今日回传case数：
 日报：
-1、参加周会
-2、参加GUI的业务对齐会议
-3、提了两个Reset_info01的issue CDC-3851 是文档问题，message中应该是变量的，但是文档中是固定值；CDC-3852是关于报的message，type与Candidate sync reset/set不对应，可能会产生误解
-4、CDC-3853关于在gui中在使用start_gui命令，应该报一条info信息提示用户"
+1、参加射频门禁参数测试评审会
+2、分析TSSC_WRAP上的漏报Reset_info01，漏报场景都为sync clear/set；遇见集群被全部关闭，导致重启集群以及重跑case，浪费不少时间
+3、提了2个GUI的issue 原理图的操作优化 CDC-gui-3865
+关于SG搜索多比特时的搜索方式CDC-gui-3866"
 
 
 LRF：
-"今日分析msg数：26
-今日发现issue数：1
-今日回传case数：
-日报：
-1.参加周会
-2.参加常值推导抽样方案讨论会
-3.分析TOP_LGC的Ac的误报漏报，并与高强讨论，发现同样是常值问题"
 
 
 JR：
-"今日分析msg数：67
+"今日分析msg数：69
 今日发现issue数：1
 今日回传case数：
 日报：
-1.参加周会；
-2.参加常值推导抽样方案讨论会；
-3.分析完成门禁新增误报漏报，目前影响误报漏报的issue只有一个：CDC-3847；
-4.在分析过程中发现，有SetupAsyncClkConvOnMux的原理图显示有问题，有一条SetupAsyncClkConvOnMux报了5个clock，但是打开原理图只显示了3个clock，原理图中应该把5个clock都显示出来更合理，已提issue：CDC-3849"
+1.分析关闭cdc.reduce_mux_with_constant_input后门禁新增的误报漏报，全部分析完成，只有一个之前提过的issue：CDC-3832；
+2.和心雨艺豪讨论常值推导脚本自动化方案；
+3.参加射频门禁参数测试评审会；
+4.在分析过程中发现，用2025.1.15的包跑case，在Message Summary中右键message点击open in source，没有反应，不能跳转到verilog对应的位置，2025.1.14的包就可以，已提issue：CDC-gui-3868"
 
 
 CXY：
@@ -49,19 +42,30 @@ CXY：
 今日发现issue数：
 今日回传case数：
 日报：
-1.修复新泛化case TSSC_WRAP上有Reset_info01漏抓的问题，分析发现原因是在解析sg rule时，脚本首先会把sg的more_simple的每一行两个以上的空格转换为一个空格，但是因为sg报告多个module内部的信号时，会给信号加一个空格，例如TOP.UQIC_TSSC.U_QIC_RT0_TOP.\G_RT.NODE这种格式的信号，这个信号在sg报告中，信号名最后一个字符就是空格。所以对比脚本的解析时，对于这种信号，需要另外处理
-2.修改门禁跑新参数的脚本"
+1.完成常值差异proc diff170
+2.和艺豪讨论diff170，diff171
+3.帮家里验证diff158，目前这个diff在rule blackbox上无漏标误标"
 
 
 CJR：
-"今日分析msg数：800
-今日发现issue数：1
-今日回传case数：1
+"今日分析msg数：
+今日发现issue数：
+今日回传case数：
 日报：
-1.参加周会
-2.分析泛化cfg1_1,cfg1_2,cfg2的setupclockglitch误报漏报，属于差异Diff115。
-3.分析泛化cfg1_1,误报ArUnsyncCtrlPath，为ISSUE CDC-GEN-B-cfg1_1-318，复现成功已回传。
-4.参加常值传播分析计划讨论会议。"
+1.分析FE_TSS:
+1.1 setup_port01 unmatch问题属于Diff75（涉及232条），在设计开头定义端口的地方使用include导入其他的端口定义设计文件，对于定义在了include导入的文件中的port，ECDC会报在include文件中，更加精确。
+1.2 误报SetupOutputMultiClkDriven，对于推断出为常值的输出port，ECDC会报SetupOutputMultiClkDriven,且报出的该输出port的data clock中只有一个时钟，并没有两个时钟；SG不会对推断为常值的port报clock _sync06.（CDC-GEN-N-332，正在复现中）
+1.3 分析SetupResetInferred误报漏报问题
+2.统计FE_TSS结果"
+
+SYH：
+"今日分析msg数：
+今日发现issue数：1
+今日回传case数：
+日报：
+1.分析伟豪写的get_hdl_info提取case的执行脚本，脚本处理细节已明晰
+2.根据泽波的提示修改param总表内的公式。
+3.对新泛华的sgdc与sdc进行语义一致检查，file一个issue：CDC-3867"
 
 
 
