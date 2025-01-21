@@ -6,35 +6,49 @@ XLL：
 "今日分析msg数：
 今日发现issue数：
 今日回传case数：
-日报：1.讨论waiver功能工具现有实现，比对脚本和导入平台该怎么处理现有实现
-2.学习了Setup_port的具体表现，结合case理解和分析，并与现场同事讨论case里的场景"
+日报：1.跟进waive功能的开发和测试情况，发现目前get_filter命令不支持传入列表，没有很好的支持现场的需求，开发正在改为支持列表
+2.测试比对脚本对waive功能的支持方式，只要第一条实现了，比对脚本就可以做到适配了
+3.与心雨一起解决sg单个比特与某条ecdc msg中的多个比特中的一个比特位match时，sg应该处理为match的问题，主要讲解了一下diff处理时如何能仅给sg打上标记，ecdc的这条保持误报的思路
+4.学习Ac剩余Rule，以及新泛化的运行分析流程，计划1月21日开始边分析边学习"
+
 
 HQ：
+"今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1. 分析1813的泛化case，跑出对比结果的有六个module，两个module没有转换完成sdc文件，猜测有资源不足的原因，目前任在跑的有三个module，TOP_LGC、APP_CORE、HIS_TOP,已经跑超过12h，APP_CORE停在check_cdc阶段，NFI_PHYG_TOP和HIS_TOP停止在integrity done"
 
 
 ZWL:
-"今日分析msg数：
-今日发现issue数：2
-今日回传case数：
-日报：
-1、参加射频门禁参数测试评审会
-2、分析TSSC_WRAP上的漏报Reset_info01，漏报场景都为sync clear/set；遇见集群被全部关闭，导致重启集群以及重跑case，浪费不少时间
-3、提了2个GUI的issue 原理图的操作优化 CDC-gui-3865
-关于SG搜索多比特时的搜索方式CDC-gui-3866"
-
-
-LRF：
-
-
-JR：
-"今日分析msg数：69
+"今日分析msg数：22
 今日发现issue数：1
 今日回传case数：
 日报：
-1.分析关闭cdc.reduce_mux_with_constant_input后门禁新增的误报漏报，全部分析完成，只有一个之前提过的issue：CDC-3832；
-2.和心雨艺豪讨论常值推导脚本自动化方案；
-3.参加射频门禁参数测试评审会；
-4.在分析过程中发现，用2025.1.15的包跑case，在Message Summary中右键message点击open in source，没有反应，不能跳转到verilog对应的位置，2025.1.14的包就可以，已提issue：CDC-gui-3868"
+1、分析门禁新增的Ac漏报误报，为之前false-bits报unmatch，现在脚本取消false-bits导致的漏报误报，除了CDC-3872以外，其余都是差异
+2、复现漏报Reset_inf01的case，只差一部分细节，21号能复现成功"
+
+
+
+LRF：
+"今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.编写并调试过滤误报SetupDataTiedToConst的脚本"
+
+
+JR：
+"今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.验证家里的diff。diff144无漏标误标，diff203存在误标，已反馈
+diff61存在误标，已反馈
+2.在新泛化BCP_TSS模块上测试常值proc标记情况，目前误报标记率达到98%，已经抽样分析标记的msg，抽样结果无误标、该模块的常值误报由11027条降到了179条
+3.跑射频随机参数测试结果，目前只跑出了cfg1，cfg2结果，数据还未回传
+4.完成常值proc， 处理对于多bit信号，sg报的常值obj包含在enno报的obj中的情况，在门禁case中测试通过，目前正在BCP_TSS模块中测试
+5.修复统计脚本计算公式出错的bug"
 
 
 CXY：
@@ -42,9 +56,12 @@ CXY：
 今日发现issue数：
 今日回传case数：
 日报：
-1.完成常值差异proc diff170
-2.和艺豪讨论diff170，diff171
-3.帮家里验证diff158，目前这个diff在rule blackbox上无漏标误标"
+1.分析FE_TSS。
+1.1 SetupResetInferred漏报，SG同时报了derived 异步置位复位和同步置位复位，而ECDC只报了异步置位复位，正在复现中。
+1.2 Setup_Port01误报，属于常值推断类型。
+2.跑包统计数据， FE_TSS。
+3.考虑参数hdl.parse_translate_off_on和db.minimum_ram_size的测试方案。
+4.编写python脚本，实现多个数据统计合并"
 
 
 CJR：
@@ -52,20 +69,32 @@ CJR：
 今日发现issue数：
 今日回传case数：
 日报：
-1.分析FE_TSS:
-1.1 setup_port01 unmatch问题属于Diff75（涉及232条），在设计开头定义端口的地方使用include导入其他的端口定义设计文件，对于定义在了include导入的文件中的port，ECDC会报在include文件中，更加精确。
-1.2 误报SetupOutputMultiClkDriven，对于推断出为常值的输出port，ECDC会报SetupOutputMultiClkDriven,且报出的该输出port的data clock中只有一个时钟，并没有两个时钟；SG不会对推断为常值的port报clock _sync06.（CDC-GEN-N-332，正在复现中）
-1.3 分析SetupResetInferred误报漏报问题
-2.统计FE_TSS结果"
+1.分析FE_TSS。
+1.1 SetupResetInferred漏报，SG同时报了derived 异步置位复位和同步置位复位，而ECDC只报了异步置位复位，正在复现中。
+1.2 Setup_Port01误报，属于常值推断类型。
+2.跑包统计数据， FE_TSS。
+3.考虑参数hdl.parse_translate_off_on和db.minimum_ram_size的测试方案。
+4.编写python脚本，实现多个数据统计合并"
+
+TZB：
+"今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1、熟悉红区工作环境
+2、分析BCP_TSS、DDR_SUB、DME_WRAP、APP_CORE、BDP、FE_TSS模块中sgdc转换sdc命令是否正确其中APP_CORE、BDP、FE_TSS需要重跑"
+
 
 SYH：
 "今日分析msg数：
-今日发现issue数：1
+今日发现issue数：
 今日回传case数：
 日报：
-1.分析伟豪写的get_hdl_info提取case的执行脚本，脚本处理细节已明晰
-2.根据泽波的提示修改param总表内的公式。
-3.对新泛华的sgdc与sdc进行语义一致检查，file一个issue：CDC-3867"
+1.常数传播与LEC验证
+1.1修改补充伟豪射频case LEC环境文档
+1.2修改伟豪射频case LEC脚本逻辑，减少多余的变量，中间文件
+1.3用最新的包跑射频case的lec验证，get_hdl_info仍存在问题：在提取时对条件编译提取不完全，`endif提取不到。帮赵洲研究了条件编译在原设计中和提取设计中的差异。issue号:CDC-3871"
+
 
 
 
