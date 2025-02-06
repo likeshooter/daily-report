@@ -20,22 +20,24 @@ HQ：
 1. 分析1813的泛化case，跑出对比结果的有六个module，两个module没有转换完成sdc文件，猜测有资源不足的原因，目前任在跑的有三个module，TOP_LGC、APP_CORE、HIS_TOP,已经跑超过12h，APP_CORE停在check_cdc阶段，NFI_PHYG_TOP和HIS_TOP停止在integrity done"
 
 
-ZWL:
-"今日分析msg数：22
-今日发现issue数：1
-今日回传case数：
-日报：
-1、分析门禁新增的Ac漏报误报，为之前false-bits报unmatch，现在脚本取消false-bits导致的漏报误报，除了CDC-3872以外，其余都是差异
-2、复现漏报Reset_inf01的case，只差一部分细节，21号能复现成功"
-
-
-
-LRF：
+ZWL：
 "今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.编写并调试过滤误报SetupDataTiedToConst的脚本"
+分析何琴分支包跑出来的漏报误报conv部分，已反馈何琴，并得知不需要继续分析ac以及其他漏报误报，等待新包再做分析"	
+
+LRF：
+"今日分析msg数：25
+今日发现issue数：2
+今日回传case数：
+日报：
+1.查看issue:CDC-GEN-N-317,定位到常值信号在经过大MUX（sg综合为多输入的MUX，ecdc综合为多个mux级联的instance）后的输出结果在双方工具上不一致 -- 已反馈给相应RD
+2.查看issue:CDC-GEN-B-340的状态 -- 未解决
+3.协助研发跑分支包并反馈相应数据
+4.分析Hi18XXE-BCP_TSS的SetupDataTiedToConst的漏报，共提两个issue:CDC-GEN-N_344、CDC-GEN-N_345
+a.分析过程中发现分析的难点主要在于双方工具的电路结构综合不一致"
+
 
 
 JR：
