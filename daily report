@@ -14,14 +14,14 @@ XLL：
 HQ：
 
 ZWL：
-"今日分析msg数：212
-今日发现issue数：7
-今日回传case数：2
+"今日分析msg数：68
+今日发现issue数：5
+今日回传case数：1
 日报：
-1.和冯敏一起分析TSSC_WRAP中漏报的SetupDataTiedToConst
-2、分析vfc/update202412分支包setup和builtin的漏报误报，主要是由于获取结构体名称的方式从get_nets TOP/uno[0]变成了get_nets TOP/uno.in1，建议两者都支持CDC-3884，其余还有两个issue CDC-3885和CDC-3886
-3、分析AO_SUB漏报误报builtin部分，由于定义的reset同时是常量，但是ecdc会报SetupRstNotPropagated导致误报---CDC-GEN-N-361
-4、另外发了三个优化issue，一个是get_*命令结果的显示优化CDC-388；另外是gui的原理图优化 CDC-gui-3883和代码框的搜索优化CDC-gui-3887"
+1、与苏黎一起看clock未传播到output的情况，造的小case被解决，但是大case上还未解决，需要再次debug
+2、分析FE_TSS中漏报误报setup_port的msg，由于SG会报ff为常值，但是并不会传播到后续所致；并发现一个crash CDC-GEN-N-gui-378，但未复现，堆栈发给罗刚了
+3、分析射频中漏报的常值部分，为issue CDC-GEN-B-380
+4、分析AO_SUB中setup_port01的clock domain报的不一致，SG报虚拟时钟，ecdc报实际的时钟 CDC-GEN-N-377"
 
 
 LRF：
