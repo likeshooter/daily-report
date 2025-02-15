@@ -3,45 +3,38 @@ ZCH：
 YYH：
 
 XLL：
-"今日分析msg数：195
-今日发现issue数：1
+"今日分析msg数：
+今日发现issue数：
 今日回传case数：
-日报：1.修复导入平台的脚本bug，启动工具传入的参数与比对脚本中的一个参数冲突了导致比对脚本source文件时报错，修改参数名字后测试通过
-2.协助RD定位现场发现的行号问题
-3.填写上半年KPI计划
-4.分析Setup message 195条，提了一个SetupDataTiedToConst漏报的issue CDC-GEN-N-363"
+日报：1.运行merge脚本，将Setup、Ar、Builtin cfg1和cfg2的数据merge了一次，Setup的已经OK了，Ar和Builtin的cfg1和cfg2图片merge不上，待解决
+2.使用开发包验证issue CDC-GEN-N-363/365/367，验证通过2个，不通过1个（363不通过）
+3.提了1个增量原理图显示的Ar_converge不够直观的issue CDC-gui-3903
+4.分析了2条Ar_converge01误报的message，都是差异Diff117-bug28-ar"
 
 HQ：
 
 ZWL：
-"今日分析msg数：68
-今日发现issue数：5
+"今日分析msg数：
+今日发现issue数：1
 今日回传case数：1
 日报：
-1、与苏黎一起看clock未传播到output的情况，造的小case被解决，但是大case上还未解决，需要再次debug
-2、分析FE_TSS中漏报误报setup_port的msg，由于SG会报ff为常值，但是并不会传播到后续所致；并发现一个crash CDC-GEN-N-gui-378，但未复现，堆栈发给罗刚了
-3、分析射频中漏报的常值部分，为issue CDC-GEN-B-380
-4、分析AO_SUB中setup_port01的clock domain报的不一致，SG报虚拟时钟，ecdc报实际的时钟 CDC-GEN-N-377"
+1、复现CDC-3898的case，并发现SetupDataTiedToConst也有多比特未合并的问题；并因为复现的问题发现gui crash的bug---CDC-gui-3905
+2、统计射频在上个节点到0228节点之间新增的issue，分5中配置分开统计；为写测试报告做准备
+3、验证CDC-GEN-B-380的case在SG汇总综合为mux+ff和en+ff时，报常值的不同；en+ff会报常值，mux+ff则不会报常值，目前没有发现这种的差异编号
+4、验证CDC-GEN-N-368的clock传播，目前clock传到了inout port上，但还是未报multiclkdriven"
 
 
 LRF：
-"今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：
-1.和冯敏一起分析Hi18XXE-BCP_TSS漏报的SetupDataTiedToConst - 还未定位问题点
-2.协助何琴、子奇跑分支包并反馈相应数据
-3.回归参数测试的相关issue
-"
+
 
 JR：
-"今日分析msg数：470
-今日发现issue数：1
-今日回传case数：
+"今日分析msg数：110
+今日发现issue数：2
+今日回传case数：1
 日报：
-1.分析完成1813E TOP_LOG中SetupDataTiedToConst的漏报，共163条，其中有111条都是因为UDP综合差异，SG综合出的是ff，ECDC综合出的是blackbox，导致漏报；其余52条漏报，都有对应的误报，未match上的原因有两个，一个是ECDC和SG推的常值不一样，另一个是ECDC比SG报的比特位更多，都是差异；
-2.分析完成1813E TOP_LOG中的ac_conv01，误报的原因是ECDC和SG报的汇聚点不一样；
-3.建议点击图中的instance/port/pin/net时，能自动打开attributs这个窗口，并显示instance/port/pin/net的属性，这样不用用户自己去点，更方便：CDC-GEN-N-gui-360"
+1.补充门禁的分析报告和截图；
+2.结构体改变导致门禁一些message匹配不上，还导致一些net在ECDC中get_nets失败，从而read_cdc失败，已提issue：CDC-3904；
+3.对于sync和set，Attributes中仍然显示的是is_async_reset和related_resets，这样不合理，建议对于sync set，Attributes的name应该显示为is_sync_set和related_sets，已提issue：CDC-GEN-N-gui-385"
 
 
 CXY：
@@ -49,30 +42,31 @@ CXY：
 今日发现issue数：
 今日回传case数：
 日报：
-1.完成过滤ac漏报中被常值影响部分的proc
-2.优化。修复常值差异proc diff170
-3.回传现场的代码修改以及新增的proc
-4.验证家里的diff proc。diff122存在bug，漏标问题已修改回传，同时这个proc还会将Diff121误标成Diff122，测例场景CDC-1855。Diff144存在误标，并且代码逻辑不合理，该diff现场场景比较少，建议不做这个diff proc
-5.帮助刘玲分析SetupDataTiedToConst"
+1.验证家里完成diff proc。diff9，diff52，diff109，diff158，diff179.其中diff158.Diff109验证未通过
+2.参加结构体改变导致脚本匹配不上的讨论会"
 
 CJR：
-"今日分析msg数：
+"今日分析msg数：33
 今日发现issue数：
 今日回传case数：
 日报：
-测试参数hdl.parse_translate_off_on；跑比对脚本，对比参数开启关闭和开启两者的差异；发现SG有个相关命令和此参数效果类似正在验证中。"
+1.分析回归射频泛化cfg1_2的问题，Ar误报漏报属于Diff85及Diff211。
+2.跑新泛化FE_TSS.
+3.review测试报告及备用数据准备,需要使用交付包进行最后确认。
+"
 
 TZB：
 
 SYH：
-MCH：
-"今日分析msg数：
+"今日分析msg数：312
 今日发现issue数：
 今日回传case数：
 日报：
-1、对导入平台接入脚本的改动进行测试，并再次比对了我目录下和刘玲目录下脚本的差异，确保无误
-2、优化lint跑包流程的脚本
-3、Lint的日常跑包工作"
+1.分析新泛化NAU_CAU_WRAP，312条均是由前级DFF的常值没有推导出，导致后级DFF常值漏报。前级未推到出的原因是CDC-GEN-N-380
+2.跑开发的debug包验证issue，CDC-GEN-N-381已解决，CDC-GEN-N-362，CDC-GEN-N-382未解决。
+3.和邱远确认了CDC-GEN-N-372中的UDP的定义问题。暂时不认为其是Diff"
+
+MCH：
 
 
 
