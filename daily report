@@ -6,35 +6,55 @@ XLL：
 "今日分析msg数：
 今日发现issue数：
 今日回传case数：
-日报：1.运行merge脚本，将Setup、Ar、Builtin cfg1和cfg2的数据merge了一次，Setup的已经OK了，Ar和Builtin的cfg1和cfg2图片merge不上，待解决
-2.使用开发包验证issue CDC-GEN-N-363/365/367，验证通过2个，不通过1个（363不通过）
-3.提了1个增量原理图显示的Ar_converge不够直观的issue CDC-gui-3903
-4.分析了2条Ar_converge01误报的message，都是差异Diff117-bug28-ar"
+日报：1.补剩下Setup cfg1的图，涉及6条message
+2.提了一个Clock和Set_case_analysis的传递方向不一致的issue CDC-3912
+3.新泛化存在多个人分析红区的同一个csv的情况，但csv不能同时被多个人写，需要拷贝到各自的路径分析后再merge结果。修改了以前的merge脚本，适配is_analysis和diff_basis列一起merge的场景。并merge了TOP_LGC setup的csv
+4.帮助心雨分析解决新泛化中处理sg obj斜杠丢失的脚本问题
+5.完成CA的工单处理规范考试"
+
 
 HQ：
+"今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.贴图分析门禁Builtin差异报告已完成
+2. 完成run脚本对新泛化sg性能的统计和对跑对比脚本性能时间的统计，集合到统计漏报误报的excel里，之后可以一起传回去
+3. 对脚本的维护和对流程细节的改进，减少大家的操作"
 
 ZWL：
 "今日分析msg数：
-今日发现issue数：1
-今日回传case数：1
+今日发现issue数：2
+今日回传case数：
 日报：
-1、复现CDC-3898的case，并发现SetupDataTiedToConst也有多比特未合并的问题；并因为复现的问题发现gui crash的bug---CDC-gui-3905
-2、统计射频在上个节点到0228节点之间新增的issue，分5中配置分开统计；为写测试报告做准备
-3、验证CDC-GEN-B-380的case在SG汇总综合为mux+ff和en+ff时，报常值的不同；en+ff会报常值，mux+ff则不会报常值，目前没有发现这种的差异编号
-4、验证CDC-GEN-N-368的clock传播，目前clock传到了inout port上，但还是未报multiclkdriven"
+1、分析conv过程发现gui crash问题，并和应康看一下，但由于没有打印信息，因此暂时没有进展，包括后续来的debug，也没有信息打印出来；并发现terminal那列的菜单栏双击就可以随意拖拽，这感觉容易影响布局，提了个issue CDC-gui-3914；如果不修改的话，则需要文档说明
+2、和应康一起看了conv的增量原理图，有点难以分析，需要增强
+3、分析射频两拍三拍Ar误报，由于Diff211导致"
 
 
 LRF：
+"今日分析msg数：56
+今日发现issue数：3
+今日回传case数：
+日报：
+1.分析过程中发现今天的包存在gui crash的问题
+2.分析参数cfg1_2下的ac_conv的相关误报漏报，发现双方工具参数对设置同一个参数值的行为都不一致，已提issue:CDC-GEN-B-394
+3.和苏黎一起看CDC-GEN-B-337的相关问题，issue相关情况苏黎已知悉
+4.分析泛化射频case反弹的message,Ac的issue已提：CDC-GEN-B-395，Setup的issue已提：CDC-GEN-B-396
+5.跑冯敏的debug包，issue待验证"
 
 
 JR：
-"今日分析msg数：110
-今日发现issue数：2
+"今日分析msg数：67
+今日发现issue数：1
 今日回传case数：1
 日报：
-1.补充门禁的分析报告和截图；
-2.结构体改变导致门禁一些message匹配不上，还导致一些net在ECDC中get_nets失败，从而read_cdc失败，已提issue：CDC-3904；
-3.对于sync和set，Attributes中仍然显示的是is_async_reset和related_resets，这样不合理，建议对于sync set，Attributes的name应该显示为is_sync_set和related_sets，已提issue：CDC-GEN-N-gui-385"
+1.分析门禁setup新增的误报漏报，分析完成发现是因为脚本proc修改导致新增误报漏报，分析完成都是差异：
+SetupBBoxPinFullyConstrained:原本是proc_Diff158->现在是Diff174,原本是proc_Diff158->现在是Diff83，原本是proc_Diff158->现在是Diff107；
+IntegrityClockConverge:原本是Proc_Diff112->现在是Diff112；
+ChyDiffSrcConv:原本是Proc_Diff112->现在是Diff150；
+2.和海洋讨论脚本proc Diff39和Diff124的问题；
+3.在分析中遇到start gui crash，check_cdc完成后还没有打开gui工具就crash了，不能稳定复现，跑第一次的时候crash了，多跑几次就不crash了，已提issue：CDC-GEN-N-393"
 
 
 CXY：
@@ -42,31 +62,35 @@ CXY：
 今日发现issue数：
 今日回传case数：
 日报：
-1.验证家里完成diff proc。diff9，diff52，diff109，diff158，diff179.其中diff158.Diff109验证未通过
-2.参加结构体改变导致脚本匹配不上的讨论会"
+1.发现对比脚本的reformat模块不适合新泛化上的一些场景，修改reformat proc，在门禁、TOP_LGC、DDR_SUB模块测试通过
+2.总结0in约束和sdc约束的对应关系
+3.发现新写的diff123proc，存在bug，会block。debug block原因，发现是get命令传参不正确，并且代码中没有判空，已将问题解决反馈给家里"
+
 
 CJR：
-"今日分析msg数：33
-今日发现issue数：
+"今日分析msg数：217
+今日发现issue数：1
 今日回传case数：
 日报：
-1.分析回归射频泛化cfg1_2的问题，Ar误报漏报属于Diff85及Diff211。
-2.跑新泛化FE_TSS.
-3.review测试报告及备用数据准备,需要使用交付包进行最后确认。
-"
+分析cfg2配置的泛化射频case：
+ac：新增属于issue：CDC-GEN-B-340、CDC-GEN-B-395
+ar：新增的属于差异Diff85、Diff211
+conv：file issue：CDC-GEN-B-cfg2-392（ECDC漏报Ac_conv01，203条）；标记差异Diff206。余下6条待分析。
+setup:新增的都是和SetupDataTiedToConst有关，还未具体分析"
+
 
 TZB：
 
 SYH：
-"今日分析msg数：312
+
+MCH：
+"今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.分析新泛化NAU_CAU_WRAP，312条均是由前级DFF的常值没有推导出，导致后级DFF常值漏报。前级未推到出的原因是CDC-GEN-N-380
-2.跑开发的debug包验证issue，CDC-GEN-N-381已解决，CDC-GEN-N-362，CDC-GEN-N-382未解决。
-3.和邱远确认了CDC-GEN-N-372中的UDP的定义问题。暂时不认为其是Diff"
-
-MCH：
+1、和协助客户在导入平台接入run统计流程，已经跑通，
+2、使用导入平台测试ecdc的流程。
+3、Elint的日常跑包"
 
 
 
