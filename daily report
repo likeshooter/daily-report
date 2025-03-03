@@ -3,27 +3,33 @@ ZCH：
 YYH：
 
 XLL：
-
+"XLL
+今日分析msg数：36
+今日发现issue数：2
+今日回传case数：
+日报：1.分析TOP_LGC的AC，分析了36条，提了2个issue，CDC-GEN-N-423/427；其他的都是差异"
 
 
 HQ：
-周六
-"今日分析msg数：
+"HQ
+今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1、检查对客户跑出结果的反标问题，，目前未发现反标脚本的问题（builtin刘玲还在检查）
-2、完成对门禁case 黄区merge结果的贴图和差异冲突检查（已完成Ac、Ar，Buildin有部分message未能复现，可能是跑的时候参数配置有问题，用22日最新的包跑对比，没有问题）"
+1.分析拷贝DDR_SUB的漏报误报，解密后的csv merge失败，需要重新标，完成全部
+2.完善run脚本逻辑，跑所有剩余新泛化的对比脚本"
 
 
 ZWL：
-"今日分析msg数：
+"ZWL
+今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1、完成小泛化的测试报告
-2、设置depth为4回归打开增量原理图就crash的issue，还未解决
-3、和艺豪一起看conv脚本"
+1、回传gui的遗留问题单和新增问题单
+2、和悦彬一起向客户确认部分自己无法复现的问题，已知晓步骤，但比如open in source无法打开sdc文件，和在project中配置tcl setting，导致read_design失败以及crash问题，可能家里不好复现，可能需要到现场验证
+3、修改熊路的统计脚本，有msgid被修改，和统计diff的bug
+4、参加周会"
 
 
 LRF：
@@ -31,36 +37,37 @@ LRF：
 
 
 JR：
-"今日分析msg数：45
+"JR
+今日分析msg数：763
 今日发现issue数：1
-今日回传case数：
+今日回传case数：1
 日报：
-1.分析cfg1和cfg2门禁各新增的一条漏报，是差异；
-2.分析1813E TOP_LOG的误报漏报，新增的SetupDataTiedToConst已分析完成，有一个之前提过的issue，其他都是差异；
-3.在分析门禁时发现proc_Diff18有问题，对于io_dqs_in_sample，ECDC报的是SetupPortFullyConstrained，而SG报的是unconstrained，脚本标了pass,走了proc_Diff18，但ECDC和SG报的不一样不是虚拟时钟导致的，所以不应该走proc_Diff18，已提issue：CDC-3917；
-4.参加周会"
+1.分析完成2.27门禁新增的大量误报漏报，大部分是因为lint error改为报verific error导致proc失效，失效的proc有6个：Diff128,Diff179,Diff98,Diff81,Diff130,Diff132,已反馈给脚本团队，还有小部分是因为ECDC报了ObjectIsNotFound但没有停止检查，从而新增的误报，已提issue：CDC-3929；
+2.分析1813E TOP_LOG的误报漏报，Ac_conv04有一个漏报，已复现并提issue：CDC-GEN-N-426，UDP综合差异，ECDC综合为blackbox，SG综合为DFF，导致ECDC多报了blackbox相关message，标记为差异Diff190；
+3.参加周会"
 
 
 CXY：
-"今日分析msg数：
+"CXY
+今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.修复diff119在现场block问题
-2.更新隔离区脚本代码
-3.和客户对齐case集，rpt路径以及门禁cfg设置 
-4.和艺豪调查射频上对比脚本跑得慢的原因中"
+1.修复新泛化LIGHTV300的NFI_PHYG模块脚本block问题。脚本block原因是：在该case上sg报的setup_port01有一条reason是“incorrectly constrained”，我们工具并没有对标的reason，所以脚本在建key的时候，报错。现在已经做了处理
+2.测试随包到现场的脚本在门禁以及射频上的运行情况，脚本无block，漏抓的情况，更新门禁，新泛化，射频对比脚本
+3.检查parameter for CDC文件中记录的参数名的正确性，以及文件中提到的参数在门禁，射频参数测试中的使用设置情况，反馈给川皓"
+
 
 
 CJR：
-"今日分析msg数：50
+"CJR
+今日分析msg数：35
 今日发现issue数：
 今日回传case数：
 日报：
-1.分析cfg1_1，射频新增ac及setup
-2.跑conv depth设为4的cfg1_2射频泛化比对。待新包验证性能及conv电路的优化。
-3.分析cfg2的射频新增。
-4.file issue：CDC-GEN-B-cfg1_2-407，depth被或门阻断（CGIC），导致漏报conv01，已反馈给研发。"
+1.分析射频cfg1_2的新增误报漏报，属于差异Diff75及Diff3。
+2.分析射频cfg1_1的新增误报漏报，发现是sg结果解析有问题，导致漏报误报1000+，已反馈心雨，已修复完成，误报漏报清零。
+3.跑depth设为9时比对。"
 
 
 
