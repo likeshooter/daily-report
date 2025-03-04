@@ -4,10 +4,13 @@ YYH：
 
 XLL：
 "XLL
-今日分析msg数：36
-今日发现issue数：2
+今日分析msg数：10
+今日发现issue数：
 今日回传case数：
-日报：1.分析TOP_LGC的AC，分析了36条，提了2个issue，CDC-GEN-N-423/427；其他的都是差异"
+日报：1.定位run TOP_LGC比对脚本的时候，csv没有反标上的问题，发现是没有给old csv加引号导致，流程里加了这个步骤，但似乎没有生效，已移交何琦处理
+2.写了一个小脚本，统计路径下日期最新的ac、ar、setup、builtin的csv中diff id及其数量，并让现场同事run这个脚本统计数据，再由我汇总数据发给川皓。脚本已合入现场的run脚本，以后需要的diff数据的时候，run diff然后输入csv路径即可
+3.分析TOP_LGC ac的message，分析了10条message，要么是常值影响，要么是差异"
+
 
 
 HQ：
@@ -16,35 +19,49 @@ HQ：
 今日发现issue数：
 今日回传case数：
 日报：
-1.分析拷贝DDR_SUB的漏报误报，解密后的csv merge失败，需要重新标，完成全部
-2.完善run脚本逻辑，跑所有剩余新泛化的对比脚本"
+1.回传新泛化漏报误报数据与性能数据，只剩一个1813的TOP_LGC等待bug修复，没有数据
+2.检查新泛化case的对比结果：目前29个case有6个还没有结果，其中4个是资源占用超出导致terminal挂掉，目前在重新跑，一个是脚本问题导致挂掉，心雨在修复，一个是1813的TOP_LGC等待bug修复
+3.验证CDC-GEN-N-270和CDC-3585的开启lint检查导致跑泛化crash的issue，目前跑了4个module，未发生问题
+4.帮助刘玲统计分析的新泛化的差异和对应message数量"
 
 
 ZWL：
 "ZWL
 今日分析msg数：
-今日发现issue数：
+今日发现issue数：1
 今日回传case数：
 日报：
-1、回传gui的遗留问题单和新增问题单
-2、和悦彬一起向客户确认部分自己无法复现的问题，已知晓步骤，但比如open in source无法打开sdc文件，和在project中配置tcl setting，导致read_design失败以及crash问题，可能家里不好复现，可能需要到现场验证
-3、修改熊路的统计脚本，有msgid被修改，和统计diff的bug
-4、参加周会"
+1、修改统计脚本中统计漏掉的msg，主要是因为表里如果ecdc没有报相关的rule时，就算SG报，也不会统计到，已修改为遍历所有rule、reason；并把ar、ac分开建dict；另外修改-n下ecdc或者sg为0时没统计到的msg
+2、提了一个ar脚本问题，关于csv格式，一是reason为应该是multiflop，但写成了其他内容；二是需要为Reset_sync04加上reason为ChyArSyncMultiTimes，方便后续统计reset_sync04
+3、跑新泛化FE_TSS，分析Ac、ar部分"
+
 
 
 LRF：
+"LRF
+今日分析msg数：48
+今日发现issue数：1
+今日回传case数：
+日报：
+1.查看并反馈CDC分支和develop分支的uniquify的memory数据
+2.查看并反馈develop分支将参数cdc.enable_lint_check分别设为true和false的read_design的memory数据
+3.查看并反馈子奇的conv net随机试验结果
+4.分析daily包3拍和2拍的Setup和Ac的新增，已标有差异Diff59和Diff115,其中有一个2拍Ac的误报需RD确认
+5.跑冯敏的debug分支包并反馈相应数据
+6.分析USBC，共提1个issue
+a.CDC-GEN-N-430 -- 漏报sync"
 
 
 
 JR：
 "JR
-今日分析msg数：763
-今日发现issue数：1
-今日回传case数：1
+今日分析msg数：115
+今日发现issue数：2
+今日回传case数：
 日报：
-1.分析完成2.27门禁新增的大量误报漏报，大部分是因为lint error改为报verific error导致proc失效，失效的proc有6个：Diff128,Diff179,Diff98,Diff81,Diff130,Diff132,已反馈给脚本团队，还有小部分是因为ECDC报了ObjectIsNotFound但没有停止检查，从而新增的误报，已提issue：CDC-3929；
-2.分析1813E TOP_LOG的误报漏报，Ac_conv04有一个漏报，已复现并提issue：CDC-GEN-N-426，UDP综合差异，ECDC综合为blackbox，SG综合为DFF，导致ECDC多报了blackbox相关message，标记为差异Diff190；
-3.参加周会"
+1.分析1813E TOP_LOG的误报漏报，在分析时发现，SG对于ErrorAnalyzeBBox中报不可综合的module，不会将这类不可综合的module综合为blackbox，而是综合为一个没有内部结构的普通module，也不会对这类不可综合的module进行setup_blackbox01检查，但现场会将这类不可综合的module set_blackbox,ECDC会综合为blackbox且会对这类不可综合的module进行setup_blackbox01检查，这导致ECDC会比SG多报setup_blackbox01相关message，已向RD反馈并提issue：CDC-GEN-N-428；
+2.在SG中setup_blackbox01报了多少条就代表有多少个blackbox，且可以在message中直观地看到所有的blackbox module名，这样可以看到具体有哪些module是blackbox，但由于ECDC中setup_blackbox01相关message有好几条，因此不能直观地看到具体的blackbox个数，也不能直观地看到具体有哪些module是blackbox，所以建议单独统计一下blackbox module名和个数并在GUI中显示出来,已提issue：CDC-GEN-N-gui-432"
+
 
 
 CXY：
@@ -53,22 +70,21 @@ CXY：
 今日发现issue数：
 今日回传case数：
 日报：
-1.修复新泛化LIGHTV300的NFI_PHYG模块脚本block问题。脚本block原因是：在该case上sg报的setup_port01有一条reason是“incorrectly constrained”，我们工具并没有对标的reason，所以脚本在建key的时候，报错。现在已经做了处理
-2.测试随包到现场的脚本在门禁以及射频上的运行情况，脚本无block，漏抓的情况，更新门禁，新泛化，射频对比脚本
-3.检查parameter for CDC文件中记录的参数名的正确性，以及文件中提到的参数在门禁，射频参数测试中的使用设置情况，反馈给川皓"
+1.根据开发给的msg对应关系，将原本CDC对比脚本中涉及到的lintmsg改成对应verific的msg。发现现在工具实际报的msg和开发给的表中记录不一致，并且有些case之前工具版本会因为lint的msg导致工具在read_design阶段就停止了，现在会继续往下检查，导致setup，builtin有新增，问题已经反馈回家里
+2.LIGHTV300的PG_SUB模块在ar对比时存在脚本问题，导致block。但是这个case比较大，工具需要跑12个小时左右，预计明天再修复脚本问题"
 
 
 
 CJR：
 "CJR
-今日分析msg数：35
-今日发现issue数：
+今日分析msg数：82
+今日发现issue数：1
 今日回传case数：
-日报：
-1.分析射频cfg1_2的新增误报漏报，属于差异Diff75及Diff3。
-2.分析射频cfg1_1的新增误报漏报，发现是sg结果解析有问题，导致漏报误报1000+，已反馈心雨，已修复完成，误报漏报清零。
-3.跑depth设为9时比对。"
-
+日报：1.分析Hi18XXE（FE_TEE）,其中SetupDataTiedToConst unmatch问题属于差异Diff75(72)；分析SetupRstInferred漏报误报。
+2.跑depth为10及99的比对，和子奇何琴讨论结果
+3.跑sg result，跑三拍设置depth为2的比对情况
+4.分析射频cfg2的setup误报漏报问题，属于版本差异
+5.file GUI issue：CDC-3933，滚动Message objects的滚动栏到底部，schematic图标会变灰"
 
 
 TZB：
@@ -76,13 +92,6 @@ TZB：
 SYH：
 
 MCH：
-"今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：
-1、和协助客户在导入平台接入run统计流程，已经跑通，
-2、使用导入平台测试ecdc的流程。
-3、Elint的日常跑包"
 
 
 
