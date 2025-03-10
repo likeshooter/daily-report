@@ -4,110 +4,80 @@ YYH：
 
 XLL：
 "XLL
-今日分析msg数：5
-今日发现issue数：2
+今日分析msg数：
+今日发现issue数：
 今日回传case数：
-日报：1.分析了TOP_LGC的Ac message 提了2个issue，CDC-GEN-N-gui-446和CDC-GEN-N-447。
-CDC-GEN-N-gui-446：ecdc对于链路颜色做得没有sg的清晰，且没有给出颜色说明
-CDC-GEN-N-447：在src和dest的clock domain一样时，不存在clock crossing，但是我们工具报了AcUnsyncDataPath-QualMergesOtherSrc
-2.统计Hi1813E各个case的issue及其message数量"
+日报：1.与何琦讨论数据表格最终的呈现方式，并按照既定的呈现方式开展新泛化的Diff和Issue统计，并调试通过，已交由何琦合入已有的表格
+2.与RD一起看Issue CDC-GEN-N-447，协助开发定位问题"
 
 
 
 HQ：
-"HQ
-今日分析msg数：
-今日发现issue数：12
-今日回传case数：
-日报：
-1. 自动统计新泛化整体数据脚本中加入各个case的instance num,seq num,以及漏报误报率的数据
-2. 帮助蒋蕊设置新泛化blackbox参数，帮助晓燕整理新泛化数据情况
-3. 参加研发分享的reset传播推断交流会
-4. 提了11个issue关于新泛化case runtime超时或内存超标（ETime / STime > 5 or EMem / SMem > 3）
-5. 跑1813的TOP_LGC的对比脚本，已能跑通（目前29个新泛化case均能跑通）
-6. 提脚本proc的issue：CDC-3934：同时存在Diff147和Diff63两个差异，是否可以将bite分开后判断是否符合Diff63的逻辑。"
 
 
 ZWL：
 "ZWL
 今日分析msg数：
-今日发现issue数：6
+今日发现issue数：
 今日回传case数：
 日报：
-1、提了两个gui的issue，CDC-gui-3936建议增加搜索历史的记录；CDC-GEN-N-gui-449点击fanin、fanout、ctrl+z太慢，都需要2-3秒，甚至都多时间，包括打开增量原理图
-2、分析FE_TSS的ar部分，都为差异
-3、分析FE_TSS的ac部分，有CDC-GEN-N-451常值误推导导致漏报（and门的输入都不是常值，但输出是常值）；CDC-GEN-N-453、CDC-GEN-N-454是RecirculationMux的二维多比特未合并，以及destination为多段bit位，但合在一起报，建议destination分段的则分开报；CDC-GEN-N-457是没有set、reset信号的mux+flop回路，mux的输入为常值0；在泛化中没有报常值，单独拿出来却会报常值，因此可能需要一个差异编号；ac部分分析完，目前全标的以上issue"
+1、复现CDC-GEN-N-457的case并修改issue描述，并向冯敏解释sg的情况；有个问题需要讨论：SG报常值的ff，并不会全部都传播到ff的d pin和q pin，是否需要研究？比如issue中的case则不会传播到d pin上；这样有利于减少我们报常值的数量，以及减少常值影响后续ff或者port的检查
+2、向燕宁演示#36939的复现方式
+3、分析FE_TSS的Setup_port01，还是由于常值推断不一致导致"
 
 
 
 LRF：
+"LRF
+今日分析msg数：36
+今日发现issue数：1
+今日回传case数：
+日报：
+1. 整理本地标记的BCP_TSS和USBC的csv到何琦新跑出的csv中
+2.分析子奇的enhance包的门禁的conv新增 -- 经分析为conv net的差异
+3.和高强一起查看issue -- CDC-GEN-N-421的问题
+4.发现一个crash的issue -- CDC-GEN-N-463"
 
 
 
 
 JR：
-"JR
-今日分析msg数：269
-今日发现issue数：1
-今日回传case数：1
-日报：
-1.分析1813E TOP_LOG的setup误报漏报，和正前哥讨论了不可综合module要不要set_blackbox，结论是不可综合module不set_blackbox，如果遇到不可综合module的综合差异导致的误报漏报就提issue，请何琦修改配置后重新跑了csv，新增了两个SetupDataTiedToConst的误报，分析发现是不可综合module的综合差异导致的，对于不可综合的module，SG未综合出内部结构，而ECDC综合出了内部结构，导致ECDC多报了SetupDataTiedToConst，已复现并提issue：CDC-GEN-N-452；
-2.分析1813E TOP_LOG的ar误报漏报，目前分析到的都是差异，一类是ECDC和SG报ar_sync的方式不一样，是差异Diff85，还有一类是SG在没有crossing的时候仍然会报ar_sync,而ECDC不会报，所以有很多漏报，是差异Diff73"
 
 
 
 CXY：
 "CXY
-今日分析msg数：37
-今日发现issue数：1
+今日分析msg数：
+今日发现issue数：
 今日回传case数：
 日报：
-1.修复LIGHTV300的PG_SUB模块在ar对比脚本问题。这个case很大脚本和工具运行时间都需要很久。脚本中用于debug的puts信息打出来也比较多，很容易将log占满，这种情况下，就不会有puts信息出来了。
-希望工具可以有清理log信息，或者将log信息重定向到别的文件的功能，主要便于脚本debug大case用，不然每次log满了之后只能重新起工具跑脚本，十分费时
-2.分析Hi1813的NFI_PHYG_TOP的ChySameSrcConvIncSeq误报
-3发现在运行ecdc时，在Violation Tree的SetupRstInferredmessage中通过ctrl+F找到指定的contents之后，点击shematic，会crash，已提issue
-4.因为新泛化部分case，报了很多DataTiedToConst，脚本要走很多遍常值的diff，导致运行对比脚本时间比较长。修改反标和常值proc的逻辑顺序，在Hi1813的FE_TSS上初步测试，可以提高脚本接近50%的速度"
+1.和王涵一起修复diff59会将sync和unsync匹配到一起的bug，在门禁和泛化case上验证，bug修复完成
+2.对于source或者dest是black-box，并且约束的时钟为虚拟时钟的情况，sg报告时会将source或dest的时钟加上black-box的instance信息，enno不会，同时高版本VC也不会。修改脚本对于ac的list的处理，对于上述情况将sg的时钟信息中的black-box的instance信息去掉。修改完成
+3.工具修改了结构体的报法，builtin部分对比脚本需要适配。适配完成，代码已回传"
 
 
 
 CJR：
-"CXY
-今日分析msg数：37
-今日发现issue数：1
+"CJR
+今日分析msg数：
+今日发现issue数：
 今日回传case数：
 日报：
-1.修复LIGHTV300的PG_SUB模块在ar对比脚本问题。这个case很大脚本和工具运行时间都需要很久。脚本中用于debug的puts信息打出来也比较多，很容易将log占满，这种情况下，就不会有puts信息出来了。
-希望工具可以有清理log信息，或者将log信息重定向到别的文件的功能，主要便于脚本debug大case用，不然每次log满了之后只能重新起工具跑脚本，十分费时
-2.分析Hi1813的NFI_PHYG_TOP的ChySameSrcConvIncSeq误报
-3发现在运行ecdc时，在Violation Tree的SetupRstInferredmessage中通过ctrl+F找到指定的contents之后，点击shematic，会crash，已提issue
-4.因为新泛化部分case，报了很多DataTiedToConst，脚本要走很多遍常值的diff，导致运行对比脚本时间比较长。修改反标和常值proc的逻辑顺序，在Hi1813的FE_TSS上初步测试，可以提高脚本接近50%的速度"
+1.分析zq新包改进gui及conv net在五组射频上的表现：
+1.1经典3拍，依旧存在当depth深度较深时，qualifier和conv net之间会断的问题（容器存储上限设置）。
+1.2 两拍情况下，gui显示两个qualifier汇聚fanout后接到mux的input pin的路线，实际为input及sel端。
+1.3 cfg12，gui仅显示了其中一个qualifier到conv net的电路，而另一个qualifier到conv net的电路画不出来。
+上述问题均反馈研发，待使用新修复包验证。
+2.验证depth的bug修复情况，其中一个bug修复完成。
+3.分析新泛化的SetupRstInferred的漏报误报。"
 
 
 TZB：
 
 SYH：
-"SYH
-今日分析msg数：207
-今日发现issue数：2
-今日回传case数：
-日报：
-1.和冯敏对了CDC-GEN-N-gui-422.家里已复现，确认问题是在TiedToConst来源的trace时如果遇到DFF，会追溯DFF的所有input，导致clk net被画出来，因为涉及公共代码，需慎重更改。
-2.分析BDP的误报漏报207条，涉及差异主要有两个：Diff114/Diff171。涉及两个issue，CDC-GEN-N-455/428。新提了两个issue：
-a：CDC-GEN-N-gui-448：搜索栏搜索obj，特别慢，关闭搜索加载界面，GUI crash
-b：CDC-GEN-N-455：对有初始值的function，变量的初始值为-1，并赋给function的返回值，导致SG综合出的电路输入直接接地，造成SetupDataTiedToConst漏报"
 
 MCH：
-"MCH
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：
-1、在导入平台中测试sg和ecdc的流程，发现了如下问题和可优化的空间：
-1-1.优化了Result的结果为Fail的信息展示结果，使其更精确。
-1-2.spyglass读入env文件和waive文件时不生效，已经跟客户反馈。
-1-3.read_sgdc时ecdc打开gui不能展示sdc文件的问题，已经和客户对接。
-2、Elint的日常跑包"
-  
+
 
 
 
