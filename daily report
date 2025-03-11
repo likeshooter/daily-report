@@ -4,15 +4,26 @@ YYH：
 
 XLL：
 "XLL
-今日分析msg数：
+今日分析msg数：69
 今日发现issue数：
 今日回传case数：
-日报：1.与何琦讨论数据表格最终的呈现方式，并按照既定的呈现方式开展新泛化的Diff和Issue统计，并调试通过，已交由何琦合入已有的表格
-2.与RD一起看Issue CDC-GEN-N-447，协助开发定位问题"
+日报：1.分析TOP_LGC Ac message 69条，全为差异，主要是diff59和diff115
+2.修复统计Diff和Issue小脚本的bug，当没有diff和issue时，输出的表格中为0的数据存在打印两次的情况，定位后对diff和issue为空的场景做了特殊处理，数据能正确打印。
+3.帮心雨确认一个GUI crash的问题和场景"
+
 
 
 
 HQ：
+"HQ
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1、分析最新跑出的新泛化case漏报误报数据和性能数据，1813的HIS_TOP和TOP_LGC的对比结果已跑出来，目前还有3个case的对比结果还没有：18XXE:APP_CONE,HIS_TOP;LIGHTV300: PG_SUB
+2、完成将刘玲写的统计issue和diff数量的结果融合到每周发的误报漏报数据和性能数据的excel表内，性能数据的总表里加入两列内容：分析进度、剩余issue内容
+3、完成csv的数据备份
+4、和景硕介绍新泛化的对比和统计方法，以及相关文件的路径，之后分析完毕的case会由AE那边统一统计，看是否有数据反弹"
 
 
 ZWL：
@@ -21,40 +32,55 @@ ZWL：
 今日发现issue数：
 今日回传case数：
 日报：
-1、复现CDC-GEN-N-457的case并修改issue描述，并向冯敏解释sg的情况；有个问题需要讨论：SG报常值的ff，并不会全部都传播到ff的d pin和q pin，是否需要研究？比如issue中的case则不会传播到d pin上；这样有利于减少我们报常值的数量，以及减少常值影响后续ff或者port的检查
-2、向燕宁演示#36939的复现方式
-3、分析FE_TSS的Setup_port01，还是由于常值推断不一致导致"
+1、分析FE_TSS的setup_port01，由于常值差异，setup_port01已分析完毕
+2、在射频中复现误报IllegalRangeSelect的问题，未能复现；在复现过程中，发现SG的功能好用，是SG能从design中的obj定位到增量原理图中，比如点击实例化的module、net、ff，都能定位到原理图中；正是因为这个功能，才能光从lint报错的file line找到上层实例化当前报错module的file；CDC-gui-3948
+3、和冯敏一起看常值问题，并让焕东跑了LEC，认为我们报的没有问题；针对报法，与李博讨论后，采取proc的方式去寻找源头"
 
 
 
 LRF：
 "LRF
-今日分析msg数：36
-今日发现issue数：1
-今日回传case数：
+今日分析msg数：168
+今日发现issue数：6
+今日回传case数：1
 日报：
-1. 整理本地标记的BCP_TSS和USBC的csv到何琦新跑出的csv中
-2.分析子奇的enhance包的门禁的conv新增 -- 经分析为conv net的差异
-3.和高强一起查看issue -- CDC-GEN-N-421的问题
-4.发现一个crash的issue -- CDC-GEN-N-463"
+1.分析[Hi18XXE]BCP_TSS -- 75%
+a.CDC-GEN-N-465 -- 漏报SetupDataTiedToConst
+2.分析USBC    -- 30%
+a.CDC-GEN-N-470 -- CDC-GEN-N-470
+b.CDC-GEN-N-471 -- 漏报MissingSynchronizer(场景与CDC-GEN-N-470一致)
+c.CDC-GEN-N-474 -- ecdc误报ChyAcSyncMultiTimes
+d.CDC-GEN-N-475 -- 漏报SetupDataTiedToConst
+e.CDC-GEN-N-477 -- 漏报SetupDataTiedToConst
+3.协助RD查看crash的堆栈信息"
+
 
 
 
 
 JR：
+"JR
+今日分析msg数：67
+今日发现issue数：
+今日回传case数：
+日报：
+1.上周请焕东把Hi18XXE TOP_LGC中因为ECDC综合出了不可综合module里的电路而SG未综合出导致误报常值推断的问题，用ECDC生成的netlist去跑LEC未通过，这个问题提的issue为CDC-GEN-N-452，今天又请焕东把CDC-GEN-N-452的case用ECDC生成的netlist去跑LEC，结果也是不通过，所以不能用LEC去证明ECDC推的常值是正确的，所以CDC-GEN-N-452需要新的差异；
+2.3.7门禁builtin新增的误报漏报都是因为SetupClkPropagated报告的格式变了导致脚本未匹配上，已反馈给心雨；
+3.由于今天的包跑case会crash，所以今天分析不了门禁新增的误报漏报；
+4.分析1813E TOP_LOG的ar误报漏报，reset_sync02和reset_sync04的漏报分析完成，目前分析到的都是差异：Diff74,Diff85,Diff191"
 
 
 
 CXY：
 "CXY
-今日分析msg数：
-今日发现issue数：
+今日分析msg数：34
+今日发现issue数：1
 今日回传case数：
 日报：
-1.和王涵一起修复diff59会将sync和unsync匹配到一起的bug，在门禁和泛化case上验证，bug修复完成
-2.对于source或者dest是black-box，并且约束的时钟为虚拟时钟的情况，sg报告时会将source或dest的时钟加上black-box的instance信息，enno不会，同时高版本VC也不会。修改脚本对于ac的list的处理，对于上述情况将sg的时钟信息中的black-box的instance信息去掉。修改完成
-3.工具修改了结构体的报法，builtin部分对比脚本需要适配。适配完成，代码已回传"
-
+1.发现03_07号的工具中SetupClkPropagated对于同一个domain约束了两个时钟的情况，工具报告的message格式发生了改变。导致builtin出现相关新增，修改脚本，适配新的格式。脚本修复完成
+2.发现10号的包gui界面打开后就会crash，已提issue
+3.修复新泛化Hi18XXE/NFI_PHYG_TOP上发现的Clock_glitch05解析上的脚本bug。代码在门禁、Hi18XXE/NFI_PHYG_TOP测试通过，已回传
+4.分析Hi1813/NFI_PHYG_TOP的ac部分34条"
 
 
 CJR：
@@ -63,18 +89,39 @@ CJR：
 今日发现issue数：
 今日回传case数：
 日报：
-1.分析zq新包改进gui及conv net在五组射频上的表现：
-1.1经典3拍，依旧存在当depth深度较深时，qualifier和conv net之间会断的问题（容器存储上限设置）。
-1.2 两拍情况下，gui显示两个qualifier汇聚fanout后接到mux的input pin的路线，实际为input及sel端。
-1.3 cfg12，gui仅显示了其中一个qualifier到conv net的电路，而另一个qualifier到conv net的电路画不出来。
-上述问题均反馈研发，待使用新修复包验证。
-2.验证depth的bug修复情况，其中一个bug修复完成。
-3.分析新泛化的SetupRstInferred的漏报误报。"
+1.跑两拍及cfg12射频验gui修复情况：mux data input修复完成；
+2.分析分析新泛化FE_TSS的SetupRstInferred的漏报误报
+2.1 CDC-GEN-N-464（6条）复现回传：SG报了data_temp为derived同步复位，ECDC没有报data_temp为复位；且误报了data_temp1为derived同步复位。
+2.2 CDC-GEN-N-466（4条）：SG报了同步置位复位，ECDC没有报，可能是SG bug，从电路中没有定位到同步复位置位的点。
+2.3 CDC-GEN-N-355（6条）：复位推导太深导致crash问题，标记6条。
+2.4 CDC-GEN-N-469(1条)：复现小case存在crash。结果：在家里无法复现，研发定位到为浏览器的问题（新功能）。
+2.5 CDC-GEN-N-476（2条）复现回传：漏报derived及primary reset。"
 
 
 TZB：
+"TZB
+今日分析msg数：26
+今日发现issue数：
+今日回传case数：
+日报：
+1.自己红区账号已经下来，配置环境，熟悉环境。
+2.修改上周参数测试报告内容，并填写自建case完成情况
+3、分析HIPHY_SUB26条messge ,都是属于行号差异"
+
+"TZQ
+今日分析msg数：10
+今日发现issue数：
+今日回传case数：
+日报：1.熟悉泛化case的运行和分析                                         2.分析NFI_PHYG10条message，其中有9条为差异Diff75，另1条为Diff18                      3.更新inner参数测试报告"
 
 SYH：
+"SYH
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.协助冯敏查看419/455，将SG设置infer_enabled_flop为false后查看两issue的对比结果。419确认为Diff171,455分析时被CDC-GEN-N-gui-448问题block住，等待开发修改
+2.编写cdc.ar_sync_filter_unused_synchronizer测试报告，xmind等    "
 
 MCH：
 
