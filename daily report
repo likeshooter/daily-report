@@ -4,12 +4,12 @@ YYH：
 
 XLL：
 "XLL
-今日分析msg数：29
+今日分析msg数：
 今日发现issue数：
 今日回传case数：
-日报：1.单独写一个脚本调用统计Diff和Issue的脚本和生成各种数据的脚本，实现了可单独跑某个case、某批case和所有新泛化case的数据，也可以在run完比对脚本后接着做统计。测试后发现还有bug，有些case的数据没有统计到，接着进行定位和修复。
-2.用冯敏的测试包run H1813/DDR_SUB，验证issue-CDC_GEN_N_363，验证不通过
-3.分析了TOP_LGC AC的message 29条，全为Diff115"
+日报：1.修复Performance表格里数据展示不完整或有错误项和遗漏项、命令行报syntax error、被除数为0等问题，总计10个bug。
+2.回归了3个已经Developed的issue，CDC-GEN-N-383/352、CDC-gui-3903，均回归通过并已关闭issue"
+
 
 
 
@@ -23,10 +23,10 @@ ZWL：
 今日发现issue数：
 今日回传case数：
 日报：
-1、帮冯敏画CDC-GEN-N-451的图形，并用dbg_is_const和dbg_case_an查看and门的输入输出情况，输入都不为常值，但输出为常值0
-2、跑射频参数cdc.reduce_mux_with_constant_input为false的情况， 结果为ac、ar、builtin没有新增误报漏报，setup新增3条漏报，为差异Diff60；conv新增39条误报漏报，还未分析
-3、跑比对时发现工具在putscommand达到最大量后就无法puts命令的结果---CDC-3950
-4.参加ECDC桃花岛DTS使用说明会议"
+1、跑射频2拍参数cdc.reduce_mux_with_constant_input为false的情况， 结果为ac、ar、builtin没有新增误报漏报，setup新增3条漏报，conv新增2条误报漏报为差异Diff61；3拍中漏报误报的conv部分也都是差异；因此这个参数设为false时，在射频两拍和三拍上都没有问题
+2、分析CDC-GEN-N-327，虽然issue没有develop，但从新跑出来的数据看issue已修复，SG报mux-select sync，我们报RecirculationMux，没有走diff63是因为bit位中间值有常值导致ecdc分bit位报，SG则报了整体的bit[42:0]；因此标记2 pass-const
+3、参加cdc pv讨论会"
+
 
 
 
@@ -39,6 +39,20 @@ LRF：
 
 
 JR：
+"JR
+今日分析msg数：549
+今日发现issue数：2
+今日回传case数：1
+日报：
+1.分析门禁新增误报漏报，普通门禁新增误报漏报分析完成
+ a.ac没有新增误报漏报,
+ b.ar有一条新增漏报是差异Diff179,
+ c.builtin有27条误报漏报：4条漏报是Diff179,4条误报漏报请焕东跑了rtl比netlist的lec，结果是成功的，所以标记为Diff192，8条误报漏报是差异Diff500-handle-built_in-024,还有11条实际是match的，但脚本未match上，已向心雨反馈，还未developed issue：CDC-3941、CDC-3943;
+ d.setup有111条新增误报漏报，4条Diff115,18条Diff134，79条Diff150,11条Diff179，14条Diff192，3条Diff500-built_in-003,issue已清零，CDC-3928->Diff179,CDC-3929->Diff134;
+2.分析门禁cfg1新增误报漏报，门禁cfg1的builtin新增较多，但目前看到的误报漏报和普通门禁builtin里的是一样的；
+3.对于同一个bus的DFF do_0，在SG的modular schematic中会显示为一个sequential block，但在ECDC的modular schematic中是直接把do_0的所有DFF都显示出来，这样modular schematic里的obj很多，看起来不方便，所以建议ECDC也把同一个bus的DFF do_0显示为一个sequential block，如果用户有需要再点击这个sequential block把所有的DFF do_0都显示出来，已提issue：CDC-gui-3951；
+4.在分析中发现，点击ChySameSrcConvExcSeq第二条：TOP/din_ff4[30:0]/q -> TOP/do_0[30]的schematic，工具会crash，已提issue：CDC-3952；
+5.参加CDC PV讨论会"
 
 
 CXY：
@@ -47,56 +61,29 @@ CXY：
 今日发现issue数：
 今日回传case数：
 日报：
-1.和艺豪一起debug对比脚本中有参数没有被及时清空导致射频case跑对比脚本老是出现环境不干净的情况。对比脚本修改完成
-2.在debug Hi18XXE/APP_CORE没有跑出csv结果时，发现脚本运行很慢，发现Diff75 proc代码逻辑有冗余的部分，原来的代码逻辑会把match的部分也走一遍Diff75，并且重复做前面已经做完的对比部分。重写这块逻辑
-3.参加ECDC桃花岛DTS使用说明会议"
+1.新泛化跑对比脚本比较慢的几个case都是涉及Clock_info03b比较多的，修改对比脚本，将Clock_info03b和其他setup msg分开跑。脚本修改完成，正在测试分开跑的效率
+2.将sg的cfg中加入infer_enabled_flop设置为false，重新刷新所有新泛化的log。目前还有Hi18XXE没有全部刷新，其余刷新完成
+3.修改builtin脚本的bug，修改完成
+4.参加cdc pv讨论会"
 
 
 
 CJR：
-"CJR
-今日分析msg数：260
-今日发现issue数：
-今日回传case数：
-日报：
-1.由于conv net的合入5组射频配置的conv数据结果发生变化，新增的误报漏报均属于此情况，均标注为Diff150、Diff1
-2.由于脚本差异diff回退，导致setupbbox的新增均属于Diff115
-3.跑比对生成s_load的tcl文件
-4.跑depth为99的情况下，conv01结果依旧存在误报漏报（v0310）
-5.测试何琴新包v0312，存在crash，无法验证conv情况
-6.参加桃花岛培训讲解会议
-7.和何琦开会，依照其诉求编写门禁csv合并脚本"
 
 
 "TZB
-今日分析msg数：16
-今日发现issue数：1
-今日回传case数：
-日报：
-1、分析HIPHY_SUB的Setup部分16条messge ,其中存在Sg在常值传播中断的情况导致在constrain部分ecdc比sg多，情况与CDC-GEN-N-457相似，csv中已标记为GEN-N-457
-其余差异为Diff158-diff25-setup_port01、Diff185-bug46-setup_port01
-2、分析过程中发现脚边的一个问题，具体问题是在csv中里存在的两条漏报和两条误报，但是他们应该是match的，问题已记录在新泛化脚本问题中
-"
+
 
 
 "TZQ
-今日分析msg数：
+"TZQ
+今日分析msg数：97
 今日发现issue数：
 今日回传case数：
-日报：                         
-1.分析NFI-PHYG的setup部分31条，其中有30条属于漏报SetupClkMuxNotRcvClk,经过分析后，发现当mux的的selsec端没经过约束，有一部分data pin没有接收到clk信号，但mux的输出端最后链接到FF的D pin,SG会报出Clock_info05c，ECDC只会报出一其中的一部。                                 
-2.参加桃花岛DTS使用说明会议"
+日报：                               1.分析NFI_PHYG的setup部分，在分析中发现SetupPortFullyConstrained这条msg如果port为inout，且同时具有data和clock的属性，在被infer为 abstract_port时不会报出domain，但SG会报出导致的不匹配，大致分析有接近100条msg属于这种情况，目前已经复现成功；分析的其余msg都是属于差异Diff124"
 
 SYH：
-"SYH
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：
-1.帮助冯敏看CDC-GEN-N-349/455,CDC-GEN-B-210。
-a.复现349/445问题并提取小case。将小case跑rtl2rtl和rtl2netlist的lec流程。rtl2rtl流程中，verify -constant0 ref:/xxx/方式比对。formal不认为SG报出的DFF为常值0。在rtl2netlist流程中，LEC不等价，但是也不认为SG报出的常值DFF为0.对于此function导致的常值漏报问题，目前需要袁洁评估是否需要创建差异。
-b.CDC-GEN-B-210,rtl2rtl对比结果,formal不认为Enno误报的DFF为常值0
-2.参加桃花岛DTS使用说明会议"
+
 
 MCH：
 
