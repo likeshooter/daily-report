@@ -1,93 +1,47 @@
-ZCH：
-
-YYH：
-
-XLL：
-"XLL
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：1.修复Performance表格里数据展示不完整或有错误项和遗漏项、命令行报syntax error、被除数为0等问题，总计10个bug。
-2.回归了3个已经Developed的issue，CDC-GEN-N-383/352、CDC-gui-3903，均回归通过并已关闭issue"
-
-
-
-
-
-
-HQ：
-
-ZWL：
 "ZWL
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1、跑射频2拍参数cdc.reduce_mux_with_constant_input为false的情况， 结果为ac、ar、builtin没有新增误报漏报，setup新增3条漏报，conv新增2条误报漏报为差异Diff61；3拍中漏报误报的conv部分也都是差异；因此这个参数设为false时，在射频两拍和三拍上都没有问题
-2、分析CDC-GEN-N-327，虽然issue没有develop，但从新跑出来的数据看issue已修复，SG报mux-select sync，我们报RecirculationMux，没有走diff63是因为bit位中间值有常值导致ecdc分bit位报，SG则报了整体的bit[42:0]；因此标记2 pass-const
-3、参加cdc pv讨论会"
-
-
-
-
-
-LRF：
-
-
-
-
-
-
-JR：
-"JR
-今日分析msg数：549
-今日发现issue数：2
+1、参加PV周会
+2、把TSSC_WRAP遗留的问题创建成DTS单；但GEN-N-333这种SG也没有画出完整增量原理图（SG画的增量原理图只有source，没有画出dest）的issue暂时没有提
+3、和冯敏一起看CDC-GEN-N-451的问题点，发现是由于and门的输入值是相反才导致我们会推常值"	"LRF
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："	"JR
+今日分析msg数：169
+今日发现issue数：1
 今日回传case数：1
 日报：
-1.分析门禁新增误报漏报，普通门禁新增误报漏报分析完成
- a.ac没有新增误报漏报,
- b.ar有一条新增漏报是差异Diff179,
- c.builtin有27条误报漏报：4条漏报是Diff179,4条误报漏报请焕东跑了rtl比netlist的lec，结果是成功的，所以标记为Diff192，8条误报漏报是差异Diff500-handle-built_in-024,还有11条实际是match的，但脚本未match上，已向心雨反馈，还未developed issue：CDC-3941、CDC-3943;
- d.setup有111条新增误报漏报，4条Diff115,18条Diff134，79条Diff150,11条Diff179，14条Diff192，3条Diff500-built_in-003,issue已清零，CDC-3928->Diff179,CDC-3929->Diff134;
-2.分析门禁cfg1新增误报漏报，门禁cfg1的builtin新增较多，但目前看到的误报漏报和普通门禁builtin里的是一样的；
-3.对于同一个bus的DFF do_0，在SG的modular schematic中会显示为一个sequential block，但在ECDC的modular schematic中是直接把do_0的所有DFF都显示出来，这样modular schematic里的obj很多，看起来不方便，所以建议ECDC也把同一个bus的DFF do_0显示为一个sequential block，如果用户有需要再点击这个sequential block把所有的DFF do_0都显示出来，已提issue：CDC-gui-3951；
-4.在分析中发现，点击ChySameSrcConvExcSeq第二条：TOP/din_ff4[30:0]/q -> TOP/do_0[30]的schematic，工具会crash，已提issue：CDC-3952；
-5.参加CDC PV讨论会"
-
-
-CXY：
-"CXY
+1.分析3.12门禁cfg1和cfg2的误报漏报，由于脚本修复了bug，所以门禁cfg1和cfg2的setup和builtin新增了一共一千多条未标记但和普通门禁一样的误报漏报，为了提高效率，就请心雨用我分析好的普通门禁的csv去反标了门禁cfg1和cfg2的csv，反标后只剩几十条误报漏报未标记，都已分析完成；
+2.在分析门禁cfg2的setup发现一个issue，对于in1,SG报的是fully constrained，但ECDC报的是SetupPortIgnoredUnconnected，已提issue：DTS2025031433297；
+3.Hi18XXE TOP_LGC提的还未developed的issue，都已通过DTS提单"	"CXY
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.新泛化跑对比脚本比较慢的几个case都是涉及Clock_info03b比较多的，修改对比脚本，将Clock_info03b和其他setup msg分开跑。脚本修改完成，正在测试分开跑的效率
-2.将sg的cfg中加入infer_enabled_flop设置为false，重新刷新所有新泛化的log。目前还有Hi18XXE没有全部刷新，其余刷新完成
-3.修改builtin脚本的bug，修改完成
-4.参加cdc pv讨论会"
-
-
-
-CJR：
-
-
-"TZB
-
-
-
-"TZQ
-"TZQ
-今日分析msg数：97
+1.参加PV周会
+2.帮蒋蕊用普通门禁结果反标门禁cfg1，cfg2的csv，提高反标效率
+3.debug 门禁builtin时钟传播数据增长情况，发现是对于同一个domian有两个时钟的情况，工具报告格式由之前的分开写变成了合并写的情况，因为builtin的大部分obj在design中没有，或者是故意写错，所以这部分脚本大部分情况都是按文本处理的，没有用工具的get命令处理，所以导致现在的情况脚本匹配不上。修改脚本适配工具的变化
+4.发现Clock_info03b的有个diff proc的逻辑会有循环嵌套的情况，导致脚本变慢。修改该proc逻辑，脚本修改完成，脚本结果以及性能测试中"	"CJR
+今日分析msg数：
 今日发现issue数：
 今日回传case数：
-日报：                               1.分析NFI_PHYG的setup部分，在分析中发现SetupPortFullyConstrained这条msg如果port为inout，且同时具有data和clock的属性，在被infer为 abstract_port时不会报出domain，但SG会报出导致的不匹配，大致分析有接近100条msg属于这种情况，目前已经复现成功；分析的其余msg都是属于差异Diff124"
-
-SYH：
-
-
-MCH：
-
-
-
-
-
+日报："	"TZQ
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："	"TZB
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："	"SYH
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.和焕东一起定位DDR_SUB中Enno报BBox的原因：被多次实例化的module，uniquify的时候，只有一个module被正确uniquify，其他的实例化都被综合为BBox。CDC-GEN-N-485
+2.提取CDC-GEN-N-455/349需要的小case给PE，用于新Diff的佐证
+3.和RD复现并研究CDC-GEN-N-408/382。待使用冯敏的DEBUG执行。
+4.完善DTS遗留问题提单，19个遗留问题中17个流程置xianli处，1个性能issue因为无法复现被block（35534），一个issue无内容(36788)"
