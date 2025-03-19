@@ -1,66 +1,78 @@
 "XLL
 今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：1.测试创建字母相同仅大小写不同的情况下，给port用abstract_port做约束，检查SG对应端口net上的时钟，时钟是大小写敏感的；但如果时钟是虚拟时钟，则大小写不敏感，需要inhouse在sg的新版本上测试一下，给定差异号
+2.实现来自数据统计的新需求，均已实现
+1）实现如果比对正在run，取日期倒数第二新的csv
+2）实现统计分出来的dataTieToConst的csv表
+3）实现根据csv文件名中的日期选择最新的csv来统计"	
+
+"ZWL
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1、复现CDC-GEN-N-349的case，并提单DTS系统DTS2025031821822
+2、验证 BCP_TSS剩下的issue，只有CDC-GEN-N-465 在冯敏的分支包中是修复的，剩下都提了DTS单
+3、在红区替换CDC编号为DTS编号，共替换39个编号；并把对应关系创建到家里环境
+4、写分享Ar的ppt，完成20%"
+
+"JR
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.分析完成普通门禁新增误报漏报，分析过程中发现CDC-3832还未修复，已reopen，ac、setup、builtin的误报漏报都受CDC-3832的影响，其中ac和builtin有一条message是CDC-3832，setup有44条message是CDC-3832，ar新增的误报漏报都是差异；
+2.分析完成新参数门禁新增误报漏报，因为新参数门禁大部分新增的误报漏报和普通门禁新增的误报漏报一样，所以把普通门禁分析完成后，就请心雨用分析完成的普通门禁的csv去merge新参数门禁的csv，merge完成后就只剩几十条未标记的误报漏报，分析完成后发现，新参数门禁和普通门禁一样只新增了一个issue：CDC-3832，门禁cfg2的setup还有一个issue是：DTS2025031433297，其他都是差异；
+3.在原理图中右键一个instance，点击open in source打开一个有两万多行的Verilog文件并定位到某一行，这个Verilog文件中显示出来的代码的字体颜色是黑色的，背景是灰色的，但是一直往上翻，代码的字体颜色和背景就正常了，代码的字体颜色会有不同的高亮，背景是白色的，再往下翻，原本是黑色的字体颜色变正常了，有不同颜色的高亮，背景也从灰色变成了白色,正常现象应该是在原理图中点击open in source打开这个Verilog文件，字体颜色就有不同的高亮，背景也是白色的，已提issue：CDC-gui-3958"	
+
+"CXY
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.整理最近在现场修改的对比脚本内容，回传给家里
+2.配置sg的cfg，增加解析param关键字synopsys。重新刷新新泛化的sg log，对应修改ecdc cfg。
+3.刷新射频case的sg rpt。根据刷新后的rpt，重新解析s_list。保存s_list
+4.帮蒋蕊merge门禁cfg1，cfg2的全部message结果，帮助减少分析任务
+5.在新泛化刷新sg的log以及对应修改ecdc的cfg之后，跑Hi813/NFI_PHYG_TOP的对比结果，对比脚本以及对比环境没有问题，但是将setupDateTiedToConst独立出来之后，何琦的脚本在处理统计数据以及对外传数据进行加密的过程中存在报错，预计明天修复这部分问题"	
+
+"CJR
+今日分析msg数：25
+今日发现issue数：
+今日回传case数：
+日报：
+1.修改rungen脚本，及门禁数据表格合并脚本
+2.跑HIS_TOP、FE_TSS比对
+3.Ac_conv01的conv net存在随机问题，ECDC会报在同一个bus信号的不同比特位上，已反馈子奇，可能是symbol的原因
+4.由于builtin脚本代码改动，导致cfg1_2 builtin原来能走的diff走不通了，标注为Diff500-line no-builtin-053
+5.提单DTS2025031713776（CDC-GEN-N-467）
+6.分析旧表FE_TSS的setupdatatiedtoconst的漏报问题：
+6.1：当mux的输入端都为常值时，ECDC没有将mux output推断出常值，导致漏报
+6.2：mux的data端连接寄存器回路输出，另一端连接常值，mux的输出没有推断为常值。正在复现中。
+
+"	"TZQ
+今日分析msg数：30
+今日发现issue数：
+今日回传case数：
+日报：                             1.分析NFI_PHYG的setup部分30条，其中24条属于Diff218，另外的4条属于，当inout的port作为out时连接常值，ECDC在SetupPortFullyConstrained中报的是set_case_analysis(propagate),SG报的是infer abstract port           2.将USBC的遗留问题创建为DTS单"	
+
+"TZB
+今日分析msg数：12
 今日发现issue数：1
-今日回传case数：1
-日报：1.修复统计Diff和issue的脚本问题，涉及4个,均已修复，需要inhouse修改并同步的脚本已回传；Ar的csv错列问题也已经反馈给艺豪
-1）diff_basis列的DiffId如果写了空格，就出现了数据丢失的情况，因为通过空格切割数据为DiffId和对应的数量，如果DiffId本身存在空格，切割后数据格式就不匹配，导致了数据丢失；
-2）统计NFI_PHYG_TOP的整体误报漏报时，因为Ar的obj中带有逗号，导致了csv的列比正常数据多了一列，统计脚本报错并停止了运行。
-3）统计门禁cfg2的数据是报错，经定位发现是builtin文件本身没有title导致，筛选数据需要基于title操作，没有title就报错了，但报的python本身的错，不方便看懂和定位问题，所以用脚本处理了，现在能清晰报出问题
-4）处理没有拿到文件的情况，如果没有拿到，直接continue，不往下走
-2.提了一个gui的bug，CDC-gui-3954，主要针对crossing path的线条颜色，应该与sg保持一致，用一种颜色标识"	"HQ
-今日分析msg数：
-今日发现issue数：
 今日回传case数：
-日报："	"ZWL
-今日分析msg数：
+日报：
+1、分析HIPHY_SUB的Setup部分12条messge ,大部分差异为Diff158-diff25-setup_port01、Diff166-bug42-filter_names、pass_const
+2、分析过程中发现setupbboxfullyconstrained误报提取小case完成，尝试复现中
+"
+
+"SYH
+今日分析msg数：198
 今日发现issue数：
 今日回传case数：
 日报：
-1、写DTS编号替换CDC编号，并统计替换信息的脚本，已完成
-2、提遗留issue的DTS问题单，并帮冯敏验证这个模块下漏报常值的issue CDC-GEN-N-345，未修复，还剩下ff[27,45]未报常值；其中ff[9]/d是常值，但是ff[9]/q不是常值，才导致漏报ff[27,45]；ff[9，27,45]是串联关系"	"LRF
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报："	"JR
-今日分析msg数：478
-今日发现issue数：
-今日回传case数：
-日报：
-1.分析3.14门禁新增的误报漏报，主要是由于修复了CDC-3943，ECDC报了QualNameInvalid会继续检查，但SG报了
-SGDC_qualifier01就不继续检查，导致ECDC和SG走和停不一致，从而新增误报漏报，和高强川皓线上视频讨论后，认为可以标记为Diff500-diff-built_in-017;
-2.分析3.17门禁新增误报漏报，目前分析到的都是脚本问题，已向心雨反馈；
-3.分析1813E TOP_LOG中ar误报漏报，分析到的arunsync的误报是因为ECDC和SG综合不同，ECDC综合出的是由与门和或门组合成的功能mux，而SG综合出的是物理mux，物理mux的选择端在SG中不会推reset，所以ECDC比SG多报了arunsync，是差异Diff51
-"	"CXY
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：
-1.修改新泛化的对比脚本，适配新泛化最近刷新的sg的log环境，已经将setupDateTiedToConst独立出setup以提升效率
-2.和何琦一起修改run脚本，适配上述的sg rpt更新以及对比脚本更新
-3.继续定位对比脚本对比常值部分，效率低的问题。发现常值的三个diff 171 170 87运行时间占常值完整对比时间的57%左右。目前发现的原因是：我们工具常值误报的数量比较大，大量误报都需要进入这些常值diff，在脚本中花费时间长。目前的应对策略是：因为新泛化中常值的误报后续会统一用lec去判断，pv目前不进行分析，所以可以暂时将这三个diff注释掉，以提升脚本速度
-4.在debug脚本速度慢的问题时，发现writeSetupMsgLine proc在新泛化中比较占时间，写一条csv内容大约需要3秒，计划下一步尝试优化这部分性能
-5.builtin对比脚本中加入了get命令去获得obj，导致脚本出现一些新的bug，正在修复中。bug原因主要是：1）有一部分门禁case的domain和sgdc中的domian层次不完全一致，之前是用文本处理的方式规避掉了，现在需要在脚本中用get命令去处理obj，导致匹配不上。已经修改完这部分case的sdc文件。2）换成get方式去处理obj之后，builtin的reformat操作也需要用setup，ac那套逻辑，这部分内容需要重新适配一下，脚本正在适配中"	"CJR
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：
-1.跑FE_TSS比对
-2.编写门禁数据回传表格的merge脚本，实现自动抓取指定日期的数据，通过调用count脚本生成加密后的4张表格然后进行表格合并，及调用刘玲姐的diff脚本生成统计数据；及将三组门禁配置数据结果合并为一张xlsx。
-3.由于参数更改导致的五组射频数据的新增都属于Diff61"	"TZQ
-今日分析msg数：126
-今日发现issue数：1
-今日回传case数：
-日报：                               1.分析NFI_PHYG的setup部分126条，其中有120条属于DTS2025031708078，另外的六条属于，当inout的port作为out时连接常值，ECDC在SetupPortFullyConstrained中报的是set_case_analysis(propagate),SG报的是infer abstract port             2.提了一个issue：DTS2025031708078，在SetupPortFullyConstrained这个rule中，若port为inout且同时具有data和clock的属性，当该port的constraint为infer abstract port时，SG会报出infer data domain，ECDC不会报"	"TZB
-今日分析msg数：20
-今日发现issue数：1
-今日回传case数：
-日报：
-1、分析HIPHY_SUB的Setup部分20条messge ,大部分差异为Diff158-diff25-setup_port01、Diff166-bug42-filter_names、Diff166-bug42-filter_names、Diff166-bug42-filter_names
-2、分析过程中发现setupclknetundefine误报，正在提取小case复现中
-"	"SYH
-今日分析msg数：54
-今日发现issue数：1
-今日回传case数：
-日报：
-1.将NAU_CAU_WRAP/DDR_SUB/BDP的遗留问题提DTS单，目前均已提交完毕
-2.分析BDP的Ar误报漏报（100%），其中31个是Diff73，剩余22个msg新提了一个issue,DTS2025031734412:ArCtrl信号经三拍同步后驱动DFF的PRE pin，SG不报ArsyncCtrlPath，导致Enno误报"
+1.分析BDP和NAU_CAU_WRAP中部分遗漏未标记的msg，目前BDP和NAU_CAU_WRAP均已分析完成
+2.分析18xxE中DDR_SUB的反弹msg共198条，Ac/Ar/Setup均有反弹，setup内均为脚本问题，ac中大多是Diff63/Diff59，少部分为Diff8和Diff157。ar中主要是已发现的issue CDC-3932.其余为常值导致的msg误报。DDR_SUB分析已完成
+3.使用rtl2netlist方法协助验证CDC-GEN-N-344，正在提取小case
+4、修改DTS单中信息敏感的部分。"
