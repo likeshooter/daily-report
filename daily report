@@ -51,12 +51,15 @@
 6.分析旧表FE_TSS的setupdatatiedtoconst的漏报问题：
 6.1：当mux的输入端都为常值时，ECDC没有将mux output推断出常值，导致漏报
 6.2：mux的data端连接寄存器回路输出，另一端连接常值，mux的输出没有推断为常值。正在复现中。
+"	
 
-"	"TZQ
+"TZQ
 今日分析msg数：30
 今日发现issue数：
 今日回传case数：
-日报：                             1.分析NFI_PHYG的setup部分30条，其中24条属于Diff218，另外的4条属于，当inout的port作为out时连接常值，ECDC在SetupPortFullyConstrained中报的是set_case_analysis(propagate),SG报的是infer abstract port           2.将USBC的遗留问题创建为DTS单"	
+日报：                            
+1.分析NFI_PHYG的setup部分30条，其中24条属于Diff218，另外的4条属于，当inout的port作为out时连接常值，ECDC在SetupPortFullyConstrained中报的是set_case_analysis(propagate),SG报的是infer abstract port           
+2.将USBC的遗留问题创建为DTS单"	
 
 "TZB
 今日分析msg数：12
@@ -64,8 +67,7 @@
 今日回传case数：
 日报：
 1、分析HIPHY_SUB的Setup部分12条messge ,大部分差异为Diff158-diff25-setup_port01、Diff166-bug42-filter_names、pass_const
-2、分析过程中发现setupbboxfullyconstrained误报提取小case完成，尝试复现中
-"
+2、分析过程中发现setupbboxfullyconstrained误报提取小case完成，尝试复现中"
 
 "SYH
 今日分析msg数：198
