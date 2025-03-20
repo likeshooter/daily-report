@@ -2,79 +2,68 @@
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
-日报：1.测试创建字母相同仅大小写不同的情况下，给port用abstract_port做约束，检查SG对应端口net上的时钟，时钟是大小写敏感的；但如果时钟是虚拟时钟，则大小写不敏感，需要inhouse在sg的新版本上测试一下，给定差异号
-2.实现来自数据统计的新需求，均已实现
-1）实现如果比对正在run，取日期倒数第二新的csv
-2）实现统计分出来的dataTieToConst的csv表
-3）实现根据csv文件名中的日期选择最新的csv来统计"	
+日报：1.run 29个新泛化case的数据，并修复遇到的bug
+2.确认一个CDC-GEN-N-458中clock信号经过ff之后依然保留了clock属性的问题，确认其为差异diff3-mux_and"	
 
 "ZWL
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1、复现CDC-GEN-N-349的case，并提单DTS系统DTS2025031821822
-2、验证 BCP_TSS剩下的issue，只有CDC-GEN-N-465 在冯敏的分支包中是修复的，剩下都提了DTS单
-3、在红区替换CDC编号为DTS编号，共替换39个编号；并把对应关系创建到家里环境
-4、写分享Ar的ppt，完成20%"
+1、跑TSSC_WRAP修改参数后最新的csv，其中新增漏报常值，需分析
+2、帮冯敏确定 CDC-GEN-N-345的问题点，并使用冯敏的debug新包验证，已修复
+3、写分享Ar的ppt，完成50%"
 
 "JR
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
+今日分析msg数：987
+今日发现issue数：1
+今日回传case数：1
 日报：
-1.分析完成普通门禁新增误报漏报，分析过程中发现CDC-3832还未修复，已reopen，ac、setup、builtin的误报漏报都受CDC-3832的影响，其中ac和builtin有一条message是CDC-3832，setup有44条message是CDC-3832，ar新增的误报漏报都是差异；
-2.分析完成新参数门禁新增误报漏报，因为新参数门禁大部分新增的误报漏报和普通门禁新增的误报漏报一样，所以把普通门禁分析完成后，就请心雨用分析完成的普通门禁的csv去merge新参数门禁的csv，merge完成后就只剩几十条未标记的误报漏报，分析完成后发现，新参数门禁和普通门禁一样只新增了一个issue：CDC-3832，门禁cfg2的setup还有一个issue是：DTS2025031433297，其他都是差异；
-3.在原理图中右键一个instance，点击open in source打开一个有两万多行的Verilog文件并定位到某一行，这个Verilog文件中显示出来的代码的字体颜色是黑色的，背景是灰色的，但是一直往上翻，代码的字体颜色和背景就正常了，代码的字体颜色会有不同的高亮，背景是白色的，再往下翻，原本是黑色的字体颜色变正常了，有不同颜色的高亮，背景也从灰色变成了白色,正常现象应该是在原理图中点击open in source打开这个Verilog文件，字体颜色就有不同的高亮，背景也是白色的，已提issue：CDC-gui-3958"	
+1.分析1813E TOP_LOG中ar误报，arunsync的误报分析完成，分析到的arunsync的误报是因为ECDC和SG综合不同，ECDC综合出的是由与门和或门组合成的功能mux，而SG综合出的是物理mux，物理mux的选择端不会推reset，所以ECDC比SG多报了arunsync，是差异Diff51；
+2.分析3.19门禁新增误报漏报，普通门禁ac的新增误报漏报是CDC-2657反弹导致的，普通门禁builtin的新增误报漏报是因为ECDC误报CmdFailedClockObjNotFound，导致TOP/bloak1.U_TOP1/bloak2.U_TOP2/clk未被成功约束为clock，已提issue：DTS2025031924817，新参数门禁ac新增误报漏报和普通门禁一样，也是CDC-2657反弹导致的，新参数门禁其他新增误报漏报都是差异；
+3.和蒋旺视频会议debug CDC-GEN-N-364，蒋旺根据debug的现象复现出了case，发现是代码有逻辑错误，把mux也当成了优先级reset"	
 
 "CXY
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：
-1.整理最近在现场修改的对比脚本内容，回传给家里
-2.配置sg的cfg，增加解析param关键字synopsys。重新刷新新泛化的sg log，对应修改ecdc cfg。
-3.刷新射频case的sg rpt。根据刷新后的rpt，重新解析s_list。保存s_list
-4.帮蒋蕊merge门禁cfg1，cfg2的全部message结果，帮助减少分析任务
-5.在新泛化刷新sg的log以及对应修改ecdc的cfg之后，跑Hi813/NFI_PHYG_TOP的对比结果，对比脚本以及对比环境没有问题，但是将setupDateTiedToConst独立出来之后，何琦的脚本在处理统计数据以及对外传数据进行加密的过程中存在报错，预计明天修复这部分问题"	
-
-"CJR
-今日分析msg数：25
-今日发现issue数：
-今日回传case数：
-日报：
-1.修改rungen脚本，及门禁数据表格合并脚本
-2.跑HIS_TOP、FE_TSS比对
-3.Ac_conv01的conv net存在随机问题，ECDC会报在同一个bus信号的不同比特位上，已反馈子奇，可能是symbol的原因
-4.由于builtin脚本代码改动，导致cfg1_2 builtin原来能走的diff走不通了，标注为Diff500-line no-builtin-053
-5.提单DTS2025031713776（CDC-GEN-N-467）
-6.分析旧表FE_TSS的setupdatatiedtoconst的漏报问题：
-6.1：当mux的输入端都为常值时，ECDC没有将mux output推断出常值，导致漏报
-6.2：mux的data端连接寄存器回路输出，另一端连接常值，mux的输出没有推断为常值。正在复现中。
-"	
-
-"TZQ
-今日分析msg数：30
-今日发现issue数：
-今日回传case数：
-日报：                            
-1.分析NFI_PHYG的setup部分30条，其中24条属于Diff218，另外的4条属于，当inout的port作为out时连接常值，ECDC在SetupPortFullyConstrained中报的是set_case_analysis(propagate),SG报的是infer abstract port           
-2.将USBC的遗留问题创建为DTS单"	
-
-"TZB
-今日分析msg数：12
+今日分析msg数：34
 今日发现issue数：1
 今日回传case数：
 日报：
-1、分析HIPHY_SUB的Setup部分12条messge ,大部分差异为Diff158-diff25-setup_port01、Diff166-bug42-filter_names、pass_const
-2、分析过程中发现setupbboxfullyconstrained误报提取小case完成，尝试复现中"
+1.和何琦一起修改现场run脚本，修复昨天发现发问题，适配新泛化的环境。脚本修复完成
+2.将新泛化setupDataTiedToConst和setup系列msg分开跑脚本，但是为了方便分析将csv还是cat到同一个文件，并且对于新泛化case中的setupDataTieToConst的误报都标记为2，pass-const，以排除对数据的影响
+3.分析Hi813/NFI_PHYG_TOP模块，source到dest经过两个mux构成的环路，source和qualifer分别接到mux的sel口，我们工具报sync RecirculationMux，三方工具报unsync qualifier not found。通过构建小case复现，发现sg在小case中也报的sync，和正前哥一起确认，认为是sg的bug，已提issue回家"	
 
-"SYH
-今日分析msg数：198
+"CJR
+今日分析msg数：236
+今日发现issue数：
+今日回传case数：
+日报：1.分析FE_TSS误报漏报，跑最新比对
+1.1 分析blackbox误报漏报属于差异Diff115版本差异（54条）
+1.2 ac_conv02误报漏报属于conv net不同，标记为Diff150(149条)
+1.3 Ac_conv01存在的3条漏报属于Diff156，所有的qualifier都汇聚于mux的data input（3条）。
+1.4 SetupPortFullyConstrained误报漏报，ECDC常值优化逻辑正确。Diff172（2条）,Diff171（16条）
+1.5 SetupRstInferred误报漏报：A:对于input信号（xfer_pwrite）经过两个触发器后作为Q1触发器的同步复位信号，ECDC报了input信号（xfer_pwrite）为primary同步复位，SG没报。(14条)"	
+
+"TZQ
+今日分析msg数：34
+今日发现issue数：
+今日回传case数：
+日报：                              
+1.分析DME_WRAP的Ar部分34条，其中有32条属于Diff73-diff12-ar,1条属于Diff74-diff13-reset_sync04。Ar还剩余一条，目前分析是当一个信号同时具有AsyncClear和AsyncSet属性并且拥有3个clock domains时，在同步路径中ECDC会报ArSyncCtrlPath，SG不会"	
+
+"TZB
+今日分析msg数：19
 今日发现issue数：
 今日回传case数：
 日报：
-1.分析BDP和NAU_CAU_WRAP中部分遗漏未标记的msg，目前BDP和NAU_CAU_WRAP均已分析完成
-2.分析18xxE中DDR_SUB的反弹msg共198条，Ac/Ar/Setup均有反弹，setup内均为脚本问题，ac中大多是Diff63/Diff59，少部分为Diff8和Diff157。ar中主要是已发现的issue CDC-3932.其余为常值导致的msg误报。DDR_SUB分析已完成
-3.使用rtl2netlist方法协助验证CDC-GEN-N-344，正在提取小case
-4、修改DTS单中信息敏感的部分。"
+1.分析DME_WRAP的Ac部分9条，都是Diff59-report4-multi_bits_merge
+2.分析HIPHY_SUB的Setup部分10条messge ,差异为Diff158-diff25-setup_port01
+3.已经复现昨天发现的setupbboxfullyconstrained误报问题，提了DTS单DTS2025031926656"	
+
+"SYH
+今日分析msg数：134
+今日发现issue数：1
+今日回传case数：
+日报：
+1.分析18XXE的DME_WRAP的setup134条，主要涉及的issue为DTS2025
+031725937，DTS2025031722089，2025031721196，DTS2025030927363，涉及的Diff为Diff171，还有少部分的Pass-const
+2.新提一个DTS2025031927363:Enno误报SetupRstInferred。if（A）-else if（B）-else的结构。代码中else if（B）后才有复位，B应为复位信号，但是Enno报的是A为复位信号。"
