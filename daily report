@@ -2,68 +2,58 @@
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
-日报：1.run 29个新泛化case的数据，并修复遇到的bug
-2.确认一个CDC-GEN-N-458中clock信号经过ff之后依然保留了clock属性的问题，确认其为差异diff3-mux_and"	
+日报：1.分析TOP_LGC Ac的message 180条，主要为差异Diff115，其余为脚本issue CDC-GEN-N-488"	
 
 "ZWL
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1、跑TSSC_WRAP修改参数后最新的csv，其中新增漏报常值，需分析
-2、帮冯敏确定 CDC-GEN-N-345的问题点，并使用冯敏的debug新包验证，已修复
-3、写分享Ar的ppt，完成50%"
+1、参加周会
+2、写Ar分享ppt，已完成
 
 "JR
-今日分析msg数：987
+今日分析msg数：98
 今日发现issue数：1
-今日回传case数：1
+今日回传case数：
 日报：
-1.分析1813E TOP_LOG中ar误报，arunsync的误报分析完成，分析到的arunsync的误报是因为ECDC和SG综合不同，ECDC综合出的是由与门和或门组合成的功能mux，而SG综合出的是物理mux，物理mux的选择端不会推reset，所以ECDC比SG多报了arunsync，是差异Diff51；
-2.分析3.19门禁新增误报漏报，普通门禁ac的新增误报漏报是CDC-2657反弹导致的，普通门禁builtin的新增误报漏报是因为ECDC误报CmdFailedClockObjNotFound，导致TOP/bloak1.U_TOP1/bloak2.U_TOP2/clk未被成功约束为clock，已提issue：DTS2025031924817，新参数门禁ac新增误报漏报和普通门禁一样，也是CDC-2657反弹导致的，新参数门禁其他新增误报漏报都是差异；
-3.和蒋旺视频会议debug CDC-GEN-N-364，蒋旺根据debug的现象复现出了case，发现是代码有逻辑错误，把mux也当成了优先级reset"	
+1.分析1813E TOP_LOG中setup的误报漏报，目前分析到的都是差异；
+2.分析3.21门禁builtin新增的误报漏报，新增的误报漏报都是issue，分别是CDC-2361和DTS2025032119891，CDC-2361是之前提过的，但是现场CDC-2361这个issue的case之前修改了sdc，所以家里的sdc和现场的不一样，已和家里对齐，且CDC-2361已reopen；
+3.参加周会"	
 
 "CXY
-今日分析msg数：34
-今日发现issue数：1
+今日分析msg数：
+今日发现issue数：
 今日回传case数：
 日报：
-1.和何琦一起修改现场run脚本，修复昨天发现发问题，适配新泛化的环境。脚本修复完成
-2.将新泛化setupDataTiedToConst和setup系列msg分开跑脚本，但是为了方便分析将csv还是cat到同一个文件，并且对于新泛化case中的setupDataTieToConst的误报都标记为2，pass-const，以排除对数据的影响
-3.分析Hi813/NFI_PHYG_TOP模块，source到dest经过两个mux构成的环路，source和qualifer分别接到mux的sel口，我们工具报sync RecirculationMux，三方工具报unsync qualifier not found。通过构建小case复现，发现sg在小case中也报的sync，和正前哥一起确认，认为是sg的bug，已提issue回家"	
+1.验证王涵的proc_sgdc和苏黎的分支包的适配情况。发现proc_sgdc转换时对于有black-box层次的信号，转换有误，已经反馈给王涵
+2.检查新泛化29个case的数据和csv情况。发现有些case的数据比较老，已经有新的csv了，但是统计数据没有同步更新。Hi18XXE的APP_CORE有统计数据但是没有csv。统计数据的问题已经反馈给何琦。对于没有csv的两个case：Hi18XXE/HIS_TOP,Hi18XXE/APP_CORE跑对比脚本。预计周一跑完结果
+3.debug新泛化上的脚本问题，ac对比中对于source或dest是black-box的情况，source和dest的时钟三方报的和我们的时钟格式上不一致，三方工具会在时钟名前加上black_box的例化名。导致脚本匹配不上。脚本适配中"	
 
 "CJR
-今日分析msg数：236
+今日分析msg数：
 今日发现issue数：
 今日回传case数：
-日报：1.分析FE_TSS误报漏报，跑最新比对
-1.1 分析blackbox误报漏报属于差异Diff115版本差异（54条）
-1.2 ac_conv02误报漏报属于conv net不同，标记为Diff150(149条)
-1.3 Ac_conv01存在的3条漏报属于Diff156，所有的qualifier都汇聚于mux的data input（3条）。
-1.4 SetupPortFullyConstrained误报漏报，ECDC常值优化逻辑正确。Diff172（2条）,Diff171（16条）
-1.5 SetupRstInferred误报漏报：A:对于input信号（xfer_pwrite）经过两个触发器后作为Q1触发器的同步复位信号，ECDC报了input信号（xfer_pwrite）为primary同步复位，SG没报。(14条)"	
+日报："	
 
 "TZQ
-今日分析msg数：34
-今日发现issue数：
-今日回传case数：
-日报：                              
-1.分析DME_WRAP的Ar部分34条，其中有32条属于Diff73-diff12-ar,1条属于Diff74-diff13-reset_sync04。Ar还剩余一条，目前分析是当一个信号同时具有AsyncClear和AsyncSet属性并且拥有3个clock domains时，在同步路径中ECDC会报ArSyncCtrlPath，SG不会"	
+今日分析msg数：481
+今日发现issue数：1
+今日回传case数：1
+日报：                               
+1.参加PV周会                        
+2.分析NFI_PYHG的setup部分10条，其中8条为Diff182,2条为DTS2025032118772:当一个inout信号通过一层层例化传递下去后悬空时，ECDC报的SetupPortFullyConstrained(infer abstract port)，但SG报的constraint not required(hanging)   
+2.分析NFI_PYHG的Ac部分全为Diff8差异                             
+3.分析NFI_PYHG的builtin部分全为差异Diff500-tcl-built_in-040"	
 
 "TZB
-今日分析msg数：19
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："	"SYH
+今日分析msg数：90
 今日发现issue数：
 今日回传case数：
 日报：
-1.分析DME_WRAP的Ac部分9条，都是Diff59-report4-multi_bits_merge
-2.分析HIPHY_SUB的Setup部分10条messge ,差异为Diff158-diff25-setup_port01
-3.已经复现昨天发现的setupbboxfullyconstrained误报问题，提了DTS单DTS2025031926656"	
-
-"SYH
-今日分析msg数：134
-今日发现issue数：1
-今日回传case数：
-日报：
-1.分析18XXE的DME_WRAP的setup134条，主要涉及的issue为DTS2025
-031725937，DTS2025031722089，2025031721196，DTS2025030927363，涉及的Diff为Diff171，还有少部分的Pass-const
-2.新提一个DTS2025031927363:Enno误报SetupRstInferred。if（A）-else if（B）-else的结构。代码中else if（B）后才有复位，B应为复位信号，但是Enno报的是A为复位信号。"
+1.参加周会
+2.分析DME_WRAP的新增msg，大部分是Diff150/192,少部分的DTS2025031927363：Enno报告rst的信号与SG不一致，导致的误报。（DME分析完毕）分析BDP的setup新增msg，均为差异。剩余ac部分的新增msg未分析"
