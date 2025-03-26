@@ -1,90 +1,82 @@
 "XLL
-今日分析msg数：
+今日分析msg数：20
 今日发现issue数：
 今日回传case数：
-日报：1.与RD一起定位问题DTS2025031453541，新增配置set_param cdc.dbg_var 31，在log中打印DBG信息，协助定位
-2.修改statistic_allfiles.py，实现需求：新增将pass-const作为误报漏报来计算误报漏报率，需求功能实现部分完成50%，中途遇到一个问题，csv表格中有很多漏报的信息，但是统计数据统计出来没有漏报，漏报率也为0，
-经过debug发现是统计脚本将severity也作为筛选数据的一个字段，如果severity为空则认为数据无效，导致没有统计到。正常来说所有message都是有severity的，由此发现比对脚本的bug，漏报时，没有写severity。临时处理方案，允许severity为空；
-比对脚本需修复这个bug（现场的新泛化脚本，心雨已修复），后续新跑出来的csv，仍然将severity作为筛选字段"
+日报：1.实现需求：新增将pass-const作为误报漏报来计算误报漏报率，进度100%，脚本已合入run 脚本，可以通过run count进入新泛化统计页面，根据提示选择对应的模块进行统计，不选择则统计所有模块
+2.用【1】中的脚本对新泛化数据进行了重刷
+3.分析TOP LGC Ac的message 20条，基本为已知问题，另发现一个sg的bug，待再次确认后提issue"
 
 "ZWL
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1、和蒋旺一起看FE_TSS和TSSC_WRAP中漏报误报Reset_info01的message，其中发现3条issue，11条由于multi-mux成为复杂结构未推断，但没有差异编号；剩下的为diff3，综合差异和2 pass-const常值差异
-2、分析TSSC_WRAP的conv，在何琴新包中我们报6条qualifer的conv01，sg只报了4条；看我们原理图，发现我们也报的没有问题，标记diff121；剩下的等何琴合进develop包之后再分析"
+1、提了DTS2025032521081、DTS2025032523756、DTS2025032536233，复现4个cas，但出现一点问题，复现出来的case能覆盖增量原理图，但是结果是小case，两边都会报出来；所以复现的case也不算完全复现；因此还是会有点麻烦
+2、和瑞风一起看了同reset、clock，SG报一条Reset_sync04，我们报多条，是差异diff85；主要是我们ar是分段检查，SG则只检查源头"	
 
 "LRF
-今日分析msg数：167
+今日分析msg数：58
 今日发现issue数：3
-今日回传case数：
-日报：
-分析USBC:
-差异：
-Diff75_line-no3 -3
-Diff-diff28-logic_optimization-data_const - 10
-Diff8-algorithem2 -2
-Diff64-Multi_reasons11 - 6
-Diff3-synth3-mux_and - 1
-issue:
-CDC-GEN-N-417 - 117
-DTS2025032423350 - 23
-DTS2025032423778 - 2
-CDC-GUI-3962 - GUI终端bug
-待商榷分析策略：
-sg的option：infer_enabled_flop
-设置为false:对于conv和const的message的匹配率更高
-设置为true:对于除conv和const的其它message的匹配率更高
-调研发现：同样的代码，将infer_enabled_flop设置为true和false，sg对于常值的推断的结果不一样（导致影响ac和其它message），且sg对于同样的电路结构在泛化case上不推常值，在提取的小case上要推常值 -- 很奇怪
-新增分析量：
-RD fixed bug后，原先报8条AcNoSyncScheme,现在报128条  --  修复了一部分可能也会有更多不匹配（分析中） -- USBC目前有500条ac待分析"
-
-"JR
-今日分析msg数：76
-今日发现issue数：1
-今日回传case数：
-日报：
-1.分析1813E TOP_LOG中setup的误报漏报，目前分析到的都是差异，1813E TOP_LOG中setup还有230条误报漏报待分析；
-2.提了一个GUI需求：在SG的原理图中，有四个快捷方式分别是zoom in、zoom out、zoom fit、go up；zoom in：把鼠标放在obj的左上角，按住鼠标左键并往右下角移动，会出现一个红色的框来框住obj并在框的右下角显示zoom in，松开鼠标左键，原理图就会以被框住的obj为中心去放大；zoom out：按住鼠标左键，从左下角向右上角移动，会出现一条红线且鼠标的位置会显示zoom out，松开鼠标左键，原理图会整体缩小；zoom fit：按住鼠标左键，从右上角向左下角移动，会出现一条红线且鼠标的位置会显示zoom fit，松开鼠标左键，原理图会放大或缩小到最佳大小并移动到中间，若原理图本来就是最佳大小且在中间则此方式无效；go up：按住鼠标左键，从右下角向左上角移动，会出现一条红线且鼠标的位置会显示go up，松开鼠标左键，原理图会去到上层原理图，建议ECDC也实现这四个功能，已提issue：CDC-gui-3961；
-3.之前提的CDC-gui-3958这个issue，RD未复现成功，和RD视频会议演示了issue的具体现象"
-
-"CXY
-今日分析msg数：
-今日发现issue数：
 今日回传case数：1
 日报：
-1.在苏黎的分支包上测试新的proc_sgdc脚本，发现在create_clock和set_case_analysis上还有脚本问题，总结脚本问题反馈给王涵，提供场景
-2.发现门禁case ac存在一个case的脚本block问题，修复block问题
-3.debug新泛化上双方工具对于black-box的场景双方工具比对不上的问题。定位到问题是在处理enno的dest时get_nets加了参数-canonical，而sg的dest处理只是get_nets或者get_nets [get_pins ]导致脚本拿到的dest信号层级不一致。修改后的代码在门禁上测试通过，正在新泛化Hi18XXE/TOP_LGC和Hi1813/NFI_PHYG_TOP上测试中"
+1.分析USBC:
+差异:
+Diff8-algorithem2 - 6
+Diff171-diff28-logic_optimization-data_const -  14
+Diff85-report10-ar - 6
+Diff73-diff12-ar - 1
+issue:
+CDC-3964
+CDC-GUI-3963
+CDC-GEN-N-417 - 12
+DTS2025032535563 - 19
+2.由于conv和ac重构的代码一直未合入develop，现在的分析策略转变为优先分析除conv和ac的其它message -- 发现一些在daily包上conv不匹配的meesage,在何琴的分支包上能与sg匹配
+3.和何琴一起看CGIC的相关问题
+4.和万林看Ar的相关问题"	
+
+"JR
+今日分析msg数：216
+今日发现issue数：2
+今日回传case数：1
+日报：
+1.分析1813E TOP_LOG中setup的误报漏报，还剩14条未分析，在分析过程中发现一个issue：在SetupBBoxPinFullyConstrained中，ECDC和SG报的Constraint不一样，ECDC报的constraint为inferred abstract_port和reset(propagated)，SG报的constraint为reset(propagated)，和苏黎讨论后，苏黎建议复现case并提issue，已复现并提issue：DTS2025032527537，其他分析到的都是差异，大部分都是综合差异，有三类，一类是mux_and的综合差异，一类是ECDC综合出的是由buffer、与门和或门组合成的有mux功能的组合逻辑，而SG综合出的是物理mux，还有一类是udp综合差异，SG综合出DFF,而ECDC综合出的是blackbox；
+2.在SG的verilog文件中，选中一个obj，右键会有一个copy hierarchical path的选项，点击copy hierarchical path就可以复制这个obj的hierarchical path，建议ECDC也实现这个功能，已提issue：CDC-gui-3967"	"CXY
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："	"CJR
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："	
 
 "TZQ
-今日分析msg数：40
-今日发现issue数：
-今日回传case数：
-日报：                                       
-1.NFI_PHYG分析：                                 
-Diff124-diff20-reset_info01_06,1条；   
-Diff168-irrgular9-clock_info05-converge，20条。
-与蒋旺哥讨论该module中SetupRstInferred关于synchronous reset的误报问题，在复现做到了增量原理图与我们工具一致，但在SG上与泛化综合的不同，暂时没有讨论出误报的原因在哪。       
-2.NFI_PHYG的builtin部分发现将builtin的msg与lint的msg匹配的现象，不应该匹配上，其实是属于差异Diff500-tcl-built_in-040   "
+今日分析msg数：35
+今日发现issue数：1
+今日回传case数：1
+日报：                                  
+1.跑NFI_TOP的对比                         
+2.分析NFI_PHYG的setup部分，发现我们在对于SetupResetInferred中同步复位信号的推断会多报，已经复现成功并提了一个issue,DTS2025032527402:一条path上A工具只会报离MUX最近的ff/q为synchronous clear，
+但ECDC会把这条path上所有的ff/q都报synchronous reset。                3.目前NFI_PHYG这个module只剩下IntegrityClockConverge这一条msg未分析完成，其余的都已分析完毕"	
 
 "TZB
-今日分析msg数：207
+今日分析msg数：169
 今日发现issue数：
 今日回传case数：
 日报：
-1.重跑DME_WRAP的对比结果
-2.分析HIPHY_SUB的Setup部分，都是差异主要是Diff174-diff30-black_box-version_difference、past-const、Diff183-bug45-setup_port01"
+1.重跑DME_WRAP的对比结果,AC新增一条是差异Diff59-report4-multi_bits_merge
+2.分析HIPHY_SUB的Setup部分，都是差异主要是Diff174-diff30-black_box-version_difference、past-const、Diff165-report26-setup_port0,pass-script-5
+3.发现setupbboxpinunconstrain误报，在提取小case复现中"	
 
 "SYH
-今日分析msg数：247
-今日发现issue数：2
-今日回传case数：
+今日分析msg数：125
+今日发现issue数：4
+今日回传case数：1
 日报：
-1.BDP的ac新增分析20条，均为Diff8/Diff59。BDP分析进度100%
-。重跑了NAU_CAU_WRAP/DDR_SUB/DME_WRAP
-2.和蒋旺一看DTS2025031722089，DTS2025031717618，正在尝试提取小case复现。
-3.分析NFI_PHYG_TOP msg237条（30%进度），主要涉及两个issue两个差异，差异为Diff106和Diff218.两个issue为新发现的issue
-3.a：DTS2025032425010:对于一个没有时钟信号的DFF，A工具报告SetupClkNetUndefined在其DFF给其他DFF赋值的一行，Enno报告SetupClkNetUndefined在DFF被赋值的一行
-3.b：DTS2025032520798：Enno误报ChyAcSyncMultiTimes,A工具对相同clock相同source的ChyAcSyncMultiTimes仅报告一次，一条msg内包含所有的destination，Enno对不同的destination分开报告，导致多报了很多条ChyAcSyncMultiTimes"
+1.分析NFI_PHYG_TOP msg125条（setup分析完成），全部为issue：
+1.aDTS2025032536490：Enno报ChySameSrcConvExcSeq，汇聚点为net phyg_fat_int[1]上，但A工具报告的汇聚点为该net连接的port phyg_fatal_int
+1.bDTS2025032538034：多个时钟驱动的output，相同的时钟组，A工具只报告一次，但是Enno报告该时钟组的所有ouput port。（已复现并回传case）
+1.cDTS2025032616039：ChySameSrcCpnvExcSeq，Enno少报了一条source clk导致对比不上，待提issue
+1.dDTS2025032531846：点击一条ChySameSrcConvExcSeq的schematic。gui crash
+2.根据李丹要求，改写Diff220中涉及的verilog文件，case已自建完成。待李丹核验
+3.关闭DTS2025031333320，根据CA给出的信息补全DTS2025031423462"
