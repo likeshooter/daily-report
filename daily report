@@ -1,82 +1,61 @@
-"XLL
-今日分析msg数：20
-今日发现issue数：
-今日回传case数：
-日报：1.实现需求：新增将pass-const作为误报漏报来计算误报漏报率，进度100%，脚本已合入run 脚本，可以通过run count进入新泛化统计页面，根据提示选择对应的模块进行统计，不选择则统计所有模块
-2.用【1】中的脚本对新泛化数据进行了重刷
-3.分析TOP LGC Ac的message 20条，基本为已知问题，另发现一个sg的bug，待再次确认后提issue"
-
 "ZWL
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1、提了DTS2025032521081、DTS2025032523756、DTS2025032536233，复现4个cas，但出现一点问题，复现出来的case能覆盖增量原理图，但是结果是小case，两边都会报出来；所以复现的case也不算完全复现；因此还是会有点麻烦
-2、和瑞风一起看了同reset、clock，SG报一条Reset_sync04，我们报多条，是差异diff85；主要是我们ar是分段检查，SG则只检查源头"	
+1、在重新跑FE_TSS的比对时，常值的csv掉了，导致常值需要重新标记；
+2、分享Ar的差异汇总
+3、跑FE_TSS和TSSC_WRAP的比对数据，但是由于参数infer_enabled_flop又要更改为true，因此需要等sg log刷了重新跑，参数的更改会导致之前分析过的内容可能会重新分析
+4、使用26号的daily包手动发现同一个信号同时报同步reset/set的现象被修复，得跑最新的比对后再确认"	
 
 "LRF
-今日分析msg数：58
+今日分析msg数：36
 今日发现issue数：3
 今日回传case数：1
 日报：
-1.分析USBC:
-差异:
-Diff8-algorithem2 - 6
-Diff171-diff28-logic_optimization-data_const -  14
-Diff85-report10-ar - 6
-Diff73-diff12-ar - 1
-issue:
-CDC-3964
-CDC-GUI-3963
-CDC-GEN-N-417 - 12
-DTS2025032535563 - 19
-2.由于conv和ac重构的代码一直未合入develop，现在的分析策略转变为优先分析除conv和ac的其它message -- 发现一些在daily包上conv不匹配的meesage,在何琴的分支包上能与sg匹配
-3.和何琴一起看CGIC的相关问题
-4.和万林看Ar的相关问题"	
+1.分析USBC
+差异：
+Diff155-bug27-version_difference - 16
+Pass-const - 2
+Issue:
+DTS2025032616944 - 1
+DTS2025032636676 - 1
+CDC-GUI-3971
+2.和高强一起看了下DTS2025032535563的问题
+3.参加万林的Ar的分析分享会
+4.和心雨看一个Ac_conv的source clock name不一致但domain一致的问题，sg的ac_conv.csv中体现的是两个不同的source clock name,ecdc的msg中体现的是两个source clock name中的其中一个，导致脚本无法match"	
 
-"JR
-今日分析msg数：216
-今日发现issue数：2
-今日回传case数：1
+"CXY
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
 日报：
-1.分析1813E TOP_LOG中setup的误报漏报，还剩14条未分析，在分析过程中发现一个issue：在SetupBBoxPinFullyConstrained中，ECDC和SG报的Constraint不一样，ECDC报的constraint为inferred abstract_port和reset(propagated)，SG报的constraint为reset(propagated)，和苏黎讨论后，苏黎建议复现case并提issue，已复现并提issue：DTS2025032527537，其他分析到的都是差异，大部分都是综合差异，有三类，一类是mux_and的综合差异，一类是ECDC综合出的是由buffer、与门和或门组合成的有mux功能的组合逻辑，而SG综合出的是物理mux，还有一类是udp综合差异，SG综合出DFF,而ECDC综合出的是blackbox；
-2.在SG的verilog文件中，选中一个obj，右键会有一个copy hierarchical path的选项，点击copy hierarchical path就可以复制这个obj的hierarchical path，建议ECDC也实现这个功能，已提issue：CDC-gui-3967"	"CXY
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报："	"CJR
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报："	
+1.修改昨天在射频上发现的脚本block问题。修复proc expand_bits的bug
+2.debug一航提的脚本issueCDC-3968、debug发现导致脚本匹配不上的原因是对于Ac_conv02 sg和enno报告的source的clk不一致，sg报了两个不同名但是domain一致的source clock。enno只报出一条。和子奇确认为工具bug，之后会在子奇的测试包上再确认
+3.对于新泛化case的sg配置，将infer_enabled_flop设置成true之后重新刷新sg的log
+4.更新隔离区，红区对比脚本。在门禁case上测试新的对比脚本。发现setup有脚本block。debug发现在diff121这个proc中get_attribute [get_clusters [get_pins $pin]]之前的包有返回值，但是在26号的包中get_clusters [get_pins $pin]这一步都还有返回值，再get_attribute就没有返回值了，这个问题会导致脚本标记不上Diff121。工具的报告内容以及电路并没有变化。工具问题已经反馈给开发，提issueCDC-3970，脚本中追加了一个判空操作，不会再block了"	
 
+	
 "TZQ
-今日分析msg数：35
-今日发现issue数：1
-今日回传case数：1
-日报：                                  
-1.跑NFI_TOP的对比                         
-2.分析NFI_PHYG的setup部分，发现我们在对于SetupResetInferred中同步复位信号的推断会多报，已经复现成功并提了一个issue,DTS2025032527402:一条path上A工具只会报离MUX最近的ff/q为synchronous clear，
-但ECDC会把这条path上所有的ff/q都报synchronous reset。                3.目前NFI_PHYG这个module只剩下IntegrityClockConverge这一条msg未分析完成，其余的都已分析完毕"	
+今日分析msg数：30
+今日发现issue数：
+今日回传case数：
+日报：                                       1.完成分析NFI_PHYG的setup部分，剩余的都是属于差异Diff112-irregular7-clock_converge。目前NFI_PHYG已全部分析完毕                                    2.跑Hi18XXE的NFI_TOP的对比脚本              3.参加万林的Ar分享会"	
 
 "TZB
-今日分析msg数：169
+今日分析msg数：20
 今日发现issue数：
 今日回传case数：
 日报：
-1.重跑DME_WRAP的对比结果,AC新增一条是差异Diff59-report4-multi_bits_merge
-2.分析HIPHY_SUB的Setup部分，都是差异主要是Diff174-diff30-black_box-version_difference、past-const、Diff165-report26-setup_port0,pass-script-5
-3.发现setupbboxpinunconstrain误报，在提取小case复现中"	
+1.分析HIPHY_SUB的Setup部分，都是差异主要是Diff174-diff30-black_box-version_difference、Diff165-report26-setup_port0
+2.关于setupbboxpinunconstrain误报，已提取case并复现DTS2025032615683
+3、提了一个关于打开setup_blackbox01的messge所描述端口的增量原理图显示功能优化的建议CDC-GUI-3972"	
 
 "SYH
-今日分析msg数：125
-今日发现issue数：4
+今日分析msg数：263
+今日发现issue数：1
 今日回传case数：1
 日报：
-1.分析NFI_PHYG_TOP msg125条（setup分析完成），全部为issue：
-1.aDTS2025032536490：Enno报ChySameSrcConvExcSeq，汇聚点为net phyg_fat_int[1]上，但A工具报告的汇聚点为该net连接的port phyg_fatal_int
-1.bDTS2025032538034：多个时钟驱动的output，相同的时钟组，A工具只报告一次，但是Enno报告该时钟组的所有ouput port。（已复现并回传case）
-1.cDTS2025032616039：ChySameSrcCpnvExcSeq，Enno少报了一条source clk导致对比不上，待提issue
-1.dDTS2025032531846：点击一条ChySameSrcConvExcSeq的schematic。gui crash
-2.根据李丹要求，改写Diff220中涉及的verilog文件，case已自建完成。待李丹核验
-3.关闭DTS2025031333320，根据CA给出的信息补全DTS2025031423462"
+1,分析NFI_FHYG_TOP的ac误报漏报240条，涉及Diff75/Diff63,新提了一个issue，DTS2025032638499
+1.a DTS2025032638499：AcNoSyncScheme行号不一致，从电路上看，Enno报在了置1的一行，SG抱在了loop所在的一行，符合电路图。case已复现并回传
+2.已分析完成的NAU_CAU_WRAP/BDP/DME/DDR_SUB,对四个case中仍存在的CDC开头issue进行重新标注。"
