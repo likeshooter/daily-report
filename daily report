@@ -1,107 +1,62 @@
-周五：
-
-"XLL
-今日分析msg数：319
-今日发现issue数：1
+"HQ
+今日分析msg数：
+今日发现issue数：
 今日回传case数：
-日报：1.提了一个issue DTS2025032827494，sg的一个bus中有一个比特位没有报Ac_unsync02，但是从原理图看，与报了Ac_unsyn02的另一个相邻比特位的电路有一段重合，应该也要报Ac_unsync02才对，疑似SG bug。我们工具正确报出。
-2.一段电路中如果既有src converge的场景，又有CtrlPotentialSynRstUndefined，ecdc工具会优先报CtrlPotentialSynRstUndefined。只要destination后面有一个与destination同时钟域的ff满足CtrlPotentialSynRstUndefined，就会报；如果不满足，就报src converge。
-3.分析了319条TOP_LGC Ac的message，除了已知问题，皆为差异，主要差异为Diff147，Diff157，Diff63"	
+日报：
+1.帮心雨确认新泛化Issue：DTS2025031926156的电路结构，qualifier同步方式
+2.帮心雨确认Diff171在新泛化里的标记情况
+3.和刘玲交接上周家里写的qor case性能数据每日变化情况proc，还有些遗留问题（生成的.qor数据结果文件进行合并）
+4.确认当前CDC开头的遗留issue是否均为脚本issue，有两个是差异：CDC-GEN-N-356（王涵已在写proc，未提DTS），CDC-GEN-N-486（已提DTS：DTS2025033134586）
+5.整理新泛化数据，以及解决统计脚本过程中出现的问题，如文件权限未打开，新数据无法更新
+6.改进release_cdc的脚本逻辑，把包名为ECDC_develop_release或ECDC_develop_daily_build_release开头的，当作每日默认选择的包来跑，其他的包需要根据输入时间，手动选择（之前的判断条件是ECDC_develop和release两个关键字同时存在，但最近有比如ECDC_develop_reset_release、ECDC_develop_FOM_release等包，容易在分析时拿到debug包）"	
 
 "ZWL
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1、参加周会
-2、分析小泛化中新增误报常值的msg，都为差异diff172；分析PNT_CNT3/5新增漏报部分，为verific报错HDL1066导致停止后续check
-3、分析FE_TSS中新增漏报常值部分，多数为diff212、diff213、diff172；但今天周会提到LEC不能完全去覆盖我们的误报，但现在脚本把所有常值误报都标记为2 pass-const，后续出现LEC无法覆盖的部分，又需需要反过来重新分析，特别是这部分和SG有差异的部分；可能就会花双倍时间了"	
+1、回归issue DTS2025032523756，DTS2025032521081，在回归过程中发现sg报Reset_info01，但增量原理图没有画全的问题，就是连在en pin上，ff的d pin为0，因为没有连在d pin，因此画不出来；关闭infer_enabled_flop能画出来；此外对于版本差异的图无法通过桃花岛穿到客户环境，是否能加强一下
+2、分析周六跑出来的csv，ar新增两条误报multiflop，为差异diff85；并确认上周六漏报的那条message为ecdc版本差异，在新版本中已修复
+3、分析漏报的Reset_info01，为差异diff3；有一个issue正在复现；分析慢的原因在于，语句复杂，SG和ecdc综合不一致导致链路不好对齐导致分析复现难"	
 
 "LRF
-今日分析msg数：107
-今日发现issue数：
+今日分析msg数：56
+今日发现issue数：1
 今日回传case数：
 日报：
-1.参加周会
-2.帮何琴造case
-3.分析Hi1813-BCP_TSS
-Diff115-bug27-version_difference - 83"	
+继续分析lint check的相关rule
+Diff212-diff44- logic_optimization - 12
+DTS2025033110454 - 9
+DTS2025031449113 - 1
+和高强看DTS2025033110454的相关问题
+帮何琴造case
+有5条SetupDataTiedToConst的漏报问题过于复杂，暂未能分析出结果"
 
-"JR
-今日分析msg数：87
-今日发现issue数：
-今日回传case数：1
+"CJR
+今日分析msg数：52
+今日发现issue数：1
+今日回传case数：
 日报：
-1.新跑了1813E TOP_LOG的csv，builtin和setup新增了误报漏报，目前分析到的都是差异；
-2.分析门禁新增误报漏报，builtin新增的误报漏报都是差异Diff500-handle-built_in-024,ac_conv1新增的unmatch是差异Diff75-line_no3;
-3.和李丹、川皓一起讨论DTS2025032013918，李丹建议1813E TOP_LOG的csv跑一下lint，看ECDC报IntegrityClockConverge的地方有没有报combloop，如果报了，就确认和DTS2025032013918是相同的差异，但combloop报五百多条，不好定位，袁姐说combloop会报converge的地方，所以建议可以直接搜converge的地方，但是在combloop报的message里没有搜到，需要明天再确认一下；
-4.帮心雨回传了一个典型测例"	
+1.跑depth为2，5，10的比对（版本：hq_v032915）
+2.跑Hi1813的FE_TSS比对及分析
+2.1 SetupPort相关msg(均和常值相关)：15条属于Diff171；9条属于pass-const;7条属于Diff172
+2.2 SetupRstNetUndefined误报漏报：由于SG和ECDC都是报在了design中不存在的net，因此脚本无法match，标注为Diff160及Diff31(14条)；复现由于综合差异导致的误报SetupRstNetUndefined情况（2条）。
+3.验证通过并关单：DTS2025032008639，DTS2025032004090、DTS2025031327930"
 
 "TZQ
-今日分析msg数：35
+今日分析msg数：63
 今日发现issue数：
 今日回传case数：
-日报：                                       
-1.分析NFI_PHYG的新增部分，都是属于Diff168-irregular9-clock_info05-converge                          
-2.分析新跑出来的N_APP_CORE的builtin部分                               
-3.参加PV周会"
+日报：                                     
+1.分析门禁新增的部分，全都为差异          
+2.分析N_APP_CORE的builtin部分，都为差异Diff208      
+3.验证并关闭问题单：                       DTS2025032527402                             DTS2025031708078                "
 
 "TZB
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.分析HIPHY_SUB的Setup部分，都是差异主要是Diff174-diff30-black_box-version_difference、past-const、Diff165-report26-setup_port0,pass-script-5
-3.分析新增的DME_WRAP的Ac部分都是差异"
-
-"SYH
-今日分析msg数：432
-今日发现issue数：2
-今日回传case数：
-日报：
-1.分析新跑的NAU_CAU_WRAP和BDP新增的msg432条，NAU_CAU_WRAP中存在少部分的Diff212,常值导致的Setup_port01漏报（pass-const），以及少量的DTS2025032638499。其余为新提的两个issue，NAU_CAU_WRAP分析完毕，BDP仍在分析中，目前结果均为Diff212。
-1.a CDC-3975: 脚本问题，对SG的Reset_info01多次抓取，导致match的msg又missing report
-1.b Enno对if条件判断中的复杂条件语句块不会infer reset，Sg会，导致漏报SetupRstInferred：Derived synchronous set。
-2.和子奇一起看DTS2025032536490，确认为Diff150。实际上此issue是Diff150的推广，只要是src和des相同的conv，在时钟等其他obj对的上的情况下，conv point不一致，均使用Diff150标注，后续会请袁洁对差异做补充
-3.和燕宁沟通，请燕宁帮忙复现了现场需关闭DTS单问题，已获取verify截图"
-
-
-
-
-
-周六：
-"ZWL
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：
-1、复现multi-mux的case，复现一半发现可能是mux-and的综合差异，因此重新分析，发现真是mu-and的差异，因此对于研发讲的multi-mux的issue不提了，改为差异Diff3
-2、复现一个漏报Reset_info01的case，复现和增量原理图一样的case后，发现ecdc也报了；因此不确定是否是版本差异，今天下班前再跑一版比对；等下周一再确认"
-
-"JR
-今日分析msg数：203
-今日发现issue数：
-今日回传case数：
-日报：
-1.分析1813E TOP_LOG的新增的误报漏报，提了一个issue：DTS2025032902278；
-2.分析参数timing.compatible_mode设置为false并用read_sgdc跑出来的门禁新增的误报漏报，提了7个issue：CDC-3976、CDC-3980、CDC-3985、CDC-4000、CDC-4002、CDC-4005、CDC-4006；
-3.对于CDC-gui-3967，我观察到两种情况，第一种是blackbox多次实例化，在SG中blackbox多次实例化只会选其中一次来报setup_balckbox01，所以copy到的hierarchical path是setup_balckbox01报的那个instance的hierarchical path，第二种是普通module实例化，如果这个module在很多module里实例化了，SG中copy到的hierarchical path是最后一次实例化的instance的hierarchical path，如果这个module在一个module里实例化了多次，SG中copy到的hierarchical path是第一次实例化的instance的hierarchical path"
-
-"TZB
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：
-1.分析HIPHY_SUB的Setup部分与Ac，大多都是差异
-2.关于Ac部分对于一种muxselect同步结构我们工具没报sync也没报async，大概原因是在最后mux上，sel端和dest clock一样，data端的clock为source clock，mux的输出端接dest的ff/d端，但是mux的输出端口只包含dest的clock不含source的clock,今天需要和研发在看一下，而Sg则是综合成and门报同步的这个问题已经与研发讨论，初步判断问题出在mux上，已提issue:DTS2025032902695
-3.回归issue :DTS2025031926656"	
-
-"SYH
-今日分析msg数：57
-今日发现issue数：
-今日回传case数：
-日报：
-1.分析BDP的新增msg，大部分为Diff212/DTS2025032902080,少部分为Diff59和DTS2025031723831。
-3。和RD一起看DTS2025031723831，查看obj属性时遇到的get_symbols命令正在修改中，等修改完毕后再看这个问题。
-2.李丹要求的Diff220相关case，复现中发现不同更改了，相关代码在synopsis translate_on/off中，根据3.18日针对pragma的更改，李丹的需求已不存在。
-3.关单DTS2025031425120，DTS2025031423147，DTS2025031332900."
+1.分析HIPHY_SUB的Ar部分,漏报ArSyncMultiFlop SG的在没有crossing的时候仍然会报ar_sync, 但ENNO不会报标记差异为Diff73-diff12-ar
+2.对于黑盒的输出端口连接到ff/rst端，这个输出端口没有其他的domain ，但是sg报的是AR中的不同步，ECDC同步与不同步都没有报，观察后主要区别是，sg中黑盒连接ff/rst后这条net都没有ff/clk的domain，而ecdc有，并且ecdc中ff/d是推断成常值，Sg是没有推断成常值，经和万林讨论标记pass-const
+3.昨天跑调试包发现工具crash已提issue回传至welink CDC-GEN-N-492"
