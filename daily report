@@ -63,3 +63,11 @@ DTS2025031449113 - 1
 1.分析HIPHY_SUB的Ar部分,漏报ArSyncMultiFlop SG的在没有crossing的时候仍然会报ar_sync, 但ENNO不会报标记差异为Diff73-diff12-ar
 2.对于黑盒的输出端口连接到ff/rst端，这个输出端口没有其他的domain ，但是sg报的是AR中的不同步，ECDC同步与不同步都没有报，观察后主要区别是，sg中黑盒连接ff/rst后这条net都没有ff/clk的domain，而ecdc有，并且ecdc中ff/d是推断成常值，Sg是没有推断成常值，经和万林讨论标记pass-const
 3.昨天跑调试包发现工具crash已提issue回传至welink CDC-GEN-N-492"
+
+"SYH
+今日分析msg数：1033
+今日发现issue数：
+今日回传case数：
+日报：
+1.分析NFI_PHYG_TOP的setup新增msg58条，大部分是Diff218，少部分的DTS2025032902080，以及1条Diff203(setup部分分析完成)，Ac部分析975条，944条为DTS2025031723831，31条Diff63"
+
