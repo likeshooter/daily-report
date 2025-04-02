@@ -1,73 +1,55 @@
-"HQ
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：
-1.帮心雨确认新泛化Issue：DTS2025031926156的电路结构，qualifier同步方式
-2.帮心雨确认Diff171在新泛化里的标记情况
-3.和刘玲交接上周家里写的qor case性能数据每日变化情况proc，还有些遗留问题（生成的.qor数据结果文件进行合并）
-4.确认当前CDC开头的遗留issue是否均为脚本issue，有两个是差异：CDC-GEN-N-356（王涵已在写proc，未提DTS），CDC-GEN-N-486（已提DTS：DTS2025033134586）
-5.整理新泛化数据，以及解决统计脚本过程中出现的问题，如文件权限未打开，新数据无法更新
-6.改进release_cdc的脚本逻辑，把包名为ECDC_develop_release或ECDC_develop_daily_build_release开头的，当作每日默认选择的包来跑，其他的包需要根据输入时间，手动选择（之前的判断条件是ECDC_develop和release两个关键字同时存在，但最近有比如ECDC_develop_reset_release、ECDC_develop_FOM_release等包，容易在分析时拿到debug包）"	
-
 "ZWL
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1、回归issue DTS2025032523756，DTS2025032521081，在回归过程中发现sg报Reset_info01，但增量原理图没有画全的问题，就是连在en pin上，ff的d pin为0，因为没有连在d pin，因此画不出来；关闭infer_enabled_flop能画出来；此外对于版本差异的图无法通过桃花岛穿到客户环境，是否能加强一下
-2、分析周六跑出来的csv，ar新增两条误报multiflop，为差异diff85；并确认上周六漏报的那条message为ecdc版本差异，在新版本中已修复
-3、分析漏报的Reset_info01，为差异diff3；有一个issue正在复现；分析慢的原因在于，语句复杂，SG和ecdc综合不一致导致链路不好对齐导致分析复现难
-4、提了一个CDC-gui-4007 gui的建议：建议把expand bit改为弹窗：首先在SG中如果是选择多比特的pin时，是弹窗，弹窗内容是表格标题包括一些bus name、annotation、connected net、annotation；表格外是选择select all和highight selected signal（s）；好处在与能清晰直观看见每个bit位连接的net，也更好选择多条net或者选择全bit位，还可以选择是否高亮；
-针对目前我们的expand bit，主要在于不能一次选择展开不同bit位，二是鼠标容易滑出范围，就又得重新去选择，三是所有多比特的pin都集中在一起，module上bus pin过多的话，不太好找到想要展开的bus pin
-改为弹窗的话，能支持搜索，能同时展开所有bit位，不同bit位；因此希望支持"	
-
-"LRF
-今日分析msg数：56
-今日发现issue数：1
-今日回传case数：
-日报：
-继续分析lint check的相关rule
-Diff212-diff44- logic_optimization - 12
-DTS2025033110454 - 9
-DTS2025031449113 - 1
-和高强看DTS2025033110454的相关问题
-帮何琴造case
-有5条SetupDataTiedToConst的漏报问题过于复杂，暂未能分析出结果"
-
-"CJR
-今日分析msg数：52
-今日发现issue数：1
-今日回传case数：
-日报：
-1.跑depth为2，5，10的比对（版本：hq_v032915）
-2.跑Hi1813的FE_TSS比对及分析
-2.1 SetupPort相关msg(均和常值相关)：15条属于Diff171；9条属于pass-const;7条属于Diff172
-2.2 SetupRstNetUndefined误报漏报：由于SG和ECDC都是报在了design中不存在的net，因此脚本无法match，标注为Diff160及Diff31(14条)；复现由于综合差异导致的误报SetupRstNetUndefined情况（2条）。
-3.验证通过并关单：DTS2025032008639，DTS2025032004090、DTS2025031327930"
-
-"TZQ
-今日分析msg数：63
+1、提reset_info01的issue DTS2025040115056、DTS2025040135373，并复现case；DTS2025040135373链路已经和泛化中的一致了，但ecdc与泛化中的行为完全相反；相同结果在泛化中TOP/cfg_max_ch_num[10:0]和TOP/cur_valid_ch_num[10:0]都没有报sync reset，但复现出来的case都报了；其中TOP/cfg_max_ch_num[10:0]在复现的case则不应该报，TOP/cur_valid_ch_num[10:0]在泛化中则应该报
+2、复现另一个漏报Reset_info01问题"	"LRF
+今日分析msg数：
 今日发现issue数：
 今日回传case数：
-日报：                                     
-1.分析门禁新增的部分，全都为差异          
-2.分析N_APP_CORE的builtin部分，都为差异Diff208      
-3.验证并关闭问题单：                       DTS2025032527402                             DTS2025031708078                "
-
-"TZB
+日报："	"JR
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："	"CXY
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："	"CJR
+今日分析msg数：259
+今日发现issue数：
+今日回传case数：
+日报：1.分析depth为2，5，10的比对的csv表格，标注完成Ar及CONV（Diff143、Diff150、Diff1）。conv04受Ac影响待新包合入验证。
+2.跑射频验证conv net随机性问题(depth为5)，跑了六次都固定报在了最低的比特位。
+3.跑APP_CORE比对
+4.分析APP_CORE的漏报误报问题。
+4.1 IntegrityRstConvOnComb（33条）：SG报信号A汇聚于bus信号B。ECDC则分开报，即报信号A分别汇聚于信号B的各个比特位。
+4.2 Setup_port unmatch（224条）:sg报在include所在行号，ECDC报在include文件里面的具体行号，ECDC更加具体。标注DIff75
+4.3 Ac_conv01(1条):属于Diff150 conv net差异。
+4.4 关于时序UDP相关的问题：SG能够将时序UDP综合，但是ECDC报错HDL-2228且综合为黑盒，属于差异Diff190."	"TZQ
+今日分析msg数：61
+今日发现issue数：
+今日回传case数：
+日报：1.分析门禁新增的部分，全为Diff192                                        2.分析NFI_TOP的Ar部分,其中32条为差异Diff73,4条为Diff74;在分析中发现ChyArSyncMultiTimes这个msg我们工具跟SG报的位置不同，疑似差异Diff85,目前正在分析验证中，该msg分析完成后，NFI_TOP的Ar部分就已全部分析完成，剩余Ac和Setup部分"	"TZB
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.分析HIPHY_SUB的Ar部分,漏报ArSyncMultiFlop SG的在没有crossing的时候仍然会报ar_sync, 但ENNO不会报标记差异为Diff73-diff12-ar
+1.分析HIPHY_SUB的Ar部分,
 2.对于黑盒的输出端口连接到ff/rst端，这个输出端口没有其他的domain ，但是sg报的是AR中的不同步，ECDC同步与不同步都没有报，观察后主要区别是，sg中黑盒连接ff/rst后这条net都没有ff/clk的domain，而ecdc有，并且ecdc中ff/d是推断成常值，Sg是没有推断成常值，经和万林讨论标记pass-const
-3.昨天跑调试包发现工具crash已提issue回传至welink CDC-GEN-N-492"
-
-"SYH
-今日分析msg数：1033
+3.对于ecdc的source会选取flop/q和port来作为source开始检查，因此存在源source一致的情况，但一条链路经过flop出去重复打拍报reset_sync04，一条链路直接出去重复打拍报reset_sync04；标记Diff85-report10-ar-01-src_dest
+4.回归issue DTS2025032615683"	"SYH
+今日分析msg数：8281
 今日发现issue数：
-今日回传case数：
+今日回传case数：1
 日报：
-1.分析NFI_PHYG_TOP的setup新增msg58条，大部分是Diff218，少部分的DTS2025032902080，以及1条Diff203(setup部分分析完成)，Ac部分析975条，944条为DTS2025031723831，31条Diff63"
-
+1.分析NFI_PHYG_TOP的Ac部分，提了一个issue
+1.a DTS2025040129969：两个bus reg分别作为source和destination，但是在RTL中并没有进行详细的位赋值操作，而是通过bus整体进行赋值。Enno与A工具报告Unsync的source obj和destination obj策略不同，导致AcUnsyncCtrlPath/AcNoSyncScheme与A工具match不上，
+A工具：
+destination：选择整个bus作为destination obj，无论实际path中具体用到几位
+source：根据电路情况，报告使用到的某一位或某几位，且分开报告，即[16:11]和[9:8] 不会出现在一条msg中
+Enno：
+destination&source ：根据电路情况，报告使用到的某一位或某几位，且分开报告，即[16:11]和[9:8] 不会出现在一条msg中
+2.帮蒋旺看DTS2025032711828，确认是由于if判断条件复杂，所以没推reset，DTS2025032709331，更改了问题的描述，Enno的DFF是相连的，但是从RTL代码中无法看出来同步置位。向应康解释了DTS2025032538034，需要开发内部讨论后决定是新增差异/和SG保持一致。
+3.关单 DTS2025031721196，DTS2025032536490，DTS2025032616039"
