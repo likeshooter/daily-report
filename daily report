@@ -1,55 +1,61 @@
+"HQ
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.完成自动化跑泛化case的脚本，目前在一个list里记录这个case是否已分析完成或未开始分析，若是，则统计它们需要的内存，分为5个档：<50GB、50-100GB、100-200GB、200-500GB、>500GB，可以选择自动跑哪一个档的case，这样可以充分利用资源
+2. 在跑case是增加显示状态：是否在跑对比，占用内存等
+3. 在跑case时统计这个case的内存，最后统计出一个实际使用内存，看是否还有资源的可调整空间"	
+
 "ZWL
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1、提reset_info01的issue DTS2025040115056、DTS2025040135373，并复现case；DTS2025040135373链路已经和泛化中的一致了，但ecdc与泛化中的行为完全相反；相同结果在泛化中TOP/cfg_max_ch_num[10:0]和TOP/cur_valid_ch_num[10:0]都没有报sync reset，但复现出来的case都报了；其中TOP/cfg_max_ch_num[10:0]在复现的case则不应该报，TOP/cur_valid_ch_num[10:0]在泛化中则应该报
-2、复现另一个漏报Reset_info01问题"	"LRF
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报："	"JR
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报："	"CXY
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报："	"CJR
-今日分析msg数：259
-今日发现issue数：
-今日回传case数：
-日报：1.分析depth为2，5，10的比对的csv表格，标注完成Ar及CONV（Diff143、Diff150、Diff1）。conv04受Ac影响待新包合入验证。
-2.跑射频验证conv net随机性问题(depth为5)，跑了六次都固定报在了最低的比特位。
-3.跑APP_CORE比对
-4.分析APP_CORE的漏报误报问题。
-4.1 IntegrityRstConvOnComb（33条）：SG报信号A汇聚于bus信号B。ECDC则分开报，即报信号A分别汇聚于信号B的各个比特位。
-4.2 Setup_port unmatch（224条）:sg报在include所在行号，ECDC报在include文件里面的具体行号，ECDC更加具体。标注DIff75
-4.3 Ac_conv01(1条):属于Diff150 conv net差异。
-4.4 关于时序UDP相关的问题：SG能够将时序UDP综合，但是ECDC报错HDL-2228且综合为黑盒，属于差异Diff190."	"TZQ
-今日分析msg数：61
-今日发现issue数：
-今日回传case数：
-日报：1.分析门禁新增的部分，全为Diff192                                        2.分析NFI_TOP的Ar部分,其中32条为差异Diff73,4条为Diff74;在分析中发现ChyArSyncMultiTimes这个msg我们工具跟SG报的位置不同，疑似差异Diff85,目前正在分析验证中，该msg分析完成后，NFI_TOP的Ar部分就已全部分析完成，剩余Ac和Setup部分"	"TZB
-今日分析msg数：
-今日发现issue数：
+1、复现漏报Reset_info01的case，复现过程发现报sync reset，但增量原理图画不全的问题，是由于报的点位连在了ff/clear上，所以画不全；并让研发一起分析，研发觉得可能是SG的bug，是因为if（rst） a[3:0] = {1'b0,a,1'b1}这种格式，SG只报rst一个点位，但是并没有复现出case说明；因此还需要进一步验证
+2、提GUI的遗留issue，DTS2504020032209、DTS2504020032372、DTS2504020032429、DTS2025040324990"	
+
+"LRF
+今日分析msg数：28
+今日发现issue数：2
 今日回传case数：
 日报：
-1.分析HIPHY_SUB的Ar部分,
-2.对于黑盒的输出端口连接到ff/rst端，这个输出端口没有其他的domain ，但是sg报的是AR中的不同步，ECDC同步与不同步都没有报，观察后主要区别是，sg中黑盒连接ff/rst后这条net都没有ff/clk的domain，而ecdc有，并且ecdc中ff/d是推断成常值，Sg是没有推断成常值，经和万林讨论标记pass-const
-3.对于ecdc的source会选取flop/q和port来作为source开始检查，因此存在源source一致的情况，但一条链路经过flop出去重复打拍报reset_sync04，一条链路直接出去重复打拍报reset_sync04；标记Diff85-report10-ar-01-src_dest
-4.回归issue DTS2025032615683"	"SYH
-今日分析msg数：8281
-今日发现issue数：
+DTS2504020018864 - 2
+DTS2025032423350 - 6
+DTS2025032423778 - 9
+DTS2504020036063 - 1
+CDC-4010
+配合焕东对ecdc漏报的常值进行LEC验证"
+
+"CJR
+今日分析msg数：35
+今日发现issue数：2
 今日回传case数：1
+日报：1.分析APP_CORE的漏报误报问题。
+1.1 Reset_info01漏报（13条）：UDP综合差异DIff190
+1.2 漏报ChyAcSyncMultiTimes(1): 复现提单DTS2504020029716。对于此复现测例，A工具报了ChyAcSyncMultiTimes：source flop """"TOP.din"" is synchronized twice (at ""TOP.U_TOP1.U_DFF.Q_D，TOP.U_TOP2.U_DFF.Q_D"") in same destination domain
+ECDC不报的原因在于在约束中对TOP.sel进行了约束，导致信号gate_1的Attributes中含有了data_clock相关的信息。
+1.3 SetupPortIgnoredNotToSeq unmatch(12条)：属于差异Diff75。
+1.4 SetBBox相关msg（8条）：属于UDP差异，标注为Diff190
+2 跑最新包验证射频情况：cpu time为1h7min，peak mem为36030MB
+3.file issue:CDC-GEN-N-493。此测例报了SetupRstNetUndefined(TOP/n283)，没有报SetupRstInferred；而SG没有报Reset_info09，但是SG报了Reset_info01（TOP.rst_ff）。
+可能原因为：SG和ECDC综合不同。在ECDC综合出来的电路中，触发器rst_ff经过了一个buffer和一个非门，然后经过一个与门（i283），最后连接到了其他触发器的复位端。
+而SG电路中，触发器rst_ff经过了一个buffer和一个非门，然后连接到了其他触发器的复位端。感觉SG综合的电路更加的合理。
+"
+
+"TZQ
+今日分析msg数：83
+今日发现issue数：
+今日回传case数：
+日报：1.分析NFI_TOP的Ar和Setup部分：   ChyArSyncMultiTimes我们工具跟SG报的destination不一致(16条)为Diff191；SetupPortIgnoredNotToSeq(40条)为Diff75;SetupPortFullyConstrained(16条)为Diff75;Ac_conv01和Ac_conv02(11条)为Diff150                                 
+2.在分析SetupResetInferred时发现存在同步复位的综合不同导致我们误报的问题，正在尝试复现中"	
+
+"SYH
+今日分析msg数：807
+今日发现issue数：
+今日回传case数：
 日报：
-1.分析NFI_PHYG_TOP的Ac部分，提了一个issue
-1.a DTS2025040129969：两个bus reg分别作为source和destination，但是在RTL中并没有进行详细的位赋值操作，而是通过bus整体进行赋值。Enno与A工具报告Unsync的source obj和destination obj策略不同，导致AcUnsyncCtrlPath/AcNoSyncScheme与A工具match不上，
-A工具：
-destination：选择整个bus作为destination obj，无论实际path中具体用到几位
-source：根据电路情况，报告使用到的某一位或某几位，且分开报告，即[16:11]和[9:8] 不会出现在一条msg中
-Enno：
-destination&source ：根据电路情况，报告使用到的某一位或某几位，且分开报告，即[16:11]和[9:8] 不会出现在一条msg中
-2.帮蒋旺看DTS2025032711828，确认是由于if判断条件复杂，所以没推reset，DTS2025032709331，更改了问题的描述，Enno的DFF是相连的，但是从RTL代码中无法看出来同步置位。向应康解释了DTS2025032538034，需要开发内部讨论后决定是新增差异/和SG保持一致。
-3.关单 DTS2025031721196，DTS2025032536490，DTS2025032616039"
+1.分析NFI_PHYG_TOP的Ac部分误报漏报807条，均为DTS2025040129969，除此之外。昨日分析的msg中有部分是错标为DTS2025040129969的情况，将此部分剥离出来。Ac分析进度约为66%。
+2.回归DTS2025031320683，DTS2025031319679。测试发现不通过，已打回。
+3.和高强复现演示了DTS2025032638499的问题情况。RD已知晓，需要询问PE意见"
+
