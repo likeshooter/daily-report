@@ -1,61 +1,48 @@
-"HQ
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：
-1.完成自动化跑泛化case的脚本，目前在一个list里记录这个case是否已分析完成或未开始分析，若是，则统计它们需要的内存，分为5个档：<50GB、50-100GB、100-200GB、200-500GB、>500GB，可以选择自动跑哪一个档的case，这样可以充分利用资源
-2. 在跑case是增加显示状态：是否在跑对比，占用内存等
-3. 在跑case时统计这个case的内存，最后统计出一个实际使用内存，看是否还有资源的可调整空间"	
-
 "ZWL
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1、复现漏报Reset_info01的case，复现过程发现报sync reset，但增量原理图画不全的问题，是由于报的点位连在了ff/clear上，所以画不全；并让研发一起分析，研发觉得可能是SG的bug，是因为if（rst） a[3:0] = {1'b0,a,1'b1}这种格式，SG只报rst一个点位，但是并没有复现出case说明；因此还需要进一步验证
-2、提GUI的遗留issue，DTS2504020032209、DTS2504020032372、DTS2504020032429、DTS2025040324990"	
+1、参加周会
+2、使用新包跑射频共7个配置的比对，ac、conv均有新增
+3、和蒋旺一起看漏报Reset_info01的部分，从debug日志来看，AST有报sync reset的点位，但是message中并没有，因此判断是有问题存在的
+4、使用新包跑FE_TSS和TSSC_WRAP的比对"	
 
 "LRF
-今日分析msg数：28
-今日发现issue数：2
+今日分析msg数：249
+今日发现issue数：
 今日回传case数：
 日报：
-DTS2504020018864 - 2
-DTS2025032423350 - 6
-DTS2025032423778 - 9
-DTS2504020036063 - 1
-CDC-4010
-配合焕东对ecdc漏报的常值进行LEC验证"
-
-"CJR
-今日分析msg数：35
-今日发现issue数：2
-今日回传case数：1
-日报：1.分析APP_CORE的漏报误报问题。
-1.1 Reset_info01漏报（13条）：UDP综合差异DIff190
-1.2 漏报ChyAcSyncMultiTimes(1): 复现提单DTS2504020029716。对于此复现测例，A工具报了ChyAcSyncMultiTimes：source flop """"TOP.din"" is synchronized twice (at ""TOP.U_TOP1.U_DFF.Q_D，TOP.U_TOP2.U_DFF.Q_D"") in same destination domain
-ECDC不报的原因在于在约束中对TOP.sel进行了约束，导致信号gate_1的Attributes中含有了data_clock相关的信息。
-1.3 SetupPortIgnoredNotToSeq unmatch(12条)：属于差异Diff75。
-1.4 SetBBox相关msg（8条）：属于UDP差异，标注为Diff190
-2 跑最新包验证射频情况：cpu time为1h7min，peak mem为36030MB
-3.file issue:CDC-GEN-N-493。此测例报了SetupRstNetUndefined(TOP/n283)，没有报SetupRstInferred；而SG没有报Reset_info09，但是SG报了Reset_info01（TOP.rst_ff）。
-可能原因为：SG和ECDC综合不同。在ECDC综合出来的电路中，触发器rst_ff经过了一个buffer和一个非门，然后经过一个与门（i283），最后连接到了其他触发器的复位端。
-而SG电路中，触发器rst_ff经过了一个buffer和一个非门，然后连接到了其他触发器的复位端。感觉SG综合的电路更加的合理。
-"
+1.参加周会
+2.分析USBC:
+Diff63-synth14-vague_match - 238
+Diff63-synth14-vague_match;Diff59-report4-multi_bits_merge - 21"
 
 "TZQ
-今日分析msg数：83
+今日分析msg数：31
 今日发现issue数：
 今日回传case数：
-日报：1.分析NFI_TOP的Ar和Setup部分：   ChyArSyncMultiTimes我们工具跟SG报的destination不一致(16条)为Diff191；SetupPortIgnoredNotToSeq(40条)为Diff75;SetupPortFullyConstrained(16条)为Diff75;Ac_conv01和Ac_conv02(11条)为Diff150                                 
-2.在分析SetupResetInferred时发现存在同步复位的综合不同导致我们误报的问题，正在尝试复现中"	
+日报：                                     
+1.参加PV周会                             
+2.分析完成NFI_TOP的Ar部分，Diff191-report30-reset_sync04(16条),Diff74-diff13-reset_sync04(4条)；分析Setup部分，Diff150-report22-conv(11条)                 
+3.复现了SetupResetInferred这个rule中当多个if-else嵌套时我们漏报的问题"
 
-"SYH
-今日分析msg数：807
+"TZB
+今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.分析NFI_PHYG_TOP的Ac部分误报漏报807条，均为DTS2025040129969，除此之外。昨日分析的msg中有部分是错标为DTS2025040129969的情况，将此部分剥离出来。Ac分析进度约为66%。
-2.回归DTS2025031320683，DTS2025031319679。测试发现不通过，已打回。
-3.和高强复现演示了DTS2025032638499的问题情况。RD已知晓，需要询问PE意见"
+1.分析TOP_lgc的setup部分，主要都为差异，Diff150-report22-conv、Diff75-line_no3、Diff18-irregular2-vclk、Diff124-diff20-reset_info01_07
+2、重跑DME_WRAP的对比结果,分析Ac的新增部分，主要差异为Diff59-report4-multi_bits_merge"
+
+
+"SYH
+今日分析msg数：
+今日发现issue数：1
+今日回传case数：
+日报：
+1.用DEBUG包重跑NAU_CAU_WRAP,帮冯敏看DTS2025031715101，DTS2025031713925，发现已经解决了。已反馈给冯敏，和应康确认DTS2025032538034是差异Diff111，家里标记Diff115有误。帮蒋旺看DTS2025031722089，修改了之前误标的10条msg，并新提了一个issue DTS2025040329301 。
+1.a：DTS2025040329301：DFF的Qpin直接接自身Dpin的loop结构，Enno漏报SetupRstInferred
+2.关单DTS2025031725937
+3.周会"
 
