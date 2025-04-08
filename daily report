@@ -17,13 +17,24 @@
 1、关闭问题单DTS2025031429354,为diff217
 2、修改红区统计脚本的问题
 3、重新分析TSSC_WRAP新增的漏报差值，都为差异，无新增issue
-4、继续尝试复现FE_TSS中漏报Reset_info01的case
-"	
+4、继续尝试复现FE_TSS中漏报Reset_info01的case"	
+
 "LRF
-今日分析msg数：
-今日发现issue数：
+今日分析msg数：56
+今日发现issue数：2
 今日回传case数：
-日报："	
+日报：
+分析USBC:
+Diff63/Diff59 - 15
+Pass-const - 2
+DTS2025040706259 - 4
+回归DTS2025031458302 - 已修复
+
+分析射频：
+3 flop:
+Diff150-report22-conv
+Diff143
+DTS2025040733332 - 7"	
 
 "CJR
 今日分析msg数：80
