@@ -8,6 +8,16 @@
 3、分析USBC中漏报误报Ar部分，为差异Diff85
 4、和蒋旺一起看漏报Reset_info01部分，有AST问题，同一个flop，sg既报同步又报异步；都需要解决"
 
+"LRF
+今日分析msg数：34
+今日发现issue数：3
+今日回传case数：
+日报：
+分析USBC
+DTS2025040910335 - 3
+DTS2025040847396 - 1
+DTS2025040916966 - 1
+DIff92-algoritm3-merge_with_other_source - 2"
 
 "CJR
 今日分析msg数：
