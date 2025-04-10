@@ -1,88 +1,45 @@
-"HQ
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：
-1. 更新DTS2025031445332最新状态
-2. 检查csv表里还标CDC开头的issue，皆为脚本问题
-3. 更改统计脚本逻辑，CDC开头的issue不放入遗留issue列中
-4. 和刘玲核对cnt.py的脚本逻辑，跑统计时，出现了数据遗失问题，已解决"	
-
 "ZWL
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1、复现出DTS2025031719293的case，已更新在DTS上；可能和Diff124-diff20-reset_info01_15有关，SG会推断部分无效代码；对于sg报同步复位，但增量原理图画不全的可参考这个case和diff
-2、和子奇看TSSC_WRAP的conv部分，为差异Diff143，和issue DTS2025040816023；
-3、跑TSSC_WRAP新的对比
-4、分析FE_TSS中漏报误报conv部分，为常值和diff143的差异"	
+1、分析TSSC_WRAP新增漏报常值部分，为差异diff213，漏报误报setup_port01，为常值差异，标记2 pass-const
+2、标记issue DTS2025031719293为差异Diff124-diff20-reset_info01_15
+3、分析USBC中漏报误报Ar部分，为差异Diff85
+4、和蒋旺一起看漏报Reset_info01部分，有AST问题，同一个flop，sg既报同步又报异步；都需要解决"
 
-"LRF
-今日分析msg数：86
-今日发现issue数：4
-今日回传case数：1
-日报：
-USBC:
-Pass-const - 6
-Diff59-report4-multi_bits_merge - 4
-Diff75-line_no3 - 2
-DTS2025031824151 - 2
-DTS2025040847396 - 18
-
-射频：
-DTS2025040808330 - 1
-DTS2504080054107
-
-和蒋旺讨论related_resets的合理性
-协助高强分析issue"	
 
 "CJR
-今日分析msg数：25
+今日分析msg数：
 今日发现issue数：
 今日回传case数：
-日报：1.跑conv depth设置为2及5时的性能：
-1.1 3rd tool_2depth 737.65 S,6961.38 MB
-1.2 3rd tool_5depth 877.32 S,8064.54 MB
-2.分析射频Ac_conv的误报漏报问题，由于ECDC误报Ac_conv01导致漏报Ac_conv04，属于差异Diff206.
-3.跑新泛化FE_TSS\APP_CORE比对
-4.和万林分析reset_info01的误报漏报问题，由于sg会解析generate if里面不生效的代码导致会误报reset_info01,验证方式为打开sg的增量原理图，如果是断开的（即作为复位连接到FF），则通过电路可以直接定位到verilog，判断是否属于这种情况，若是可标注Diff124-diff20-reset_info01_15。
-5.验证开启lint check的情况下，射频依旧会阻塞，同CDC-GEN-B-495
-6.跑门禁数据表格合并脚本"	
+日报：1.测试分析射频ChyDataBusDiffSyncScheme随机问题。多次测试cfg11配置下，不报ChyDataBusDiffSyncScheme。Destination在AcDatapath里面的reason为Validgate。应该报ChyDataBusDiffEnable。
+2.和何琦一起优化表格合并脚本
+3.分析新泛化NFI_TOP的conv漏报误报问题"	
 
 "TZQ
-今日分析msg数：277
-今日发现issue数：
+今日分析msg数：51
+今日发现issue数：2
 今日回传case数：
-日报：1.分析门禁新增的部分，发现一个issue，当出现1'bx <= dout1_6时我们会漏报ComprisonWithXZQ(CDC-4012，7条)；Diff81-synth15-unsynthesizable(14条)；
-发现builtin新增都是因为之前被Lint的msg阻断了没有报出来，Lint的msg做了修改，导致builtin新增了256条，经过分析是sdc文件的问题(没有TOP/)，已经修改了case的sdc文件            
-2.分析NFI_TOP的setup部分"	
+日报：1.分析门禁新增，在修改了一些case的sdc文件后，builtin新增数量大幅减少，新增的多位差异Diff104和Diff192，还有一些是脚本没有抓取到SG报的msg导致的误报。
+发现Diff98和Diff81这两个差异中描述到我们工具报了Lint的msg之后会停下来，但实际的情况是我们会继续check下去，然后由于lint的原因我们会和SG综合不同，导致报的msg不同，
+已提issue DTS2025040922669、DTS2025040923235              
+2.分析NFI_TOP的Ac部分，发现Unmatch的msg是属于脚本把SG报的文件和行号都抓错了导致的unmatch"	
 
 "TZB
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1、分析TOP_LGC的setup新增部分已完成都是差异
-2、分析门禁普通参数的setup部分大多是差异，其中对于module TOP(input aaa,rst,tmp,output reg ccc);
-wire clk;
-assign clk=1'b0;
-always @(posedge clk or negedge rst) begin
-if(!clk) begin
-cCC<=1b0;
-end
-else begin
-ccc<=aaa;
-endmodule这个case，Sg报了SYNTH_5192没check cdc，enno报了SigLogicDiffWithSensList但是check cdc了导致误报了SetupDataTiedToConst，但是跑了回退5个版本的Ecdc只报了SigLogicDiffWithSensList没有check cdc"	
+1、分析门禁普通参数的setup部分，对于一个ff的clk端为常值0，其ff/d为一个约束的reset的信号，，ff/q端无论是A工具还是ECDC都是一个静态信号，且ff/q与TOP的dout1端口相连，ecdc报这个端口是被约束的quasi_static(propagated)，sg报unconstrained，DTS2025040906956
+2、分析门禁cfg2的setup和ac，对于昨日提到的lint走停的问题已提DTS2025040918059
+"
 
 "SYH
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.和RD一起分析issue
-1.a DTS2025032709331，AST没有检测到destination DFF。导致漏报
-1.b DTS2025031717618，不论从代码还是网表上看，都是同步的，但是AST中却认为是异步，AST问题
-1.c DTS2025032711828，AST信息显示Stop at mux sel pin。适用Diff39-diff7-rst_inferred
-1.d DTS2025032902080，异步复/置位中存在同步复/置位，适用Diff124-diff20-reset_info01_13
-2.根据issue分西结果对BDP/NAU_CAU_WRAP的reset部分重标记，"
+1.分析标注NAU_CAU_WRAP的setup部分重跑后漏标的msg634条。 
+2.分析USBC的新增clock_info03的漏报19条，其中大部分是Diff12,4条新issue DTS2025041010503
+2.a DTS2025014010503: 在function epit_get_xftime中，返回值均不为常值，则推演出txfe_xftime结果为一个13位的XXXXXXXXXXX00，A工具和Enno都报了低2位为常值0，但是A工具报高三位为常值0，Enno没报。怀疑是A工具BUG"
