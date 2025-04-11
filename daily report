@@ -16,7 +16,8 @@
 1、复现Reset_info01的case并提issue DTS2025041022096，和脚本问题CDC-4014
 2、复现USBC中误报ArUnsync的case，最后发现是diff90的差异，case发回去作为regression
 3、提issue DTS2025041028660并复现case，这个case还可以当做AST的case；并且通过这个case发现SG对于reset_info01的增量原理图中的dest是按照source信号的连接顺序画的，
-比如sync_rese是flop b的同步reset，但在代码中先连接flop a，那画出来的增量原理图则是sync_reset到flop a；这点对于分析复现case的难度增大很多"
+比如sync_rese是flop b的同步reset，但在代码中先连接flop a，那画出来的增量原理图则是sync_reset到flop a；这点对于分析复现case的难度增大很多
+4、向研发演示CDC-gui-4013的操作步骤；主要原因是使用重定向文件的方式去启动的工具和GUI"
 
 "CJR
 今日分析msg数：103
