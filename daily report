@@ -1,55 +1,29 @@
+"HQ
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1. 帮助研发跑设置SG参数：set_option infer_enabled_flop false后的对比脚本
+2. 分析自动生成测试报告逻辑，将必要数据整理到excel并发回家里，再通过刘玲的python脚本整合到word里，已发回一版数据（msg名未加密，用""xxx""暂时代替，现在用base64加密，需要刘玲后面拿到数据后对message名进行解密）
+3. 帮助焕东改进lec的脚本逻辑（整合脚本的修改）
+4. 集成艺豪的对比golden文件的脚本，加入对比流程内，每次对比时弹出选项，如果同意，会先拿本次结果和历史结果对比，若一致则不进行对比"
+
 "ZWL
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1、分析TSSC_WRAP新增漏报常值部分，为差异diff213，漏报误报setup_port01，为常值差异，标记2 pass-const
-2、标记issue DTS2025031719293为差异Diff124-diff20-reset_info01_15
-3、分析USBC中漏报误报Ar部分，为差异Diff85
-4、和蒋旺一起看漏报Reset_info01部分，有AST问题，同一个flop，sg既报同步又报异步；都需要解决"
-
-"LRF
-今日分析msg数：34
-今日发现issue数：3
-今日回传case数：
-日报：
-分析USBC
-DTS2025040910335 - 3
-DTS2025040847396 - 1
-DTS2025040916966 - 1
-DIff92-algoritm3-merge_with_other_source - 2"
-
-"CJR
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：1.测试分析射频ChyDataBusDiffSyncScheme随机问题。多次测试cfg11配置下，不报ChyDataBusDiffSyncScheme。Destination在AcDatapath里面的reason为Validgate。应该报ChyDataBusDiffEnable。
-2.和何琦一起优化表格合并脚本
-3.分析新泛化NFI_TOP的conv漏报误报问题"	
+1、复现Reset_info01的case并提issue DTS2025041022096，和脚本问题CDC-4014
+2、复现USBC中误报ArUnsync的case，最后发现是diff90的差异，case发回去作为regression
+3、提issue DTS2025041028660并复现case，这个case还可以当做AST的case；并且通过这个case发现SG对于reset_info01的增量原理图中的dest是按照source信号的连接顺序画的，
+比如sync_rese是flop b的同步reset，但在代码中先连接flop a，那画出来的增量原理图则是sync_reset到flop a；这点对于分析复现case的难度增大很多"
 
 "TZQ
-今日分析msg数：51
-今日发现issue数：2
-今日回传case数：
-日报：1.分析门禁新增，在修改了一些case的sdc文件后，builtin新增数量大幅减少，新增的多位差异Diff104和Diff192，还有一些是脚本没有抓取到SG报的msg导致的误报。
-发现Diff98和Diff81这两个差异中描述到我们工具报了Lint的msg之后会停下来，但实际的情况是我们会继续check下去，然后由于lint的原因我们会和SG综合不同，导致报的msg不同，
-已提issue DTS2025040922669、DTS2025040923235              
-2.分析NFI_TOP的Ac部分，发现Unmatch的msg是属于脚本把SG报的文件和行号都抓错了导致的unmatch"	
+今日分析msg数：86
+今日发现issue数：3
+今日回传case数：2
+日报：1.分析门禁新增的msg，提了三个issue，CDC-4015：SG报了Propagate_Resets但脚本没有抓出来，导致误报；
+DTS2025041020571：当一个port通过buffer连到一个net上最后连到FF的rst pin时，我们报了port的not propagate，但SG只报了port的propagate；
+DTS2025041017174：关于WireMultiAssign这条msg，我们的行为与差异Diff128相反；其他的都属与差异                                      
+2.分析NFI_TOP的Ac部分，发现一个issue，DTS2025041010473：当用ValidGate的方式进行同步时，最后链接到一个BBOX上，A工具报的AcSync at and gate，但ECDC报的是AcNoSyncScheme"
 
-"TZB
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：
-1、分析门禁普通参数的setup部分，对于一个ff的clk端为常值0，其ff/d为一个约束的reset的信号，，ff/q端无论是A工具还是ECDC都是一个静态信号，且ff/q与TOP的dout1端口相连，ecdc报这个端口是被约束的quasi_static(propagated)，sg报unconstrained，DTS2025040906956
-2、分析门禁cfg2的setup和ac，对于昨日提到的lint走停的问题已提DTS2025040918059
-"
-
-"SYH
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：
-1.分析标注NAU_CAU_WRAP的setup部分重跑后漏标的msg634条。 
-2.分析USBC的新增clock_info03的漏报19条，其中大部分是Diff12,4条新issue DTS2025041010503
-2.a DTS2025014010503: 在function epit_get_xftime中，返回值均不为常值，则推演出txfe_xftime结果为一个13位的XXXXXXXXXXX00，A工具和Enno都报了低2位为常值0，但是A工具报高三位为常值0，Enno没报。怀疑是A工具BUG"
