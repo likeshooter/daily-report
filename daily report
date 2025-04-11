@@ -6,7 +6,7 @@
 1. 帮助研发跑设置SG参数：set_option infer_enabled_flop false后的对比脚本
 2. 分析自动生成测试报告逻辑，将必要数据整理到excel并发回家里，再通过刘玲的python脚本整合到word里，已发回一版数据（msg名未加密，用""xxx""暂时代替，现在用base64加密，需要刘玲后面拿到数据后对message名进行解密）
 3. 帮助焕东改进lec的脚本逻辑（整合脚本的修改）
-4. 集成艺豪的对比golden文件的脚本，加入对比流程内，每次对比时弹出选项，如果同意，会先拿本次结果和历史结果对比，若一致则不进行对比"
+4. 集成艺豪的对比golden文件的脚本，加入对比流程内，每次对比时弹出选项，如果同意，会先拿本次结果和历史结果对比，若一致则不进行对比"	
 
 "ZWL
 今日分析msg数：
@@ -15,9 +15,8 @@
 日报：
 1、复现Reset_info01的case并提issue DTS2025041022096，和脚本问题CDC-4014
 2、复现USBC中误报ArUnsync的case，最后发现是diff90的差异，case发回去作为regression
-3、提issue DTS2025041028660并复现case，这个case还可以当做AST的case；并且通过这个case发现SG对于reset_info01的增量原理图中的dest是按照source信号的连接顺序画的，
-比如sync_rese是flop b的同步reset，但在代码中先连接flop a，那画出来的增量原理图则是sync_reset到flop a；这点对于分析复现case的难度增大很多
-4、向研发演示CDC-gui-4013的操作步骤；主要原因是使用重定向文件的方式去启动的工具和GUI"
+3、提issue DTS2025041028660并复现case，这个case还可以当做AST的case（age_copy_done_bmp_dly6和age_copy_done_bmp_dly7同时存在与多个always中作为同步reset，同时作用的第一个always块中age_copy_done_bmp_dly6是作为age_copy_done_pram的同步reset；第二个always中age_copy_done_bmp_dly7作为cache_copy_cnt的同步reset；但ecdc漏报age_copy_done_bmp_dly7的同步reset；）；并且通过这个case发现SG对于reset_info01的增量原理图中的dest是按照source信号的连接顺序画的，比如sync_rese是flop b的同步reset，但在代码中先连接flop a，那画出来的增量原理图则是sync_reset到flop a；这点对于分析复现case的难度增大很多
+4、向研发演示CDC-gui-4013的操作步骤；主要原因是使用重定向文件的方式去启动的工具和GUI"	
 
 "CJR
 今日分析msg数：103
@@ -38,7 +37,27 @@
 今日发现issue数：3
 今日回传case数：2
 日报：1.分析门禁新增的msg，提了三个issue，CDC-4015：SG报了Propagate_Resets但脚本没有抓出来，导致误报；
-DTS2025041020571：当一个port通过buffer连到一个net上最后连到FF的rst pin时，我们报了port的not propagate，但SG只报了port的propagate；
-DTS2025041017174：关于WireMultiAssign这条msg，我们的行为与差异Diff128相反；其他的都属与差异                                      
-2.分析NFI_TOP的Ac部分，发现一个issue，DTS2025041010473：当用ValidGate的方式进行同步时，最后链接到一个BBOX上，A工具报的AcSync at and gate，但ECDC报的是AcNoSyncScheme"
+DTS2025041020571：当一个port通过buffer连到一个net上最后连到FF的rst pin时，我们报了port的not propagate，
+但SG只报了port的propagate；DTS2025041017174：关于WireMultiAssign这条msg，我们的行为与差异Diff128相反；其他的都属与差异                                       
+2.分析NFI_TOP的Ac部分，发现一个issue，DTS2025041010473：当用ValidGate的方式进行同步时，最后链接到一个BBOX上，A工具报的AcSync at and gate，但ECDC报的是AcNoSyncScheme"	
 
+"TZB
+今日分析msg数：132
+今日发现issue数：1
+今日回传case数：
+日报：
+1.分析TOP_LGC的Ac部分，都为差异Diff71-report6-black_box
+2.分析门禁参数大多为差异，对于port clk[3:2]，rst[3:2]其虽然在verilog中定义但是无连接关系，A工具对这类端口的是fully constrained 约束：inferred_abstract_port{TOP.clk[0](clka)}，
+ecdc报的是fully constrained 约束：inferred_abstract_port，对于端口rst[1]A工具比ecdc工具报的fully constrained 约束中多一个clka，DTS2025041019163"	
+
+"SYH
+今日分析msg数：318
+今日发现issue数：1
+今日回传case数：
+日报：
+1.分析NAU_CAU_WRAP重跑后的对比脚本漏标与新增的msg318条，所有issue msg均以最新分析结果标注。但仍有2个issue，DTS2025032709331，DTS2025031927363遗留，需要提取小case协助复现
+2.尝试提取DTS2025032709331的复现小case
+3.帮冯敏看DTS2501020018864问题，经评估不用跑LEC，代码逻辑简单，适用Diff213
+4.关单DTS2025031715101，DTS2025031713925，DTS2025032711828，DTS2025032902080
+5.DTS2025041026894:增量原理图搜索栏中搜索任意一个DFF obj，GUI显示一个没有任何连接的verfic_dff
+"
