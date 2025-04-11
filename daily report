@@ -18,6 +18,15 @@
 3、提issue DTS2025041028660并复现case，这个case还可以当做AST的case（age_copy_done_bmp_dly6和age_copy_done_bmp_dly7同时存在与多个always中作为同步reset，同时作用的第一个always块中age_copy_done_bmp_dly6是作为age_copy_done_pram的同步reset；第二个always中age_copy_done_bmp_dly7作为cache_copy_cnt的同步reset；但ecdc漏报age_copy_done_bmp_dly7的同步reset；）；并且通过这个case发现SG对于reset_info01的增量原理图中的dest是按照source信号的连接顺序画的，比如sync_rese是flop b的同步reset，但在代码中先连接flop a，那画出来的增量原理图则是sync_reset到flop a；这点对于分析复现case的难度增大很多
 4、向研发演示CDC-gui-4013的操作步骤；主要原因是使用重定向文件的方式去启动的工具和GUI"	
 
+"LRF
+今日分析msg数：47
+今日发现issue数：
+今日回传case数：
+日报：
+1.回归USBC的DTS单
+2.分析USBC的conv - 需要将sg的option infer_enabled_flop设置为false来比对
+3.协助RD定位相关问题 "
+
 "CJR
 今日分析msg数：103
 今日发现issue数：
