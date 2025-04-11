@@ -18,6 +18,20 @@
 3、提issue DTS2025041028660并复现case，这个case还可以当做AST的case；并且通过这个case发现SG对于reset_info01的增量原理图中的dest是按照source信号的连接顺序画的，
 比如sync_rese是flop b的同步reset，但在代码中先连接flop a，那画出来的增量原理图则是sync_reset到flop a；这点对于分析复现case的难度增大很多"
 
+"CJR
+今日分析msg数：103
+今日发现issue数：
+今日回传case数：
+日报：1.分析USBC conv02的误报漏报。
+1.1 此泛化SG报Ac_conv的synchronizer为与destination触发器相连的上一层级的net上，而ECDC报在destination触发器的q端，导致无法走脚本proc。其中存在86条conv02属于差异Diff150，存在9条属于Diff143.
+1.2 由于sg综合成带使能的FF，导致误报漏报太多，因此研发建议关闭infer_enabled_flop进行对比，分析结果是否会优化。数据结果还在比对中。
+2.分析NFI_TOP的reset_info01误报漏报.
+2.1 其中16条漏报属于综合差异导致，标记为Diff3
+2.2 SG推断为derived同步复位，而ECDC没有推断出，正在复现中。
+2.3 和万林一起研究发现，SG报了derived同步复位，但是增量电路图中显示的destination为带有异步复位的触发器，不是真正的dest，之所以显示此dest的原因是因为此触发器的verilog代码在靠前的位置，因此sg的电路图存在误导性，增加了分析的难度。
+3 修改门禁数据合并脚本。
+4.和何琦定位修改泛化数据表格合并脚本。"
+
 "TZQ
 今日分析msg数：86
 今日发现issue数：3
