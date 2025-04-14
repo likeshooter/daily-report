@@ -1,72 +1,96 @@
-"HQ
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：
-1. 帮助研发跑设置SG参数：set_option infer_enabled_flop false后的对比脚本
-2. 分析自动生成测试报告逻辑，将必要数据整理到excel并发回家里，再通过刘玲的python脚本整合到word里，已发回一版数据（msg名未加密，用""xxx""暂时代替，现在用base64加密，需要刘玲后面拿到数据后对message名进行解密）
-3. 帮助焕东改进lec的脚本逻辑（整合脚本的修改）
-4. 集成艺豪的对比golden文件的脚本，加入对比流程内，每次对比时弹出选项，如果同意，会先拿本次结果和历史结果对比，若一致则不进行对比"	
+周五
 
 "ZWL
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1、复现Reset_info01的case并提issue DTS2025041022096，和脚本问题CDC-4014
-2、复现USBC中误报ArUnsync的case，最后发现是diff90的差异，case发回去作为regression
-3、提issue DTS2025041028660并复现case，这个case还可以当做AST的case（age_copy_done_bmp_dly6和age_copy_done_bmp_dly7同时存在与多个always中作为同步reset，同时作用的第一个always块中age_copy_done_bmp_dly6是作为age_copy_done_pram的同步reset；第二个always中age_copy_done_bmp_dly7作为cache_copy_cnt的同步reset；但ecdc漏报age_copy_done_bmp_dly7的同步reset；）；并且通过这个case发现SG对于reset_info01的增量原理图中的dest是按照source信号的连接顺序画的，比如sync_rese是flop b的同步reset，但在代码中先连接flop a，那画出来的增量原理图则是sync_reset到flop a；这点对于分析复现case的难度增大很多
-4、向研发演示CDC-gui-4013的操作步骤；主要原因是使用重定向文件的方式去启动的工具和GUI"	
+1、回归DTS2025031719293，为差异Diff124-diff20-reset_info01_15；回归DTS2025040115056，已修复
+2、复现DTS2025031443906的case，共两个case
+3、回归DTS2025032536233，研发给的说明是对于标量和一维数组，存在异步复位不报同步复位是Diff124-diff20-reset_info01_13；但Diff124-diff20-reset_info01_13中写的是做成和SG一致，因此不能用，
+第二是画出来的增量原理图中的dest是一个既有同步又有异步的flop（是一个标量），但SG还是报了同步，因此这个差异还是用不了；
+第三应该是sg的增量原理图画错了，导致无法确认真正作用为同步reset的flop是哪一个；对于sg增量原理图可能画错的情况，DTS2025041022096的case能说明"
 
 "LRF
-今日分析msg数：47
-今日发现issue数：
+今日分析msg数：36
+今日发现issue数：1
 今日回传case数：
 日报：
-1.回归USBC的DTS单
-2.分析USBC的conv - 需要将sg的option infer_enabled_flop设置为false来比对
-3.协助RD定位相关问题 "
+1.分析USBC的conv
+Diff150 - 14
+CDC-4020:
+ecdc report:ChySameSrcConvExcSeq
+Multiple synchronizers 'TOP/U_TEST_0/dest/q ......'
+
+sg report:Ac_conv02
+4 synchronizers (TOP.tmp[0],TOP.tmp[1]...)......
+
+TOP.tmp[0]其实连接的就是TOP/U_TEST_0/dest/q，目前脚本会将这种报告判断为误报和漏报，希望脚本能直接将这种匹配上，目前涉及的rule为Ac_conv01/02/03
+
+2.和袁姐看Reset_info01的相关问题"
 
 "CJR
-今日分析msg数：103
+今日分析msg数：122
 今日发现issue数：
 今日回传case数：
-日报：1.分析USBC conv02的误报漏报。
-1.1 此泛化SG报Ac_conv的synchronizer为与destination触发器相连的上一层级的net上，而ECDC报在destination触发器的q端，导致无法走脚本proc。其中存在86条conv02属于差异Diff150，存在9条属于Diff143.
-1.2 由于sg综合成带使能的FF，导致误报漏报太多，因此研发建议关闭infer_enabled_flop进行对比，分析结果是否会优化。数据结果还在比对中。
-2.分析NFI_TOP的reset_info01误报漏报.
-2.1 其中16条漏报属于综合差异导致，标记为Diff3
-2.2 SG推断为derived同步复位，而ECDC没有推断出，正在复现中。
-2.3 和万林一起研究发现，SG报了derived同步复位，但是增量电路图中显示的destination为带有异步复位的触发器，不是真正的dest，之所以显示此dest的原因是因为此触发器的verilog代码在靠前的位置，因此sg的电路图存在误导性，增加了分析的难度。
-3 修改门禁数据合并脚本。
-4.和何琦定位修改泛化数据表格合并脚本。"
+日报：1.分析关闭infer_enabled_flop进行对比的USBC conv02。2条误报，1条漏报都属于dataclock导致。其中118条属于CDC-4020（对于synchronizer SG是报在net上，ECDC报在FF的Q pin上）；已标记为issue，case瑞风已回传，待给出差异。
+2.复现Reset_info01漏报（DTS2025041110872）：SG存在增量原理图bug，增量电路图中显示的destination为带有异步复位的触发器，不是真正的dest。
+其实是具有误导性的，真正dest是其他的没有带异步复位的触发器。同时此单，还存在漏报derived synchronous set及undriven synchronous set及primary synchronous set共8条msg。 "	
 
 "TZQ
-今日分析msg数：86
-今日发现issue数：3
-今日回传case数：2
-日报：1.分析门禁新增的msg，提了三个issue，CDC-4015：SG报了Propagate_Resets但脚本没有抓出来，导致误报；
-DTS2025041020571：当一个port通过buffer连到一个net上最后连到FF的rst pin时，我们报了port的not propagate，
-但SG只报了port的propagate；DTS2025041017174：关于WireMultiAssign这条msg，我们的行为与差异Diff128相反；其他的都属与差异                                       
-2.分析NFI_TOP的Ac部分，发现一个issue，DTS2025041010473：当用ValidGate的方式进行同步时，最后链接到一个BBOX上，A工具报的AcSync at and gate，但ECDC报的是AcNoSyncScheme"	
+今日分析msg数：81
+今日发现issue数：
+今日回传case数：
+日报：1.分析门禁新增的msg,均为差异，主要是Lint问题导致的综合不同的原因                
+2.分析NFI_TOP的Ac部分，目前也都是多bit的差异Diff59                                
+3.回归问题单DTS2025031820782                   
+4.跑NFI_TOP的对比脚本"
 
 "TZB
-今日分析msg数：132
-今日发现issue数：1
+今日分析msg数：32
+今日发现issue数：
 今日回传case数：
 日报：
-1.分析TOP_LGC的Ac部分，都为差异Diff71-report6-black_box
-2.分析门禁参数大多为差异，对于port clk[3:2]，rst[3:2]其虽然在verilog中定义但是无连接关系，A工具对这类端口的是fully constrained 约束：inferred_abstract_port{TOP.clk[0](clka)}，
-ecdc报的是fully constrained 约束：inferred_abstract_port，对于端口rst[1]A工具比ecdc工具报的fully constrained 约束中多一个clka，DTS2025041019163"	
+分析门禁普通、cfg1\cfg2的Setup及Ac部分，均为差异，主要是综合上的差异
+改了一些case的SDC文件"	
 
 "SYH
-今日分析msg数：318
-今日发现issue数：1
+今日分析msg数：
+今日发现issue数：
 今日回传case数：
 日报：
-1.分析NAU_CAU_WRAP重跑后的对比脚本漏标与新增的msg318条，所有issue msg均以最新分析结果标注。但仍有2个issue，DTS2025032709331，DTS2025031927363遗留，需要提取小case协助复现
-2.尝试提取DTS2025032709331的复现小case
-3.帮冯敏看DTS2501020018864问题，经评估不用跑LEC，代码逻辑简单，适用Diff213
-4.关单DTS2025031715101，DTS2025031713925，DTS2025032711828，DTS2025032902080
-5.DTS2025041026894:增量原理图搜索栏中搜索任意一个DFF obj，GUI显示一个没有任何连接的verfic_dff
-"
+1.确认DME_WRAP/NAU_CAU_WRAP/BDP中剩余标记的issue单号，修改为对应差异。目前三个模块的setup reset部分中各自仅有DTS2025040716695，DTS202503192736和DTS2025031927363
+2，和高强袁洁一起看DTS2025040129969/DTS2025032638499，根据袁洁的要求，更新了issue的描述并贴图方便评差异DTS2025040129969经袁洁评估可适用Diff59-report4-multi_bits_merge
+3.关单DTS2025031723831，DTS2025040129969，DTS2025031722089"
+
+周六：
+
+"CJR
+今日分析msg数：20
+今日发现issue数：
+今日回传case数：
+日报：1.射频cfg1_2误报conv02，之前版本是10个qualifier汇聚报了一条conv02，现在是这十个qualifier分开报了六条conv02，因为其中一个qualifier状态属于conv，导致无法将此10条qualifer报在一起。此bug研发已知晓。
+cfg11漏报Ac_conv04,在其他配置中此destination在Ac中的reason为validgate和ricirculationmux，而cfg11的reason为validgate。待用新包确认修复问题。
+2.分析USBC conv02:2条属于CDC-4020;
+3.关单DTS2025040856893属于差异Diff206，验证DTS2025031712647，提供截图及说明
+4.跑新泛化FE_TSS比对"	"
+
+"TZB
+今日分析msg数：166
+今日发现issue数：
+今日回传case数：
+日报：
+1.分析门禁cfg2的setup部分主要是综合上差异和一些脚本问题，已记录在脚本问题表格中
+2.分析TOP_LGC的Ac部分，都是Diff59多比特差异 
+"	
+
+"SYH
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.尝试提取DTS2025031927363的复现小case，只提取出了和代码中电路结构的相同的case，但无法复现issue。
+2.关单DTS2025031333005，DTS2025031712647
+3.和蒋旺确认，确定DTS2025040329301适用Diff124-diff20-reset_info13
+4.重跑NAU_CAU_WRAP/BDP/DME_WRAP"
+
