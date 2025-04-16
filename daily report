@@ -3,60 +3,75 @@
 今日发现issue数：
 今日回传case数：
 日报：
-1、回归DTS2025031314309，已修复；
-2、分析FE_TSS新增漏报常值部分，是由于差异掉了，已重新标记上
-3、和蒋旺一起看DTS2025031443906的问题，主要是assign req_wcmd_vld = req_vld && req_hop && req_type;和assign req_cmd_vld = req_vld && req_hop;这两个语句导致，SG综合比ecdc多综合一个and引起优先级问题；因此需要两个差异编号，一个优先级差异Diff124-diff20-reset_info01_07；但没有相关的综合差异
-4、和瑞风一起看BCP_TSS的ar部分，为差异diff85和diff191；还有一个常值是属于差异Diff213"	
+1、跑TSSC_WRAP的最新对比，剩余issue为：DTS2025040816023、DTS2025031443906（综合差异和优先级差异，但缺少综合差异编号）
+2、提save_sesion的issue CDC-4022；直接使用命令save_session -force test，没有保存gui可以通过project去open的session文件（*.ennooprj），是否考虑互通
+3、更新验证gui上个节点新增的遗留issue，已验证10个，剩余2个未验证"	
 
 "LRF
-今日分析msg数：186
-今日发现issue数：1
+今日分析msg数：105
+今日发现issue数：2
 今日回传case数：
 日报：
-Hi18XXE-BCP_TSS:
-Diff115 - 58
-Diff212-diff44- logic_optimization - 4
-Diff124-diff20-reset_info01_17 - 4
-Diff24-synth4-mux_and - 2
-Diff85/Diff191-report30-restet_sync04
-Pass-const - 2
-DTS2025041421692 - 差异Diff213
-
+射频3 flop:
+Diff171 - 8
 USBC:
-DTS2025041426411 - 1"
+DTS2025041535500 - 2
+回归issue:
+DTS2025031824617
+DTS2025031824022
+DTS2025031823919
+DTS2025031815212
+DTS2025031821822
+DTS2025032423350 - Diff124-diff20-reset_info01_15
+DTS2025033110454
+DTS2025032535563
+DTS2025031449113
+DTS2025032706630 - Diff192-diff35-logic_optimization"
+
+"JR
+今日分析msg数：950
+今日发现issue数：0
+今日回传case数：0
+日报：
+1.回归DTS上的3个issue；
+2.分析Hi18XXE TOP_LGC最新csv新增的误报漏报：
+2.1 ar新增的误报漏报有882条，分析完成，都是差异：Diff85和Diff51;
+2.2 ac新增的误报漏报脚本bug修复后还有61条误报漏报，分析了54条，是差异：Diff63和Diff59，还剩7条待分析;
+3.分析门禁新增误报漏报，都是脚本问题导致的新增，已向心雨反馈"
 
 "CXY
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.修改新泛化对比脚本，适配conv系列rule使用sg infered_enable_flop false的配置，其余rule使用sg infered_enable_flop true的配置
-2.和何琦一起修改run脚本，适配新泛化对比脚本的修改
-3.给康凯提供上周他的对于setup_port01重构的代码 在现场不匹配的场景case
-4.更新现场的对比脚本，验证库上的代码在现场的情况。修复之前对比脚本对于black-box在ac对比中的bug，debug上周万林提的关于Reset_info01的对比问题，新包脚本中已经解决
-5.回归issue单，DTS2025031926156，回归通过已关闭，DTS2025032022578，问题仍然存在，已经让家里reopen，并且和高强视频会议重新看了这个问题"
+1.对接康凯关于setup_port01,苏黎分支包的对比脚本代码修改，提供有脚本问题的场景
+2.修复DME_WRAP上的脚本block问题，修复对比脚本将conv和setup分开跑不同sg rpt时发现的moresimple路径在脚本中没有更新的问题，原因是脚本中有全局变量未及时更新，修复LIGHTV300/HIPHY_SUB中black-box不match的脚本问题，修复门禁builtin上lint msg和builtin rule误匹配上的问题
+3在新泛化Hi18XXE/NAU_CAU_WRAP上验证上周完成的diff190 proc，验证通过"
 
 "CJR
-今日分析msg数：13
+今日分析msg数：39
 今日发现issue数：
-今日回传case数：
-日报：1.分析USBC conv02
-1.1 如果存在fanout到其他的时钟域，SG不报此qualifier，属于差异Diff122。
-1.2 由于net不匹配，属于CDC-4020
-1.3 由于SG报了其他的data clock domain的汇聚，因此会导致漏报，属于DTS2025041426411
-2.和瑞风一起看reset_info01的问题。"	
+今日回传case数：1
+日报：1、分析USBC conv02：4条属于DTS2025041426411，3条属于Diff122。
+2、复现DTS2025041426411问题：由于存在其他的data clock domain的汇聚，ECDC不报，SG报了conv02，且汇聚的之后必须连接到触发器，否则SG也不报。
+3、整理射频数据（3拍、2拍、cfg1_1、cfg1_2、cfg2）
+4.射频Ar均属于差异Diff85及Diff211"	
 
 "TZB
-今日分析msg数：232
+今日分析msg数：144
+今日发现issue数：
+今日回传case数：
+日报：
+1.回归关闭DTS2025040906956
+2.分析TOP_LGC中Ac部分，Diff71-report6-black_box\Diff59-report4-multi_bits_merge\Diff63-synth14-vague_match
+3.重跑HIPHY_SUB的对比结果"	
+
+"SYH
+今日分析msg数：5501
 今日发现issue数：1
 今日回传case数：
 日报：
-1.分析TOP_LGC的Ac部分都是差异，Diff59,Diff71,对于一个mux的输出端连接黑盒的一个端口A0，mux的两个输入及Sel分别连接ff1/q，ff2/q，ff3/q，mux 的sel和2个data的domain相同，mux的output的domain和sel、data的domain一样，黑盒的端口A0被约束的clock是一个虚拟时钟，A工具报了3条（mux/sel、mux/data1、mux/data2 --> A0）不同步，ECDC sync和unsync都没报，DTS2025041423858
-2、分析回归门禁的新增和issue"
-
-"SYH
-今日分析msg数：147
-今日发现issue数：
-今日回传case数：
-日报：
-1.分析BDP/NAU_CAU_WRAP/DDR_SUB重跑后新增/掉标的误报漏报数据，BDP部分6个Diff150，17个Diff124-diff20-reset_info01_13/06,NAU_CAU_WRAP;12个Diff124-diff20-reset_info01_13,4个Diff224。DDR_SUB,104个Diff224，DME_WRAP:4个Diff124-diff20-reset_info01_13"
+1.分析NAU_CAU_WARP/BDP/DDR_SUB/DME_WRAP的ac/ar部分，确保分析进度在100%
+2.分析NFI_PHYG_TOP的误报漏报，2.a setup部分将已回归的issue重标，2个Diff124-diff20-reset_info01_15，5个Diff124-diff20-reset_info01_13，103个Diff218。
+2.b ac部分分析5501条，均为Diff59导致
+3.新提一个issue DTS2025041522016：Enno漏报同步复位"
