@@ -1,77 +1,153 @@
+16：
 "ZWL
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1、跑TSSC_WRAP的最新对比，剩余issue为：DTS2025040816023、DTS2025031443906（综合差异和优先级差异，但缺少综合差异编号）
-2、提save_sesion的issue CDC-4022；直接使用命令save_session -force test，没有保存gui可以通过project去open的session文件（*.ennooprj），是否考虑互通
-3、更新验证gui上个节点新增的遗留issue，已验证10个，剩余2个未验证"	
+1、验证剩余2个gui新增问题，其中#36940存在需求问题，需要再后续gui重新设计后再做这部分功能；#38381是为复现问题；除此之外，上次节点的gui新增问题均已修复
+2、写TSSC_WRAP的差异报告
+3、跑TSSC_WRAP和FE_TSS的比对数据"	
 
 "LRF
-今日分析msg数：105
-今日发现issue数：2
+今日分析msg数：26
+今日发现issue数：
 今日回传case数：
 日报：
-射频3 flop:
-Diff171 - 8
-USBC:
-DTS2025041535500 - 2
-回归issue:
-DTS2025031824617
-DTS2025031824022
-DTS2025031823919
-DTS2025031815212
-DTS2025031821822
-DTS2025032423350 - Diff124-diff20-reset_info01_15
-DTS2025033110454
-DTS2025032535563
-DTS2025031449113
-DTS2025032706630 - Diff192-diff35-logic_optimization"
+1.撰写差异报告
+2.分析BCP_TSS/USBC
+3.回归issue"
 
 "JR
-今日分析msg数：950
+今日分析msg数：25
 今日发现issue数：0
 今日回传case数：0
 日报：
-1.回归DTS上的3个issue；
-2.分析Hi18XXE TOP_LGC最新csv新增的误报漏报：
-2.1 ar新增的误报漏报有882条，分析完成，都是差异：Diff85和Diff51;
-2.2 ac新增的误报漏报脚本bug修复后还有61条误报漏报，分析了54条，是差异：Diff63和Diff59，还剩7条待分析;
-3.分析门禁新增误报漏报，都是脚本问题导致的新增，已向心雨反馈"
+1.分析Hi18XXE TOP_LGC剩余未分析误报漏报，今日Hi18XXE TOP_LGC的误报漏报都已分析完成：
+1.1 setup共18条，已分析完成，都是差异，2条是差异Diff213,16条是差异Diff171;
+1.2 ac共7条，都已分析完成，3条是常值推导导致的漏报，1条是差异Diff62,还有3条是issue：DTS2025040847396;
+2.回归Hi18XXE TOP_LGC的issue，ac还剩3个issue：DTS2025032827494、DTS2025040847396、DTS2025041423858,setup还剩一个issue：DTS2025032013918；
+3.写Hi18XXE TOP_LGC的差异报告"	
 
 "CXY
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.对接康凯关于setup_port01,苏黎分支包的对比脚本代码修改，提供有脚本问题的场景
-2.修复DME_WRAP上的脚本block问题，修复对比脚本将conv和setup分开跑不同sg rpt时发现的moresimple路径在脚本中没有更新的问题，原因是脚本中有全局变量未及时更新，修复LIGHTV300/HIPHY_SUB中black-box不match的脚本问题，修复门禁builtin上lint msg和builtin rule误匹配上的问题
-3在新泛化Hi18XXE/NAU_CAU_WRAP上验证上周完成的diff190 proc，验证通过"
+1.debug 差异Proc Diff18在新泛化上有漏标的情况，发现是对于infer_clock_domain的处理有问题，导致解析双方工具的key不一致，修复bug
+2.优化昨天对于全局变量$moresimple的处理
+3.对接康凯关于Setup_port01的代码修改，跑门禁全量case，检查结果中是否还存在脚本问题，目前Setup_port01新增的内容中无脚本问题
+4.回归4/30交付的新泛化csv中的脚本问题，目前交付的新泛化case中无遗留脚本问题
+5.和客户对齐交付时普通门禁，门禁cfg1，门禁cfg2，考训case，射频case，新泛化case的参数配置"	
 
 "CJR
-今日分析msg数：39
-今日发现issue数：
+今日分析msg数：18
+今日发现issue数：2
 今日回传case数：1
-日报：1、分析USBC conv02：4条属于DTS2025041426411，3条属于Diff122。
-2、复现DTS2025041426411问题：由于存在其他的data clock domain的汇聚，ECDC不报，SG报了conv02，且汇聚的之后必须连接到触发器，否则SG也不报。
-3、整理射频数据（3拍、2拍、cfg1_1、cfg1_2、cfg2）
-4.射频Ar均属于差异Diff85及Diff211"	
+日报：1、分析射频Ar脚本没有反标上误报漏报，同之前表格报的相同属于差异
+2、分析USBC conv02：
+2.1、复现提单DTS2025041616416：dest2_1和dest3_1经过打拍，分别连接到了mux的data input端，而此mux的输出仅带有一个qualifier的信息，因此这两个qualifier是不可以被认为是汇聚的。待做实验验证不同sg版本是否行为一致
+2.2、DTS2025041613079:ECDC误报ChySameSrcConvExcSeq，且打开增量电路图没有画完整。A工具没有报出相关的Rule。
+3、0224射频数据已完成提取（3拍、2拍、cfg1_1、cfg1_2、cfg2）。"
 
 "TZB
-今日分析msg数：144
+今日分析msg数：16
 今日发现issue数：
 今日回传case数：
 日报：
-1.回归关闭DTS2025040906956
-2.分析TOP_LGC中Ac部分，Diff71-report6-black_box\Diff59-report4-multi_bits_merge\Diff63-synth14-vague_match
-3.重跑HIPHY_SUB的对比结果"	
+1.分析门禁新增部分都是差异
+2.写DDR_SUB的差异报告"
 
 "SYH
-今日分析msg数：5501
+今日分析msg数：128
+今日发现issue数：3
+今日回传case数：
+日报：
+1.分析NFI_PHYG_TOP的ac部分漏报
+msg：64条DTS2025041627010，64条Diff59，分析过程中发现了一个脚本问题，两个issue
+1.a 脚本问题: 对比脚本对SG的msg部分抓取，对于rs.v文件的所有Ac msg，对比脚本抓取了obj，file_name,line_num等信息，但是没有抓取msg本身。已反馈给心雨
+1.b DTS2025041627010：Enno报告AcSyncDataPath，但是打开对应msg的增量原理图， 发现其Qulifier和destination DFF并不相连。且Enno标记同一Dff为destiantion和source
+1.c ：DTS2025041633057：GUI问题:AcUnsyncDataPath这条msg，source obj和destination obj均为bus，打开msg的增量原理图，显示出两个不相连的source和destination，但bus source和bus destination中的其他位是相连的
+2.帮助心雨确认DDR_SUB中记录的脚本问题，一部分适用Diff59，另一部分新提了一个issue：DTS2025041622859
+2.a DTS2025041622859：一条net链接了内部的ouput/input port，但是内部的input/output port均未连接任何逻辑器件。对于外部output port，Enno报SetupPortIgnoredUnconnected，但是A工具报unconstraint：此issue类似Diff203-diff41-setup_port01，但此情况不属于差异中的细节描述，请给出适用于此的差异解释阐述
+3.关单DTS2025041026894，DTS2025031717618"
+
+17：
+
+"HQ
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1. 完成测试报告数据的脱敏，之前使用base64的逻辑，客户不允许xlsx内容存在乱码，目前使用map，一对一进行替换
+2. 和客户核对跑新泛化的时的流程和问题 
+3. 门禁、考训、射频结果客户跑完，交由刘玲跑反标
+4. 和刘玲对接跑反标流程"
+
+"ZWL
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1、补充TSSC_WRAP的差异报告，剩余两条未补充
+2、反标客户跑出来的射频csv，验证发现有漏标的，需要分析原因
+3、按何琦的需求修改统计脚本
+4、分析小泛化漏标的csv，发现是我们的csv没有标记，已补充"	
+
+"LRF
+今日分析msg数：18
+今日发现issue数：
+今日回传case数：
+日报：
+1.撰写差异报告
+2.分析BCP_TSS/USBC
+3.回归issue"	"JR
+今日分析msg数：33
+今日发现issue数：0
+今日回传case数：0
+日报：
+1.在写Hi18XXE TOP_LGC的差异报告时，发现手动跑的sg的message和csv中sg的message不一致，向心雨和何琦反馈了这个问题，发现是部分cfg未设置成功，心雨和何琦已修复这个问题；
+2.DTS2025032827494这个issue，ECDC和SG综合不一样导致的误报，下午和袁姐、李丹讨论后的结论是拿包含source和destination的.v，跑lec，验证ECDC综合的正确性,请焕东帮助跑了lec,lec是通过的，是差异Diff230;
+3.DTS2025041423858这个issue是因为ECDC和SG的综合差异导致的漏报，ECDC综合出的是具有mux功能的与门加或门的组合逻辑，SG综合出的是mux，因为mux的选择端不能推出clock，所以ECDC能推出clock，而SG不能，且因为ECDC推出的clock传到了blackbox的pin，blackbox的pin有clock属性则不能作为destination，所以ECDC漏报了，因此这个issue是差异Diff51；
+4.写Hi18XXE TOP_LGC的差异报告"
+
+"CXY
+今日分析msg数：
 今日发现issue数：1
 今日回传case数：
 日报：
-1.分析NAU_CAU_WARP/BDP/DDR_SUB/DME_WRAP的ac/ar部分，确保分析进度在100%
-2.分析NFI_PHYG_TOP的误报漏报，2.a setup部分将已回归的issue重标，2个Diff124-diff20-reset_info01_15，5个Diff124-diff20-reset_info01_13，103个Diff218。
-2.b ac部分分析5501条，均为Diff59导致
-3.新提一个issue DTS2025041522016：Enno漏报同步复位"
+1.debug蒋蕊发现手动跑的新泛化sg结果和csv中结果不一致的情况，发现是由于现场的run脚本有错误改动，导致手动跑时有部分cfg设置未设置成功，已经和何琦修改
+2.验证diff122的修改在射频和门禁上的效果，修改无问题，代码回传中
+3.enhance之前写的diff212.diff213在多bit信号上的作用效果，修改完成
+4.debug新泛化Hi18XXE/NFI_PHYG_TOP上有些sg missing的内容中没有s_message的情况，修改脚本中
+5.提了一个issue，希望工具里面可以有kill脚本的功能.在工具中source对比脚本进行debug时，有在脚本运行中途想加d停掉脚本进程的需求，这种时候因为工具中不能kill掉脚本进程，要么只能等脚本跑完，要么只能把工具kill掉，再重启工具。对于在新泛化的case，跑工具花的时间很长，跑对比脚本时间也很长。所以对于大case上的脚本debug来说，很不方便
+所以希望工具可以给一个操作，kill掉在工具内部执行脚本"
+
+"CJR
+今日分析msg数：9
+今日发现issue数：
+今日回传case数：
+日报：1、和袁姐及丹姐看USBC conv02，ECDC报出的msg，SG没有报出来，同时各个qualifier都报了Ac_sync。最终决定此类问题为宽泛差异，条件需满足以下：A.ECDC conv02误报 B、ECDC报的qualifier需要在SG的Ac_sync中报出 3、conv net中不可以存在第三个data clock
+2.关单DTS2025040732625，标记差异为Diff119
+3、跟何琦看表格加密脚本
+4、实现李博提供的attributes显示cluster的proc，能够方便追溯symbols的信息；学习及使用李博现场提供的proc脚本，能够便捷比对指定rule的msg。
+5.填写差异报告"	
+
+"TZB
+今日分析msg数：60
+今日发现issue数：
+今日回传case数：
+日报：
+1.分析门禁的有变动messge，都属于差异Diff125-diff20-logic_optimization
+提了一个关于lint的issue CDC-4025
+2.写了DDR_SUB的差异报告"	
+
+"SYH
+今日分析msg数：10
+今日发现issue数：2
+今日回传case数：
+日报：
+1.写BDP的差异分析报告
+2.4.16的包跑BDP的对比，setup新增10条msg，新提了两个issue
+2.a DTS2025041739687，嵌套的if逻辑，Enno误报SetupRstInferred，Candidate synchronous set。Enno从外部的if条件推出set，但是A工具没有报告相关的信息。
+2.b Enno误报SetupRstInferred，嵌套的if-else if-else，每条else if和else语句均能推出reset，但是A工具没报相关msg
+3.回归DDR_SUB/DME_WRAP/NAU_CAU_WRAP/BDP中的已修复issue"
