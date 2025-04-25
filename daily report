@@ -1,198 +1,223 @@
-18：
-
-"HQ
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：
-1. 对新泛化的客户结果反标脚本进行修改优化，并跑新泛化和门禁的结果
-2. 和家荣完成xlsx各sheet内容替换的python逻辑
-3. 完成隔离区射频上个节点测试报告数据的回传，以及上个节点门禁测试报告数据的回传
-4. 优化对比脚本逻辑，抓取old csv时会进行循环显示
-5. 在跑泛化case时，在流程中加入obj list的替换proc，方便分析（和万林一起完成）"
-
+22:
 "ZWL
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1、分析射频漏标csv的原因，是由于参数没对齐导致，主要是hdl.translate_off_on的默认值改成false了，所以需要把这个参数重新设为true；还有因为解析的sg log不一致导致漏标，从单独跑sg的结果看，客户表里的msg和sg结果能对齐，因此需要我们重新解析log
-2、补充TSSC_WRAP的差异报告，补充完成
-3、提了关于射频性能的问题；reset后，跑不出结果，DTS2025041839875"
+1、补充DDR_SUB的差异报告，并修改csv标记错误的msg
+2、和高强一起看Ac的问题，sg报[23:19]，ecdc报[23:0]的Ac_unsync；需要提取小case回去验证
+3、提了3个关于blackbox的issueCDC-4026、CDC-4027、CDC-4028"
 
 "LRF
-今日分析msg数：16
+今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.分析USBC的ac和conv部分
-2.帮研发构造case"	
+1.回归issue:
+DTS2025032423778 -- ECDC行为和差异描述并不一致
+已回归：
+DTS2025040122753
+DTS2025040733332
+DTS2504020018864
+2.分析USBC的剩余Ac_conv的不匹配
+3.完善USBC的差异报告
+4.提了一个[Enhance]-CDC-4029:增强CtrlPotenyialSynRstUndefined的增量原理图的易看性
+CtrlPotenyialSynRstUndefined的原理图过于冗余，建议只显示其中一条path,不用将所有的fanout展示出来"
 
 "JR
-今日分析msg数：47
-今日发现issue数：
-今日回传case数：
-日报：
-1.回归1个DTS的issue；
-2.Hi18XXE TOP_LGC中一个IntegrityClockConverge的误报，需要看SG的lint是否报了comb_loop，如果报了，则是差异，但是直接跑SG的lint没有报comb_loop，伟豪和艺豪发现SG中combloop有个开关没有打开，打开后误报的这条IntegrityClockConverge在SG的lint中报了comb_loop，所以这个误报是差异Diff23-Lint_error-comb_loop；
-3.分析USBC中ac_conv01未分析的误报漏报，目前分析到的都是差异：Diff156和Diff143"	
-
-"CXY
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：
-1.debug脚本proc diff212在新泛化上标记失败的原因，发现原因是虽然电路结构以及常值推断符合diff212.但是两个工具报的时钟不一致，所以导致标记不上，疑似差异分析有误，已经反馈给case负责人
-2.和艺豪一起debug新泛化Hi18XXE/NFI_PHYG_TOP上发现的ac解析出错导致csv中没有写s_message的问题。问题出在解析时的正则匹配用的贪婪匹配.*，对于新泛化中特殊层次结构的信号（信号名和bit位之间有空格这种结构）会匹配有问题，修改正则匹配方式解决该问题
-3.帮泽波解释关于反标客户log时Setup_port01有部分rule需要手动反标的问"
-
-"CJR
-今日分析msg数：19
-今日发现issue数：
-今日回传case数：
-日报：1.填写FE_TSS的差异报告，已完成setup的差异填写
-2.分析USBC conv误报漏报
-2.1存在10余条conv02的误报属于Diff229
-2.2 5条conv01的漏报属于diff156.
-2.3 分析发现存在sg在多个qualifier分别发生汇聚后，连接到了mux的input端，报的不合理，ECDC应该会分别报出，如是则属于差异Diff156
-3.分析USBC reset_info的漏报，由于嵌套if的综合差异所以推断的reset不一致，属于Diff124。"
-
-"TZB
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：
-1.写DDR_SUB差异报告
-2.分析反标脚本在门禁上失败的messge"	
-
-"SYH
-今日分析msg数：
-今日发现issue数：1
-今日回传case数：
-日报：
-1.完成BDP差异分析报告，分析过程中发现了两个问题，
-1.a DTS2025041838064 A工具报告的SetupRstInferred信息只能与Enno部分match上。例如，但是在A工具中搜索该msg，增量原理图显示的source DFF与A工具msg中报告的并不一致.，Enno的增量原理图显示与msg是一致的
-1.b 脚本问题，ar部分ChyArSyncMultiTimes，Enno和A工具的msg可以对比上，但是对比脚本抓取得csv中obj对不不上由此导致的unmatch，已反馈给艺豪
-2.帮心雨确认NAU中疑似错标的Diff，十余条Diff213误标成Diff212，已修正
-3.给run脚本提了一个小需求：run gencomp时选择old csv时，只能可选文件只提供一次，不能循环提供。希望可以循环提供
-4.DME用4.16的包重跑后出现掉标的msg，补充分析，便于交付重跑"
-
-
-19：
-
-"LRF
-今日分析msg数：14
-今日发现issue数：
-今日回传case数：
-日报：
-1.分析USBC的ac和conv部分
-2.帮研发构造case
-"
-
-"JR
-今日分析msg数：20
-今日发现issue数：
-今日回传case数：
-日报：
-1.分析USBC中ac_conv01未分析的误报漏报，目前分析到的有部分是issue：DTS2025041426411，还有部分是差异：Diff122和Diff143；
-2.DTS2025041907035和子奇视频会议确认，可以标记为差异：Diff143"	
-
-"CXY
-今日分析msg数：150
-今日发现issue数：
-今日回传case数：
-日报：
-1.发现射频cfg1_2的sg log我们用的和客户用的有些出入，对比两边的log文件，从log记录看两边用的cfg是一致的，但是moresimple中涉及到一条Clock_info05b，一条Ac_unsync01报告的信号名不一致，实际手动跑出来的sg结果与客户侧的log一致。按照客户侧的sg rpt跑射频cfg1_2结果，重新解析load_file文件，setup有一条新增，属于差异，更新cfg1_2的oldcsv
-2.检查射频3拍，2拍，cfg1_1,cfg1_2,cfg2的sg rpt文件与客户侧用的sg rpt对比。只有cfg1_2有上述问题，其他配置使用的sg rpt与客户使用的一致
-3.给黄区的交付表补充贴图，修改部分原本标记的不合理的diff.分析msg150条"
-
-"SYH
-今日分析msg数：
-今日发现issue数：1
-今日回传case数：
-日报：
-1.写DME_WRAP的差异分析报告
-2.发现了一个SG的Clock_info03b的报法BUG，DTS2025041905842:使用参数INITIAL_DATA（2457900）对26位的bus进行赋值，赋值的2进制结果应该是有0有1,但是无论实际电路中和SG的msg，均显示只有常值0，msg也只报告常值0"
-
-
-
-21：
-"HQ
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：
-1. 对新泛化、门禁的客户结果进行反标
-2. 对隔离区射频本节点测试报告数据的回传时，存在一个pass-CDC的一个问题，脚本问题应该match，已让心雨修改并让景硕重新跑
-3.对门禁本节点测试报告数据的回传时，也存在一些Diff-CDC_Lint为开头的差异，以及一些格式问题，已拜托万林修改脚本以及修改差异编号
-4.拜托艺豪增补messageID转化脚本的功能，帮忙修改了里面mapping的部分，保证内外一致，完成新的回传流程
-5.用交付包跑BDP的对比
-6.让客户再跑射频depth2/5和USBC的结果"	
-
-"ZWL
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：
-1、反标客户新跑cfg1-2的csv，验证之前由于参数问题漏标的部分，已经标上；参数目前没有问题了
-2、优化统计脚本，使其能统计DTS开头的issue号
-3、补充FE的差异报告
-4、用交付包跑TSSC_WRAP的比对
-"	
-
-"LRF
-今日分析msg数：56
-今日发现issue数：1
-今日回传case数：
-日报：
-1.分析USBC未分析完的Ac_conv剩余部分
-2.和冯敏看一个常值漏报的issue"	
-
-"JR
-今日分析msg数：213
+今日分析msg数：734
 今日发现issue数：
 今日回传case数：
 日报：
 1.补充黄区门禁的差异报告，在补充差异报告的过程中发现一些差异和之前标记的不一样，就重新分析了这部分的case，处理了门禁差异标记的冲突，在补充差异报告的过程中还发现有些差异编号不正确，修改了标记错误的差异编号；
-2.用交付包跑DDR_SUB和TOP_LGC的对比"	
+2.补充黄区门禁的差异报告发现，由于Elint行为的改变，Diff84这个差异不能用了，因此之前标这个差异的case需要一个新差异，下午和伟豪视频会议讨论了，伟豪说他下来和袁姐讨论一下，看是否写一个新差异；
+3.补充黄区门禁的差异报告发现，SetupDataTiedToConst有一个误报，标成了差异，这个误报已向前哥反馈"	
 
 "CXY
-今日分析msg数：
+今日分析msg数：540
 今日发现issue数：
 今日回传case数：
 日报：
 1.补充黄区门禁cfg2 setup的差异报告，补充过程中发现有部分差异标记不合理，重新分析这部分内容，更新差异编号
-2.分析Hi8XXE/NAU_CAU_WRAP的Reset_info01在15号的csv中可以match，但是今天的csv中match不上的原因，发现是之前用的load_session中的setup_map不正确，对于Reset_info01修复了issueCDC-4014后，
-没有重新解析load_session导致之前现在匹配不上，需要删除旧的load_session，重新跑一遍脚本"	
+2.分析Hi8XXE/NAU_CAU_WRAP的Reset_info01在15号的csv中可以match，但是今天的csv中match不上的原因，发现是之前用的load_session中的setup_map不正确，对于Reset_info01修复了issueCDC-4014后，没有重新解析load_session导致之前现在匹配不上，需要删除旧的load_session，重新跑一遍脚本
+3.处理merge后的黄区ac cfg2 cfg1和普通门禁的冲突
+4.补充黄区门禁cfg2 builtin的差异报告"
 
 "CJR
-今日分析msg数：20
+今日分析msg数：
 今日发现issue数：
 今日回传case数：
-日报：1.分析完成USBC的conv，涉及差异Diff122、Diff156、及Diff143
-2.由于射频cfg2的sg rpt解析没有更新导致有一条msg无法匹配，目前已更新match了
-3.补充FE的差异报告"	
+日报：1.验证关单DTS2504020029716，DTS2025031713776
+2.USBC的setup差异报告完成
+3.验证USBC conv02的问题，conv depth存在断掉的情况，从mux的output到下一个mux的output，depth从3变为0了，导致误报conv02。"	
 
 "TZQ
-今日分析msg数：188
+今日分析msg数：664
 今日发现issue数：
 今日回传case数：
-日报：1.补充黄区门禁Ar部分的差异报告，在补充过程中发现有标的不正确的，修改了错误的标记  
-2.用交付包跑NFI_TOP                       
-3.发现uninfer_0207这个case需要修改sdc，修改sdc后门禁出现新增，经过分析，是属于差异，Diff84,Diff74和Diff85"	
+日报：1.补充黄区门禁ar cfg1,cfg2和普通builtin的差异报告，补充过程中发现有一些差异标记的有误，重新分析并标记了这部分case"
 
 "TZB
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.分析门禁反标的csv
-2.写DDR_SUB差异报告"	
+1.写DDR_SUB的差异报告，过程中发现一个问题对于一个muxselect同步结构，在mux/sel端连接情况是：qualifier接到与qualifier clk一样的ff1/d,然后qualifier与此ff1/q进行异或，异或后再和另外一个与qualifier clk一样的ff2进行相或，最后连接到mux/sel，首先对于这个情况工具报unsync,发现的问题在于使用get_attributes [get_symbols [get_pins XXX]]获取第一次异或的输出pin属性时，state1显示的是sync，获取第二次相或输出的pin属性时候state1显示的conv
+2.写门禁built-in cfg1的差异报告"	
 
 "SYH
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.完成DME_WRAP的差异分析报告
-2.写NAU_CAU_WRAP差异分析报告"
+1.分析NAU_CAU_WRAP新赠2000余条msg的原因，脚本问题已反馈给心雨，分析BDP/DME的掉标记msg，BDP为Diff150，DME为Diff147
+2.何苏黎确认DTS2025041622859为Diff187。
+3.写差异报告NAU_CAU_WRAP
+"
+
+
+23:
+"ZWL
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1、提了enhance issue DTS2025042307057
+2、关闭已修复DTS单
+3、验证gui的遗留问题，并修改状态；使用交付包简单验证gui功能，看是否crash，文档是否正确；均无异常"
+
+"LRF
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.回归issue:
+已回归：
+DTS2504080054107
+DTS2025041421692
+2.完善USBC和TOP_LGC的差异报告"	
+
+"JR
+今日分析msg数：190
+今日发现issue数：
+今日回传case数：
+日报：
+1.补充黄区门禁的差异报告，处理门禁差异标记的冲突，在补充差异报告的过程中还发现有些差异编号不正确，修改了标记错误的差异编号；
+2.在补充差异报告的过程中发现,一些lint相关的差异由于lint行为改变不能用了,比如Diff84、Diff128，就重新分析了这部分误报漏报;
+3.在补充差异报告的过程中发现，在SG中一个DFF报了clock_info03b，这个DFF的output不一定是常值，output是否是常值还受enable pin和reset/set pin的状态的影响，
+而ECDC中DFF报了SetupDataTiedToconst,这个DFF的output一定也是常值，这个差异会导致ECDC和SG对于报了SetupDataTiedToconst的DFF的output所连的port报的setup_port01不一样，
+ECDC中DFF报了SetupDataTiedToconst，和这个DFF的output相连的port也是常值，那么在setup_port01中会报fully constraint，而SG中报了clock_info03b的DFF的output不一定是常值，那么和DFF的output相连的port，
+在setup_port01中就可能会报unconstrained，这个差异已向袁姐反馈，袁姐写了新的差异Diff234"	
+
+"CXY
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.补充Hi18XXE/NAU_CAU_WRAP的diff标记 110条
+2.跑交付包cfg2的数据
+3.整理现场的对比脚本修改，回传代码
+4.跑康凯的diff214的代码，提供场景给康凯"
+
+"CJR
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.补充USBC、TOP_LGC的差异报告
+2.跟研发看Conv depth的问题。"	
+
+"TZQ
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：1.补充门禁普通Ar的差异报告                
+2.补充新泛化TOP_LGC和DDR_SUB的差异报告      
+3.修改TOP_LGC和DDR_SUB中差异标记错误的部分 "	
+
+"TZB
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.写门禁cfg2的built-in差异报告
+2.写门禁普通参数Ar的差异报告
+3.写TOP_LGC中Ar的差异报告"
+
+"SYH
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.完成NAU_CAU_WRAP的差分析报告
+2.帮冯敏看DTS2025041905842，确认是Diff212，LEC验证冯敏的自建小case中port的常值情况，LEC认为制定的port为常值0，但是Enno没有报告，应该是常值算法问题
+3.重跑NAU_CAU_WRAP的setup部分，协助心雨补充Diff标记，将NAU_CAU_WRAP/DDR_SUB/BDP/DME_WRAP中issue，确保所有可回归issue全部标记为Diff或解决"
+
+
+24:
+"ZWL
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1、复现DDR_SUB的一个误报case，复现出来的case和sg能匹配上，但根据这个case发现了DDR_SUB中真正的问题，是由于常值未推断导致误报[18:0],issue DTS2025042422004
+2、验证初版测试报告，并提出疑问点，和刘玲讨论逻辑，修正"
+
+"LRF
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.review射频测试报告
+2.确认Diff143的合理性：SG在conv之后，只有连接到一个与destination clock domain的DFF，才会报告Ac_conv。"	
+
+"JR
+今日分析msg数：320
+今日发现issue数：
+今日回传case数：
+日报：
+1.发现门禁有四个case的SDC有问题，已经向心雨反馈；
+2.由于lint行为改变，Diff84这个差异不能用了，标记Diff84的这些case ECDC和SG有综合差异，跑lec不通过，所以也标不了新差异，今天前哥和李丹讨论了这个问题，接受ECDC和SG的综合差异，结论是请袁姐更新一下Diff84的描述，继续使用Diff84这个差异;
+3.补充黄区门禁的差异报告，处理门禁差异标记的冲突，在补充差异报告的过程中还发现有些差异编号不正确，修改了标记错误的差异编号"
+
+"CXY
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.修改对比脚本处理TOP_LGC上手动标记的diff75的部分，现在已经用脚本match"
+
+"CJR
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：1.review射频测试报告
+2.黄区merge门禁数据
+3.验证USBC conv02误报问题，已修复。"	
+
+"TZQ
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：1.补充门禁中遗漏的差异报告，检查门禁中差异冲突并修改，修改门禁中差异标记的错误                 
+2.review 红区中反标情况                       
+3.验证关闭DTS单：DTS2025041017174、DTS2025040922669"
+
+"TZB
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.review了DDR_SUB的测试报告
+2.回归DTS2025040918059 DTS2025041423858"
+
+
+"SYH
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.关单DTS2025032638499,DTS2025032425010,DTS2025040329301,DTS2025041622859,DTS2025041010503
+2.review新泛化测报告
+3.netlist2netlist验证冯敏的小case，"
+
