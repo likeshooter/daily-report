@@ -1,42 +1,72 @@
+DTS2025042722281
+DTS2025042722465
+DTS2025042723214
+DTS2025042307057(matched 0)这个你那边已经提了的
+DTS2025042724091
+DTS2025042724489
+DTS2025042725853
+DTS2025042725875
+DTS2025042725805
+DTS2025042725993
+
 "HQ
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.更新门禁和射频的最终版测试报告数据，门禁格式处理错误，射频确实conv部分
-2.分析客户反标的门禁数据结果，是客户的环境问题
-3.检查门禁测试报告，反馈问题给刘玲"
+写测试报告，门禁、射频与新泛化，将其他同事发现的问题，在测试报告上进行修改"
 
 "ZWL
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1、参加周会
-2、review TSSC_WRAP的测试报告
-3、解释统计数据中出现疑问的部分，主要是多个diff被统计到一起，主要是因为脚本proc中多个diff之间只有空格，没有分号导致"	
+1、参加gui的验收结论会议
+2、review测试报告，并修改FE_TSS、TSSC_WRAP的测试报告，已完成"
 
-
-"JR
-今日分析msg数：34
+"LRF
+今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.review Hi18XXE TOP_LGC的测试报告；
-2.分析4.25daily build门禁新增的误报漏报，从目前分析到的误报漏报发现的问题是之前CdcFalsePathNoCrossing的message报的-to后面的obj会加上/q，而现在去掉了/q，所以导致脚本没有反标上之前标记的差异"	
+1.review射频和USBC的交付报告并进行相应的更改"	
+
+"JR
+今日分析msg数：170
+今日发现issue数：4
+今日回传case数：3
+日报：
+1.分析4.25daily build门禁新增误报漏报，builtin主要是CdcFalsePathNoCrossing的变化，导致新增误报漏报，提了两个issue：DTS2025042704081、DTS2025042706565，setup都是SetupRstInferred新增的误报漏报，因为现在不对比SetupRstInferred，所以setup新增的误报漏报都标pass-reset_info01;
+2.review Hi18XXE TOP_LGC和门禁的测试报告；
+3.总结普通门禁本次交付和上次交付差异变化的原因"	
 
 "CXY
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.参加周会
-2.解释大家填写交付报告时对脚本diff proc有疑问的部分
-3.enhance diff212，diff213，diff79"
+1.验证get_fanin/fanout的option buf_inv_only的最新修改对现场对比脚本的影响，该option修改会影响到一个有关Reset_info01的diff procDiff123-diff19-clock_info01-02
+2.增加脚本逻辑，适配对于之后Clock/Reset_info相关的新增，脚本直接标记pass-clock/reset_info减少分析量，同时因为要增加这个新的pass，上面提到get_fanin/fanout的option buf_inv_only修改，对脚本的影响可以忽略不计"	
+
+"CJR
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+修改7组配置的射频报告；及差异变化数据统计。发现存在数据比较错误；及比对脚本标注名称错误。及conv数据没有拿到old数据进行比较(old表没有conv)。"	
 
 "TZQ
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
-日报：1.review Hi18XXE中DME_WARP的测试报告                                 
-2.review 门禁cfg1的测试报告(20%)"
+日报：1.review门禁cfg1的测试报告，发现其中有多个case被误标为Diff500-diff-built in-046,重新分析这部分case后，修改了这部分             
+2.review GUI测试报告中parameter部分，发现参数db.extract_rams这个参数缺少了设置为true的结果，已添加"	
+
+
+"SYH
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.定稿新繁华NAU_CAU_WRAP/BDP的测试报告，统计新泛化中包含reset_info01的数据总览，review并修改门禁Cfg2的差异变化。
+2.帮冯敏看小case的lec对比结果，set verification_set_undriven_signals x后2018版本的fm认为Enno综合出的网编为产值0，但是2022版的认为不为常值0，从代码上来看也推不出应为常值0，应该是fm2018版的bug。"
