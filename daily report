@@ -1,72 +1,76 @@
-DTS2025042722281
-DTS2025042722465
-DTS2025042723214
-DTS2025042307057(matched 0)这个你那边已经提了的
-DTS2025042724091
-DTS2025042724489
-DTS2025042725853
-DTS2025042725875
-DTS2025042725805
-DTS2025042725993
-
-"HQ
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：
-写测试报告，门禁、射频与新泛化，将其他同事发现的问题，在测试报告上进行修改"
-
 "ZWL
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1、参加gui的验收结论会议
-2、review测试报告，并修改FE_TSS、TSSC_WRAP的测试报告，已完成"
+1、参加测试报告评审会
+2、修改考训的测试报告
+3、跑1813的TSSC_WRAP的对比，并分析setup漏报常值部分，为差异Diff217，共45条"	
 
 "LRF
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.review射频和USBC的交付报告并进行相应的更改"	
+1.用脚本去实现原理图中指定path一键上色的功能，目前发现两个问题
+a.用两个get_pins的方式(get_path -from [get_pins xxx] -to [get_pins xxx])指定某条path会返回一个空值，与研发沟通后待确认中
+b.get_path命令的速度很慢
+2.编写李博和心雨写的conv分析脚本的使用文档
+3.发现一个crash的问题，无堆栈信息 -- DTS2025042816071
+4.参加交付报告评审会"
 
 "JR
-今日分析msg数：170
-今日发现issue数：4
-今日回传case数：3
+今日分析msg数：45
+今日发现issue数：1
+今日回传case数：
 日报：
-1.分析4.25daily build门禁新增误报漏报，builtin主要是CdcFalsePathNoCrossing的变化，导致新增误报漏报，提了两个issue：DTS2025042704081、DTS2025042706565，setup都是SetupRstInferred新增的误报漏报，因为现在不对比SetupRstInferred，所以setup新增的误报漏报都标pass-reset_info01;
-2.review Hi18XXE TOP_LGC和门禁的测试报告；
-3.总结普通门禁本次交付和上次交付差异变化的原因"	
+1.完善门禁的测试报告；
+2.参加0430节点测试报告评审会；
+3.分析Hi1813 DME WRAP setup的误报漏报；
+4.提了一个GUI的问题：右键选中Expand的Inward/Outward，Inward和Outward都既有input又有output，这样不合理，应该Expand的Inward中只有input，Expand的Outward中只有output才合理，issue编号为CDC-gui-4032"	
 
 "CXY
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.验证get_fanin/fanout的option buf_inv_only的最新修改对现场对比脚本的影响，该option修改会影响到一个有关Reset_info01的diff procDiff123-diff19-clock_info01-02
-2.增加脚本逻辑，适配对于之后Clock/Reset_info相关的新增，脚本直接标记pass-clock/reset_info减少分析量，同时因为要增加这个新的pass，上面提到get_fanin/fanout的option buf_inv_only修改，对脚本的影响可以忽略不计"	
+1.enhance duff212.diff213适配1个mux+ff的loop电路结构和2个mux+ff的loop电路结构的diff proc标记
+2.整理了一下不比行号的proc的逻辑，修改main.tcl中的setup的行号对比逻辑
+3.整理脚本修改的内容，回传代码
+4.测试merge_bit修改后的分支包对现场的影响。测试结果：这个包会影响到非连续bus信号（如a[6:4,1:0]）的脚本对比，以及影响脚本反标。因为对于这种信号，fold_bus_bits的返回值格式发生了变化，daily包的返回值是：a[6:4] a[1:0]，这个包的返回值是a[6:4,1:0]，具体的原因分析以及建议已通过邮件的方式回复
+5.对于常值sg报的bit位属于enno报的bit的子集的情况，脚本目前是对sg标记成pass-fasle-bits，写PPT说明情况，用于给客户评审"	
 
 "CJR
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-修改7组配置的射频报告；及差异变化数据统计。发现存在数据比较错误；及比对脚本标注名称错误。及conv数据没有拿到old数据进行比较(old表没有conv)。"	
+1.修改7组射频测试报告
+2.反馈脚本名称错误
+3.修改射频old csv，整理0430节点射频数据及备份
+4.参加射频测试报告评审会议"	
 
 "TZQ
-今日分析msg数：
+今日分析msg数：5
 今日发现issue数：
 今日回传case数：
-日报：1.review门禁cfg1的测试报告，发现其中有多个case被误标为Diff500-diff-built in-046,重新分析这部分case后，修改了这部分             
-2.review GUI测试报告中parameter部分，发现参数db.extract_rams这个参数缺少了设置为true的结果，已添加"	
+日报：1.参加0430节点测试报告评审              
+2.跑Lighting中NFI_PHYG的对比脚本，发现ac,和setup都有新增，经过分析后，ac的新增是Diff157,setup新增的511条的全是SetupPortFullyConstrained的，经过发现是对比脚本的包跟运行的包不一致造成的问题"	
 
-
-"SYH
+"TZB
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.定稿新繁华NAU_CAU_WRAP/BDP的测试报告，统计新泛化中包含reset_info01的数据总览，review并修改门禁Cfg2的差异变化。
-2.帮冯敏看小case的lec对比结果，set verification_set_undriven_signals x后2018版本的fm认为Enno综合出的网编为产值0，但是2022版的认为不为常值0，从代码上来看也推不出应为常值0，应该是fm2018版的bug。"
+1.将红区的case：VERIFY_MBIT_002--Ac_sync02_246
+VERIFY_RESET_001--Ar_unsync01_001 
+sync_method_mux_001--reciculation_mux_099抄录到黄区准备回传回去
+2.参加0430节点测试报告评审"	
+
+"SYH
+今日分析msg数：30
+今日发现issue数：
+今日回传case数：
+日报：
+1.参加0430节点测试报告评审
+2.跑18XXE的NFI_PHYG_TOP，DDR_SUB模块，NFI_PHYG_TOP模块由于SetupPort msg的改动导致match不上，DDR_SUB新增msg 30条，16条Diff63&Diff59，11条Diff18，3条Diff157&Diff59"
