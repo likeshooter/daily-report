@@ -1,86 +1,25 @@
-"HQ
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：
-1. 检查测试报告问题，更新测试报告功能测试数据总览数据，脚本上存在bug，sg的total message抓了多次，已解决
-2. 参加测试报告评审会
-3. 解决射频数据少抓问题（测试报告已手改）"
-
-
-"ZWL
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：
-1、参加测试报告评审会
-2、修改考训的测试报告
-3、跑1813的TSSC_WRAP的对比，并分析setup漏报常值部分，为差异Diff217，共45条"	
-
-"LRF
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：
-1.用脚本去实现原理图中指定path一键上色的功能，目前发现两个问题
-a.用两个get_pins的方式(get_path -from [get_pins xxx] -to [get_pins xxx])指定某条path会返回一个空值，与研发沟通后待确认中
-b.get_path命令的速度很慢
-2.编写李博和心雨写的conv分析脚本的使用文档
-3.发现一个crash的问题，无堆栈信息 -- DTS2025042816071
-4.参加交付报告评审会"
-
 "JR
 今日分析msg数：45
 今日发现issue数：1
-今日回传case数：
+今日回传case数：1
 日报：
-1.完善门禁的测试报告；
-2.参加0430节点测试报告评审会；
-3.分析Hi1813 DME WRAP setup的误报漏报；
-4.提了一个GUI的问题：右键选中Expand的Inward/Outward，Inward和Outward都既有input又有output，这样不合理，应该Expand的Inward中只有input，Expand的Outward中只有output才合理，issue编号为CDC-gui-4032"	
+1.修改门禁有问题的约束；
+2.分析Hi1813 DME_WRAP中setup剩余未分析误报漏报，今日已把Hi1813 DME_WRAP中setup都分析完成，今日分析到的都是差异；
+3.在分析过程中发现一个RecirculationMux原理图的问题，如果source和mux选择端的qualifier汇聚了再连到mux的a1，RecirculationMux的原理图没有在mux的选择端把qualifier显示出来，而是在source和qualifier汇聚的地方把qualifier显示出来，这样显示出来的原理图不是RecirculationMux真正的原理图，
+已复现并提issue：DTS2025043027265"	
 
 "CXY
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.enhance duff212.diff213适配1个mux+ff的loop电路结构和2个mux+ff的loop电路结构的diff proc标记
-2.整理了一下不比行号的proc的逻辑，修改main.tcl中的setup的行号对比逻辑
-3.整理脚本修改的内容，回传代码
-4.测试merge_bit修改后的分支包对现场的影响。测试结果：这个包会影响到非连续bus信号（如a[6:4,1:0]）的脚本对比，以及影响脚本反标。因为对于这种信号，fold_bus_bits的返回值格式发生了变化，daily包的返回值是：a[6:4] a[1:0]，这个包的返回值是a[6:4,1:0]，具体的原因分析以及建议已通过邮件的方式回复
-5.对于常值sg报的bit位属于enno报的bit的子集的情况，脚本目前是对sg标记成pass-fasle-bits，写PPT说明情况，用于给客户评审"	
-
-"CJR
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：
-1.修改7组射频测试报告
-2.反馈脚本名称错误
-3.修改射频old csv，整理0430节点射频数据及备份
-4.参加射频测试报告评审会议"	
-
-"TZQ
-今日分析msg数：5
-今日发现issue数：
-今日回传case数：
-日报：1.参加0430节点测试报告评审              
-2.跑Lighting中NFI_PHYG的对比脚本，发现ac,和setup都有新增，经过分析后，ac的新增是Diff157,setup新增的511条的全是SetupPortFullyConstrained的，经过发现是对比脚本的包跟运行的包不一致造成的问题"	
-
-"TZB
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：
-1.将红区的case：VERIFY_MBIT_002--Ac_sync02_246
-VERIFY_RESET_001--Ar_unsync01_001 
-sync_method_mux_001--reciculation_mux_099抄录到黄区准备回传回去
-2.参加0430节点测试报告评审"	
+1.验证分支包merg_bit_with_fold_bus_bit_option，验证fold_bus_bits新增option后对现场对比脚本的影响，验证结果：会对现场的对比造成影响。因为目前只做了merge_bit，get_* [merge_bit result]部分还没有实现，会导致现场部分case的get返回值为空。并且get命令对于二维信号的处理上还存在问题，和开发联系，预计开发修复完上述问题后再到现场继续验证
+2、发现对比脚本diff59 proc存在bug，脚本中对enno的信号也进行了reformat处理，删除这部分操作"
 
 "SYH
-今日分析msg数：30
+今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.参加0430节点测试报告评审
-2.跑18XXE的NFI_PHYG_TOP，DDR_SUB模块，NFI_PHYG_TOP模块由于SetupPort msg的改动导致match不上，DDR_SUB新增msg 30条，16条Diff63&Diff59，11条Diff18，3条Diff157&Diff59"
+1.分析HI1813的DDR_SUB新增误报漏报，setup部分分析完成，分析过程中发现了一个pass_false_bit的漏标脚本问题，已反馈给心雨
+2.初步看CA对新泛化差异标记反馈，NAU_CAU_WRAP/BDP/DME_WRAP部分大部分都是脚本问题或者与差异的理解不统一导致的，少部分确实存在差异错标的问题，需节后确认详情"
