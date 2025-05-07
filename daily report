@@ -1,25 +1,45 @@
-"JR
-今日分析msg数：45
-今日发现issue数：1
-今日回传case数：1
-日报：
-1.修改门禁有问题的约束；
-2.分析Hi1813 DME_WRAP中setup剩余未分析误报漏报，今日已把Hi1813 DME_WRAP中setup都分析完成，今日分析到的都是差异；
-3.在分析过程中发现一个RecirculationMux原理图的问题，如果source和mux选择端的qualifier汇聚了再连到mux的a1，RecirculationMux的原理图没有在mux的选择端把qualifier显示出来，而是在source和qualifier汇聚的地方把qualifier显示出来，这样显示出来的原理图不是RecirculationMux真正的原理图，
-已复现并提issue：DTS2025043027265"	
-
-"CXY
+"HQ
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.验证分支包merg_bit_with_fold_bus_bit_option，验证fold_bus_bits新增option后对现场对比脚本的影响，验证结果：会对现场的对比造成影响。因为目前只做了merge_bit，get_* [merge_bit result]部分还没有实现，会导致现场部分case的get返回值为空。并且get命令对于二维信号的处理上还存在问题，和开发联系，预计开发修复完上述问题后再到现场继续验证
-2、发现对比脚本diff59 proc存在bug，脚本中对enno的信号也进行了reformat处理，删除这部分操作"
+1. 查看放假期间跑泛化对比的结果，当前仍在跑：LIGHTV300: HIPHY_SUB,PG_SUB
+跑失败：Hi18XXE: APP_CORE（crash），正前在分析原因
+2. 修改统计脚本bug，performance.xlsx的软件包名称有不准确的情况，已修改
+3. 发最新的统计数据回去
+4. 检查LIGHTV300 HIPHY_SUB的Enno数量message超标原因：SetupClkTiedToConst多报了60w条
+5. 帮助川皓更新dts表单，及查询表单状态"	
+
+"ZWL
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+解释客户对于DDR_SUB和TSSC_WRAP提出标记不合理的diff；其中有Diff63和Diff150存在脚本需解决的问题，另外的则解释完成"
+
+"JR
+今日分析msg数：890
+今日发现issue数：1
+今日回传case数：1
+日报：
+1.分析Hi18XXE HIS_TOP,目前分析到的都是差异；
+2.分析今日门禁新增误报漏报：
+ 2.1 setup新增误报漏报都是差异：Diff227,Diff87,其中一部分新增是因为上周发现几个case的sdc有问题，把sdc改正确后新增了一些误报，都是差异Diff227，另一部分新增是之前常值提了一个issue修好了导致的新增，是差异Diff87，门禁cfg的setup_port有一部分脚本还未适配好，已提issue：CDC-4034；
+ 2.2 ac新增的误报都是差异Diff227；      
+ 2.3 ar有一个新增，是issue，已提issue：DTS2025050662423"	
+
+"TZQ
+今日分析msg数：62
+今日发现issue数：
+今日回传case数：
+日报：1.回归DTS单：DTS2025041010473           
+2.分析NFI_TOP的setup部分，其中有56条都是属于差异，在分析过程中发现NFI_TOP的csv有漏标的情况已反馈；分析过程中遇到当一个BBOX的pin通过多次组合逻辑连接到FF的D pin时，
+打开infer_abstract_port,SG报的fully constraint，ECDC报的no constraint，但经过复现后我们报的也是fully constraint，目前正在查找导致在泛化上报no constraint的原因"	
 
 "SYH
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.分析HI1813的DDR_SUB新增误报漏报，setup部分分析完成，分析过程中发现了一个pass_false_bit的漏标脚本问题，已反馈给心雨
-2.初步看CA对新泛化差异标记反馈，NAU_CAU_WRAP/BDP/DME_WRAP部分大部分都是脚本问题或者与差异的理解不统一导致的，少部分确实存在差异错标的问题，需节后确认详情"
+1.帮助冯敏确认1.30版本遗留issueDTS2025041535500，经分析RTL代码，to_other_adj_byte_cnt[16]应为常值0。但是Enno没报，SG报了。将Enno吐出的verific网表用SG进行分析，SG没分析出常值，证明SG和Enno的常值算法对Enno综合出的网表看法一致，确定是综合问题导致
+2.解释新泛化模块差异分析4.30中客户的质疑，BDP/DME_WRAP解释完毕"
