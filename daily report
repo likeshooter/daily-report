@@ -1,45 +1,64 @@
-"HQ
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：
-1. 查看放假期间跑泛化对比的结果，当前仍在跑：LIGHTV300: HIPHY_SUB,PG_SUB
-跑失败：Hi18XXE: APP_CORE（crash），正前在分析原因
-2. 修改统计脚本bug，performance.xlsx的软件包名称有不准确的情况，已修改
-3. 发最新的统计数据回去
-4. 检查LIGHTV300 HIPHY_SUB的Enno数量message超标原因：SetupClkTiedToConst多报了60w条
-5. 帮助川皓更新dts表单，及查询表单状态"	
-
 "ZWL
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-解释客户对于DDR_SUB和TSSC_WRAP提出标记不合理的diff；其中有Diff63和Diff150存在脚本需解决的问题，另外的则解释完成"
+1、回归DTS2025040816023、DTS2025041028660、DTS2025032536233；均已修复关闭
+2、新增优化建议DTS2025050717855
+3、提setup_blackbox的issue，DTS2025050721973"	
 
-"JR
-今日分析msg数：890
-今日发现issue数：1
-今日回传case数：1
-日报：
-1.分析Hi18XXE HIS_TOP,目前分析到的都是差异；
-2.分析今日门禁新增误报漏报：
- 2.1 setup新增误报漏报都是差异：Diff227,Diff87,其中一部分新增是因为上周发现几个case的sdc有问题，把sdc改正确后新增了一些误报，都是差异Diff227，另一部分新增是之前常值提了一个issue修好了导致的新增，是差异Diff87，门禁cfg的setup_port有一部分脚本还未适配好，已提issue：CDC-4034；
- 2.2 ac新增的误报都是差异Diff227；      
- 2.3 ar有一个新增，是issue，已提issue：DTS2025050662423"	
-
-"TZQ
-今日分析msg数：62
-今日发现issue数：
-今日回传case数：
-日报：1.回归DTS单：DTS2025041010473           
-2.分析NFI_TOP的setup部分，其中有56条都是属于差异，在分析过程中发现NFI_TOP的csv有漏标的情况已反馈；分析过程中遇到当一个BBOX的pin通过多次组合逻辑连接到FF的D pin时，
-打开infer_abstract_port,SG报的fully constraint，ECDC报的no constraint，但经过复现后我们报的也是fully constraint，目前正在查找导致在泛化上报no constraint的原因"	
-
-"SYH
+"LRF
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.帮助冯敏确认1.30版本遗留issueDTS2025041535500，经分析RTL代码，to_other_adj_byte_cnt[16]应为常值0。但是Enno没报，SG报了。将Enno吐出的verific网表用SG进行分析，SG没分析出常值，证明SG和Enno的常值算法对Enno综合出的网表看法一致，确定是综合问题导致
-2.解释新泛化模块差异分析4.30中客户的质疑，BDP/DME_WRAP解释完毕"
+1.解释客户对于差异标记提出的质疑
+CDC-4033 -- 需研发尽快解决
+2. 回归issue
+DTS2025040808330 -- 已修复
+DTS2025032636676 -- 点击增量原理图crash,无法回归"
+
+"JR
+今日分析msg数：156
+今日发现issue数：
+今日回传case数：
+日报：
+1.分析Hi18XXE HIS_TOP,目前分析到的都是差异；
+2.在分析过程中发现，Diff226-line8-clk的proc有问题：在比较SetupClkNetUndefined时，脚本比较objects 以及objects的个数，如果都和SG是一样的就可以标这个差异了，不用再比较行号和file，但是Diff226-line8-clk的proc还比较了file,已向心雨反馈；
+3.回归2个DTS单，均是差异，已关闭DTS单"
+
+"CXY
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.处理交付数据Hi18XXE/DDR_SUB中客户认为应该是match，但是脚本走了proc的内容。debug发现是因为在建key时，ekey中的时钟信息去掉了{},但是skey中的时钟信息没有处理{}，所以脚本误走了proc，已经修改
+2.debug 6号的门禁，射频数据中setup_port01有新增的问题，以及builtin反标不上的问题。门禁中setup_port01新增是由于节前修改了部分有问题的sdc文件导致的，属于正常情况，需要pv分析新增，射频新增是由于脚本配合了苏黎的修改之后，未更新射频的s_list，已经刷新射频所有配置的s_list。buitin反标失败是由于oldcsv有问题，oldcsv中间被python脚本处理过，导致标记的7全部变成了7.0，所以反标失败，回退一版oldcsv
+3.debug TOP_LGC突然跑工具失败的原因，发现是sdc文件被误改了，有个port约束将原本正确的小写port名改成了大写，sdc文件何琦已经帮忙修改回去
+4.验证国炜对于merge_bus_bits修改的分支包，这个包fold_bus_bit仍然有问题，使用命令fold_bus_bits[get_nets {TOP/din1[0] TOP/din[0]}],没有返回值，但是get_nets {TOP/din1[0] TOP/din[0]}是有正确的返回值的。问题以及case场景已经提供给国炜
+5.整理交付时发现的脚本diff proc名字有误的情况以及proc中少写了diff内容的情况，反馈给家里的脚本团队"
+
+"TZQ
+今日分析msg数：58
+今日发现issue数：1
+今日回传case数：
+日报：1.分析Hi18XXE的NFI_TOP，提了一个issue，DTS2025050718438，一个BBOX的pin连接到Dff的D pin时SG报的fully constraint，ECDC报的no constraint；其余的都是差异，
+在分析过程中发现，同一个BBOX在SG和ECDC报的SetupBBox的msg的hier_name不同的情况，正在分析原因                             
+2.回归DTS单1个"	
+
+"TZB
+今日分析msg数：72
+今日发现issue数：
+今日回传case数：
+日报：分析HIPHY_SUB的Ar与Setup部分，都为差异，Diff85,Diff174,Diff185,Diff183"	
+
+"SYH
+今日分析msg数：77
+今日发现issue数：1
+今日回传case数：
+日报：
+1.解释新泛化模块差异分析4.30中客户质疑，NAU_CAU_WRAP解释完毕，过程中新提了一个issue
+1.a DTS2025050717671：cr2cs_qsp_req_align_size为一个四位的4`b0X0X，BEAT_SIZE为整形5。取四位即为4`b0101。即三目运算符的判断结果永远为false，shape_cmd_align_max_size为BEAT_SIZE[4-1:0]，即常值4`b0101，但是Enno仅报告了第1位和第3位常值0，没有报第0位和第2位为常值1.
+2.看BDP/NAU_CAU_WRAP/DME_WRAP的新增误报漏报问题，均为差异
+3，分析Hi18XXE中NFI_PHYG_TOP误报漏报，均为差异，Diff69.Diff157，Diff8 
+4.关单DTS2025040716695"
