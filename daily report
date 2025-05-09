@@ -1,64 +1,72 @@
+"HQ
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1、对比脚本增加debug模式，使用debug包跑对比结果，不对现有数据产生影响
+2、完成艺豪golden模式的配置，可以自动选择是否更新golden"
+
 "ZWL
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1、回归DTS2025040816023、DTS2025041028660、DTS2025032536233；均已修复关闭
-2、新增优化建议DTS2025050717855
-3、提setup_blackbox的issue，DTS2025050721973"	
+1、创建DTS2025050811038，客户提出来的关于增量原理图的优化建议
+2、分析1813中TSSC_WRAP的ac、setup的漏报误报，分析完成，只有一个DTS2025050721973，剩下的都为差异；目前这个module已经全部分析完成"
 
 "LRF
-今日分析msg数：
+今日分析msg数：36
 今日发现issue数：
 今日回传case数：
 日报：
-1.解释客户对于差异标记提出的质疑
-CDC-4033 -- 需研发尽快解决
-2. 回归issue
-DTS2025040808330 -- 已修复
-DTS2025032636676 -- 点击增量原理图crash,无法回归"
+1.分析USBC的Ac和conv新增
+conv新增为差异
+ac新增部分为差异，部分待确认，待确认部分点击增量原理图会crash
+2.分析子奇的enhance包
+门禁的新增为差异"
 
 "JR
-今日分析msg数：156
-今日发现issue数：
-今日回传case数：
+今日分析msg数：675
+今日发现issue数：2
+今日回传case数：1
 日报：
-1.分析Hi18XXE HIS_TOP,目前分析到的都是差异；
-2.在分析过程中发现，Diff226-line8-clk的proc有问题：在比较SetupClkNetUndefined时，脚本比较objects 以及objects的个数，如果都和SG是一样的就可以标这个差异了，不用再比较行号和file，但是Diff226-line8-clk的proc还比较了file,已向心雨反馈；
-3.回归2个DTS单，均是差异，已关闭DTS单"
+1.Hi18XXE TOP_LGC的新增都是脚本问题导致的，已向心雨反馈；
+2.分析Hi18XXE HIS_TOP，在分析过程中发现，在module内部把clk赋值为0时，对于clk net相同的DFF，SG只会选择design中的第一个DFF来报clock_info03c，比如此测例中dout是design中的第一个DFF，SG中的clock_info03c只报了dout，如果把dout和dout1交换位置，那么SG中的clock_info03c只会报dout1[0]，而ECDC会在SetupClkTiedToConst中报出所有的DFF，对于这个问题有差异Diff30和Diff178,但是在Hi18XXE HIS_TOP中，ECDC报了25262条SetupClkTiedToConst，而SG只报了225条clock_info03c，数量差异比较大，所以建议ECDC也像SG这样报，已复现case并提issue：CDC-GEN-N-496；
+3.分析门禁新增误报漏报，分析完成，issue情况如下：
+ 3.1.builtin还有issue：CDC-4035,CDC-3331,CDC-3419,DTS2025042706565；
+ 3.2.setup的cfg还有一个脚本问题：CDC-4034;
+ 3.3.AC和AR没有issue；
+4.在分析门禁时发现，ECDC报的SyncCellFailed：Sync cell 'TOP VERIFIC_DFFRS'is not used to synchronize any crossing中有VERIFIC_DFFRS这个design中没有的module，ECDC不应该报VERIFIC_DFFRS，已提issue：CDC-4035"
 
 "CXY
 今日分析msg数：
 今日发现issue数：
-今日回传case数：
+今日回传case数：1
 日报：
-1.处理交付数据Hi18XXE/DDR_SUB中客户认为应该是match，但是脚本走了proc的内容。debug发现是因为在建key时，ekey中的时钟信息去掉了{},但是skey中的时钟信息没有处理{}，所以脚本误走了proc，已经修改
-2.debug 6号的门禁，射频数据中setup_port01有新增的问题，以及builtin反标不上的问题。门禁中setup_port01新增是由于节前修改了部分有问题的sdc文件导致的，属于正常情况，需要pv分析新增，射频新增是由于脚本配合了苏黎的修改之后，未更新射频的s_list，已经刷新射频所有配置的s_list。buitin反标失败是由于oldcsv有问题，oldcsv中间被python脚本处理过，导致标记的7全部变成了7.0，所以反标失败，回退一版oldcsv
-3.debug TOP_LGC突然跑工具失败的原因，发现是sdc文件被误改了，有个port约束将原本正确的小写port名改成了大写，sdc文件何琦已经帮忙修改回去
-4.验证国炜对于merge_bus_bits修改的分支包，这个包fold_bus_bit仍然有问题，使用命令fold_bus_bits[get_nets {TOP/din1[0] TOP/din[0]}],没有返回值，但是get_nets {TOP/din1[0] TOP/din[0]}是有正确的返回值的。问题以及case场景已经提供给国炜
-5.整理交付时发现的脚本diff proc名字有误的情况以及proc中少写了diff内容的情况，反馈给家里的脚本团队"
+1.继续验证merge_bus_bits的分支包，这个包目前仍然有问题，
+1）对于特定层次结构（如TOP/BLCOK2[0].U_SYNC2/U_BLOCK1[0].U_SYNC1/path_end）目前无法get，
+2）对于bit位超过1000的信号，get命令返回值最大只到999
+3）对于bit数达到四位之后，显示方式是：TOP/out[1，023:0][31:0]，由于用了逗号分隔和csv默认分割符一致，导致csv会出现错行
+4）get_nets {{{TOP/U_SYNC/do_0[0]} TOP/din_ff TOP/din_ff2}} 和daily 包返回值不同，daily包无返回值，分支包会返回TOP/din_ff TOP/din_ff2}
+上述问题的复现方式以及测例场景已经反馈给范国炜，目前正在修复中
+2.整理新泛化和门禁上手标的diff，确认需要enhance和新开发的diff
+3.验证王涵关于diff59+diff63的proc修改
+4.参加脚本周会
+5.修复蒋蕊反馈的TOP_LGC以及门禁cfg1上发现的脚本问题"
+
 
 "TZQ
-今日分析msg数：58
-今日发现issue数：1
-今日回传case数：
-日报：1.分析Hi18XXE的NFI_TOP，提了一个issue，DTS2025050718438，一个BBOX的pin连接到Dff的D pin时SG报的fully constraint，ECDC报的no constraint；其余的都是差异，
-在分析过程中发现，同一个BBOX在SG和ECDC报的SetupBBox的msg的hier_name不同的情况，正在分析原因                             
-2.回归DTS单1个"	
-
-"TZB
-今日分析msg数：72
+今日分析msg数：93
 今日发现issue数：
 今日回传case数：
-日报：分析HIPHY_SUB的Ar与Setup部分，都为差异，Diff85,Diff174,Diff185,Diff183"	
+日报：1.分析Hi18XXE NFI_TOP的setup部分，分析的全都是差异，Diff174(28条),因为recirculation mux+Dff SG没有推出常值，ECDC推了常值导致ECDC多报set_case_analysis(propagated)属于pass-const，Diff213(29条),Diff212(24条)         
+2.关闭1个DTS单"
 
 "SYH
-今日分析msg数：77
-今日发现issue数：1
+今日分析msg数：232
+今日发现issue数：
 今日回传case数：
 日报：
-1.解释新泛化模块差异分析4.30中客户质疑，NAU_CAU_WRAP解释完毕，过程中新提了一个issue
-1.a DTS2025050717671：cr2cs_qsp_req_align_size为一个四位的4`b0X0X，BEAT_SIZE为整形5。取四位即为4`b0101。即三目运算符的判断结果永远为false，shape_cmd_align_max_size为BEAT_SIZE[4-1:0]，即常值4`b0101，但是Enno仅报告了第1位和第3位常值0，没有报第0位和第2位为常值1.
-2.看BDP/NAU_CAU_WRAP/DME_WRAP的新增误报漏报问题，均为差异
-3，分析Hi18XXE中NFI_PHYG_TOP误报漏报，均为差异，Diff69.Diff157，Diff8 
-4.关单DTS2025040716695"
+1.分析Hi18XXE NFI_PHYG_TOP的ar 部分，分析均为差异Diff85和Diff74
+NFI_PHYG_TOP分析完成
+2.关单DTS2025041742429，DTS2025041739687，DTS2025041522016，DTS2025032709331，DTS2025031927363，DTS2025031314309，DTS2025041838064，DTS2025041905842"
