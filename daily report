@@ -122,10 +122,13 @@
 3.参加GUI分享交流会"
 
 "TZB
-今日分析msg数：
-今日发现issue数：
+今日分析msg数：72
+今日发现issue数：1
 今日回传case数：
-日报："
+日报：1.分析hiphy_sub setup部分72条，主要为diff174 
+发现一个issue提了dts单DTS2025051238456,一条常值net连接多个ff/clk端及一些黑盒的端口，报了这条net为 setupclknetundefine但是对于此条messge的增量原理图所连接的ff未报SetupClkTiedToconst ,A工具对于ff啥也没报         
+2.参加GUI功能会议"
+
 
 "SYH
 今日分析msg数：266
