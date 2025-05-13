@@ -1,72 +1,136 @@
-"HQ
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：
-1、对比脚本增加debug模式，使用debug包跑对比结果，不对现有数据产生影响
-2、完成艺豪golden模式的配置，可以自动选择是否更新golden"
+5.9：
 
 "ZWL
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1、创建DTS2025050811038，客户提出来的关于增量原理图的优化建议
-2、分析1813中TSSC_WRAP的ac、setup的漏报误报，分析完成，只有一个DTS2025050721973，剩下的都为差异；目前这个module已经全部分析完成"
+1、复现case并提issue DTS2025050919120；关于自身mux+flop结果并未满足打拍数报multifanout
+2、解释客户认为标记不合理的数据
+3、参加周会:
 
-"LRF
-今日分析msg数：36
+"JR
+今日分析msg数：59
 今日发现issue数：
 今日回传case数：
 日报：
-1.分析USBC的Ac和conv新增
-conv新增为差异
-ac新增部分为差异，部分待确认，待确认部分点击增量原理图会crash
-2.分析子奇的enhance包
-门禁的新增为差异"
-
-"JR
-今日分析msg数：675
-今日发现issue数：2
-今日回传case数：1
-日报：
-1.Hi18XXE TOP_LGC的新增都是脚本问题导致的，已向心雨反馈；
-2.分析Hi18XXE HIS_TOP，在分析过程中发现，在module内部把clk赋值为0时，对于clk net相同的DFF，SG只会选择design中的第一个DFF来报clock_info03c，比如此测例中dout是design中的第一个DFF，SG中的clock_info03c只报了dout，如果把dout和dout1交换位置，那么SG中的clock_info03c只会报dout1[0]，而ECDC会在SetupClkTiedToConst中报出所有的DFF，对于这个问题有差异Diff30和Diff178,但是在Hi18XXE HIS_TOP中，ECDC报了25262条SetupClkTiedToConst，而SG只报了225条clock_info03c，数量差异比较大，所以建议ECDC也像SG这样报，已复现case并提issue：CDC-GEN-N-496；
-3.分析门禁新增误报漏报，分析完成，issue情况如下：
- 3.1.builtin还有issue：CDC-4035,CDC-3331,CDC-3419,DTS2025042706565；
- 3.2.setup的cfg还有一个脚本问题：CDC-4034;
- 3.3.AC和AR没有issue；
-4.在分析门禁时发现，ECDC报的SyncCellFailed：Sync cell 'TOP VERIFIC_DFFRS'is not used to synchronize any crossing中有VERIFIC_DFFRS这个design中没有的module，ECDC不应该报VERIFIC_DFFRS，已提issue：CDC-4035"
+1.解释客户对Hi18XXE TOP_LGC提出的差异质疑；
+2.参加周会"
 
 "CXY
 今日分析msg数：
 今日发现issue数：
-今日回传case数：1
+今日回传case数：
 日报：
-1.继续验证merge_bus_bits的分支包，这个包目前仍然有问题，
-1）对于特定层次结构（如TOP/BLCOK2[0].U_SYNC2/U_BLOCK1[0].U_SYNC1/path_end）目前无法get，
-2）对于bit位超过1000的信号，get命令返回值最大只到999
-3）对于bit数达到四位之后，显示方式是：TOP/out[1，023:0][31:0]，由于用了逗号分隔和csv默认分割符一致，导致csv会出现错行
-4）get_nets {{{TOP/U_SYNC/do_0[0]} TOP/din_ff TOP/din_ff2}} 和daily 包返回值不同，daily包无返回值，分支包会返回TOP/din_ff TOP/din_ff2}
-上述问题的复现方式以及测例场景已经反馈给范国炜，目前正在修复中
-2.整理新泛化和门禁上手标的diff，确认需要enhance和新开发的diff
-3.验证王涵关于diff59+diff63的proc修改
-4.参加脚本周会
-5.修复蒋蕊反馈的TOP_LGC以及门禁cfg1上发现的脚本问题"
-
+1.和高强对issueDTS2025032022578，误报已经修复，但是仍然有漏报的情况，reopen该issue
+2.参加周会
+3.针对USBC中客户对脚本标pass的质疑内容进行解释"	
 
 "TZQ
-今日分析msg数：93
+今日分析msg数：52
 今日发现issue数：
 今日回传case数：
-日报：1.分析Hi18XXE NFI_TOP的setup部分，分析的全都是差异，Diff174(28条),因为recirculation mux+Dff SG没有推出常值，ECDC推了常值导致ECDC多报set_case_analysis(propagated)属于pass-const，Diff213(29条),Diff212(24条)         
-2.关闭1个DTS单"
+日报：1.参加PV周会                            
+2.分析Lighting的NFI_PHYG的新增部分，发现setup的新增是属于,SetupPort对于inout的port会分为as input和as output两条报导致的；目前这个module只剩下30条SetupClkMuxNotRcvClk这一个rule还未分析         
+3.跑Hi18XXE的NFI_TOP的对比脚本                
+4.参加森林的分享会"	
 
-"SYH
-今日分析msg数：232
+"TZB
+今日分析msg数：80
 今日发现issue数：
 今日回传case数：
 日报：
-1.分析Hi18XXE NFI_PHYG_TOP的ar 部分，分析均为差异Diff85和Diff74
-NFI_PHYG_TOP分析完成
-2.关单DTS2025041742429，DTS2025041739687，DTS2025041522016，DTS2025032709331，DTS2025031927363，DTS2025031314309，DTS2025041838064，DTS2025041905842"
+1.分析HIPHY_SUB，setup部分主要差异为，Diff85,Diff174
+2.对于一个常值net连接多个ff/clk端，其中有一个ff报了setupclknetundefine而sg没报，在继续分析其原因中
+3.帮忙写客户对TOP_LGC的差异质疑的解释"
+
+"SYH
+今日分析msg数：478
+今日发现issue数：1
+今日回传case数：
+日报：
+1.参加周会
+2.分析NFI_TOP的ac部分误报漏报，主要是Diff59，Diff63，Diff91。发现了一个issue：DTS2025051204386：Enno和A工具报告文件行号不一致，AcSyncDataPath，Enno报的是destination的文件名和行号，A工具报告的是source的文件名和行号"
+
+
+5.12：
+
+"HQ
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.查看新泛化对比结果DME_WRAP有新增，DDR_SUB有新增，TOP_LGC，ac部分有脚本匹配问题（心雨已修复），builtin，ar有新增，NFI_PHYG_TOP ac有脚本问题（csv错误打开并保存，已解决），setup有新增
+2.帮助焕东解决泛化跑DC的脚本流程，已完成
+3.完成两个节点间的差异变化excel的生成脚本，已回传，明日和刘玲对接，抓取相应数据
+4.setup跑dataTieToConst的对比时存在脚本bug，已交由心雨解决
+5.APP_CON由于脚本bugE对比结果停滞，已重新再跑"
+
+"ZWL
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1、关于属性窗口的优化建议--DTS2025051237170：1、用单空格分割多个obj，容易无法区分；建议使用逗号或者换行；2、对于可以点击进入下层的对象，现在有使用下横线标记，但下横线经常使用在定义对象中，因此建议删掉下横线
+2、解释客户认为标记不合理的数据
+3、验证DTS2025050919120，关闭infer_enabled_flop时，sg也会报multifanout，因此这个issue只是差异"
+
+"LRF
+今日分析msg数：22
+今日发现issue数：2
+今日回传case数：
+日报：
+1.分析客户对USBC提出的差异
+2.帮研发造case
+3.参加GUI分享会"
+
+"JR
+今日分析msg数：267
+今日发现issue数：3
+今日回传case数：1
+日报：
+1.解释完成客户对Hi18XXE TOP_LGC提出的差异质疑；
+2.分析门禁新增误报漏报：
+ 2.1 Ac、Ar没有新增；
+ 2.2 setup普通、cfg1各新增两条误报漏报，都是issue：DTS2025051234779，cfg2 setup的csv有脚本问题，应该match的message没有match，已向心雨反馈；
+ 2.3 builtin普通、cfg1和cfg2各新增66条误报漏报，都是issue：DTS2025051232061、DTS2025051231449；"
+
+"CXY
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.验证merge_bus_bits分支包对现场的影响，目前该分支包对对比脚本无影响，对现场反标存在一定影响，对于二维非连续信号，之前的包不能合并，csv中的obj是按bit展开的形式写入的，分支包可以合并，obj则是按合并的形式写入的，所以会影响到反标。但是在门禁上只影响到一条msg，对现场影响比较小，并且将非连续bus的bit合并是这个分支包要做的主要功能。验证意见：认为这个包可以合入到develop
+2.验证康凯关于内存泄漏的修改以及王涵关于Diff157和Diff63的修改
+3.更新现场脚本，整理最近现场的代码修改，回传到家里"
+
+"CJR
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.分析添加USBC的差异解释
+2.depth2及5的setupport比对不上，改了tcl脚本，需要重新加载解析文件。"	
+
+"TZQ
+今日分析msg数：85
+今日发现issue数：
+今日回传case数：
+日报：1.验证DTS2025050718438，发现当inout端口分别报input和output的SetupPort相关msg时，output报的内容跟参数cdc.check_port_setup设置为output时的结果不一样；
+与苏黎讨论后，发现是BUG，已reopen该issue，并建立了test case交给苏黎重新修复
+2.分析Hi18XXE的NFI_TOP的Conv部分，目前分析到的全都是汇聚点不同的差异                   
+3.参加GUI分享交流会"
+
+"TZB
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："
+
+"SYH
+今日分析msg数：266
+今日发现issue数：
+今日回传case数：1
+日报：
+1.帮苏黎复现DTS2025042930080的小case并回传
+2.分析NFI_TOP的ac部分误报漏报266条，均为差异（Diff136，Diff109，Diff212，Diff71）"
