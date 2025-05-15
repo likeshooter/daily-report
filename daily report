@@ -1,76 +1,72 @@
 "XLL
-今日分析msg数：20
+今日分析msg数：12
 今日发现issue数：
 今日回传case数：
-日报：1.分析HIS_TOP ac的数据，分析了20条，均为脚本问题，已告知心雨
-2.查看TOP_LGC差异标记不合理的地方和原因
-3.参加与CA的差异标记澄清会议"
-
-"HQ
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：
-1. 参加430节点差异遗留问题对齐会议
-2. 修改性能数据统计脚本逻辑，解决golden模式下，golden不变未统计到性能的bug
-3. TOP_LGC的builtin行号未抓取到，在debug原因
-4. 多次使用同一个包：（513的daily包）用report_violation后的结果进行对比，发现值的顺序有变化,(SetupRstInferred部分)已提issue：CDC-4037
-5. 整理的DTS单最新状态"
+日报：1.分析HIS_TOP AC的message 14条，其中需要提2个issue
+1）DTS2025051433293，QualMergesOtherSrc在GUI上没有将source都显示，建议都显示，更直观；
+2）工具报了QualMergesOtherSrc，但qualifier链路上并没有另一条source。待提成DTS单"
 
 "ZWL
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1、向冯敏演示DTS2025042422004的问题点，并跑debug信息供他参考
-2、向高强演示sg对于source有多个clock信号，报srcconverge，但enno报CtrlPotentialSynRstUndefined；并提取case
-3、参加430节点差异遗留问题对齐会议"
+1、关闭问题单DTS2025050919120
+2、和苏黎沟通DTS2025050721973的问题，需要打debug包过来
+3、分析APP_CORE的Reset_sync04部分，大部分为差异diff191；有一条是我们误报，但分析结果是sg的问题点，需要写差异；有一条是sg能综合GTECH_UDP_FD2（Q_int,D,CP,CD）这条语句，但enno综合成blackbox，导致我们漏报
+4、参加430节点差异遗留问题对齐会议"
 
 "LRF
-今日分析msg数：
+今日分析msg数：56
 今日发现issue数：
 今日回传case数：
 日报：
-1.回归issue
-DTS2025032423778
-DTS2025040706259 -- 增量原理图存在crash的问题
-DTS2025040916966 -- 回归通过
-2.帮RD造case
-3.分析USBC的Ac和conv新增"
+1.分析子奇的enhance包
+a.ac有新增问题
+1）sync -> unsync
+2)reason变化
+2.查看射频cfg1_1的新增问题 -- 定位中
+3.参加430节点差异遗留问题对齐会议 "
 
 "JR
-今日分析msg数：132
+今日分析msg数：157
 今日发现issue数：
 今日回传case数：
 日报：
-1.回归3个DTS单；
-2.Hi18XXE TOP_LGC的builtin的csv中漏了一些内容，导致原本match的message不match了，发现是跑csv跑得有问题，重新跑后应该就没问题了；
-3.参加430节点差异遗留问题对齐会，向客户解释Hi18XXE TOP_LGC的差异质疑；
-4.分析门禁新增误报漏报，setup的新增有两个问题导致，第一个是之前走的Diff150这个proc，现在没走了，导致新增，第二个是setup cfg2的setup_port脚本还是没有完全适配，导致还有新增，这两个问题都向心雨反馈了"
+1.reopen CDC-GEN-N-370，在昨天的430节点差异遗留问题对齐会中，客户认为，对于CDC-GEN-N-370这个issue里提到的UDP，在ECDC不可综合而在SG中可综合不合理，不应该标记为差异Diff190，而应该修改ECDC的综合结果，让ECDC也可综合，或者用其他方法证明ECDC综合的正确性；
+2.回归3个DTS单；
+3.和开发线上讨论DTS2025042924074，ECDC和SG报的文件名不一样，后面要ECDC改成和SG一样；
+4.分析今日门禁新增误报漏报，没有新增issue，ac、ar、builtin误报漏报为0，setup还有一个issue：DTS2025051234779"
 
 "CXY
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.处理现场脚本问题
-2.参加430节点差异遗留问题对齐会议"
+1.enhance 在Hi18XXE/DDR_SUB上发现的Diff18 proc的bug
+2.和开发线上开会定位DTS2025032022578的问题，发现是由于信号经过与门后，丢失了一个data_clock_tag，导致漏报。预计苏黎明天会发一个debug包用于定位问题
+3.处理现场脚本问题
+4.对于昨天客户评审时，对差异PPT中Diff111这个场景不清楚的地方，写PPT进行补充说明。在补充时发现，脚本proc中存在bug，由于虚拟时钟导致的不match问题，也走到了这个proc里面，脚本问题正在修复中
+5.参加430节点差异遗留问题对齐会议"
 
 "TZQ
-今日分析msg数：23
+今日分析msg数：80
 今日发现issue数：
 今日回传case数：
-日报：1.分析Hi18XXE的NFI_TOP的conv部分，分析中发现当一个qualifier与一个other data clock汇聚之后再与另外两个qualifier汇聚，SG没有报conv相关的msg，ECDC报了Ac_conv01,根据子奇之前发的邮件的内容来看，
-SG在遇到qualifier与other data clock汇聚之后如果连到一个same clk driver FF时是会继续传播qualifier信号的，但在分析过程中SG并没有，
-目前正在分析是否有其他的原因导致SG没有报出Ac_conv01，有可能是qualifier fanout后连接到另一个clock domain导致的问题         
-2.参加430节点差异遗留问题对其会议"
+日报：1.关闭2个DTS单：            
+DTS2025040923235--Lint rule导致综合不同的差异 
+DTS2025032118772--inout port作为output时悬空报SetupPortIgnoredUnconnect的问题                         
+2.分析NFI_TOP的conv部分，目前分析到的全都是差异                                    
+3.参加430节点差异遗留对其会议"
 
 "TZB
-今日分析msg数：
+今日分析msg数：56
 今日发现issue数：
 今日回传case数：
 日报：
-参加430节点差异遗留问题对齐会议"
+1.分析hiphy_sub setup部分，主要为diff174 
+2.分析HIS_TOP中Ac部分，标记的为pass-const，主要是因为对于一个ff我们推了常值而sg没有推，导致我们漏报了Ac_sync01的messge，所以标记了pass-const
+2。参加430节点差异遗留问题对齐会议"
 
 "SYH
 今日分析msg数：
