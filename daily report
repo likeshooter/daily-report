@@ -1,57 +1,77 @@
 "XLL
-今日分析msg数：
-今日发现issue数：
+今日分析msg数：40
+今日发现issue数：1
 今日回传case数：
-日报：1.Debug开发遇到的大case运行时报out of memory的问题，更新golden中的部分message golden后，就不报了；但是发现很多以前pass的golden现在fail了，筛选了其中部分查看，发现有些message的obj之前是拆开比特位报的，现在合并成bus报的，其他的golden已交接给rd去跟进
-2.与RD一起看昨天提到的“工具报了QualMergesOtherSrc，但qualifier链路上并没有另一条source”的问题，待RD现场确认
-3.分析HIS_TOP AC，遇到以下情况，source到destination之间经过了一堆组合逻辑，中间有多条qualifier，qualifier与source信号汇聚的点不同，sg选的qualifier报出的是sync，ecdc选的qualifier是更靠近destination的那条，报的是unsync，这个情况需要rd看下我们的处理是否正确，后续再看是否需要给一个差异"
+日报：1.分析HIS_TOP AC的message 40条，其中发现了一个问题，已提issue，其余均为差异：Diff147、Diff63，提的issue：DTS2025052030539，A工具报MultiFanout，ecdc报了AcSyncCtrlPath-MultiFlop，从原理图中key看到打拍链中有多个fanout，应该报AcUnsyncCtrlPath-MultiFanout
+提取了小case，但是没有复现出这个场景"
 
 "ZWL
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1、创建DTS2025051530141，关于sg能正常综合upd，enno综合为blackbox的问题
-2、参加差异澄清会
-3、和冯敏看DTS2025042422004的问题，和苏黎看DTS2025050721973的问题；都还需要进一步debug
-4、编写一个reset_sync04的待评审差异"
+1、编写一个漏报ar_unsync的差异编号Diff503
+2、分析APP_CORE的arsync部分，漏报为差异diff502和DTS2025051530141（UPD的综合差异），误报为Diff502；另外Diff502在新泛化比较常见，希望脚本支持"
 
 "LRF
-今日分析msg数：18
-今日发现issue数：
-今日回传case数：
-日报：
-1.参加差异澄清会
-2.分析子奇的conv enhance包"
-
-"JR
-今日分析msg数：247
-今日发现issue数：3
-今日回传case数：1
-日报：
-1.回归1个DTS单；
-2.分析Hi18XXE TOP_LGC最新csv中新增的误报漏报，在分析过程中发现两个问题：
- 2.1 DTS2025051509288：IntegrityClockConverge的原理图有问题，只有net out1有clock属性，net out2、out3没有clock属性，但是在IntegrityClockConverge的原理图中把out2、out3也都显示出来了，不应该把out2、out3显示出来，因为out2、out3和IntegrityClockConverge无关；
- 2.2 DTS2025051510220：IntegrityClockConverge报的clock pin不正确；
-3.分析门禁今日新增误报漏报，只有ac和builtin有新增误报漏报：
- 3.1 ac新增是因为bus合并导致之前标的差异掉了；
- 3.2 builtin新增一个issue CDC-4039：因为bus合并导致漏报了一个obj"
-
-"TZQ
-今日分析msg数：128
-今日发现issue数：
-今日回传case数：
-日报：1.与苏黎一起看DTS2025050718438相关问题，BBOX的outpin 我们的工具没有data clock，SG有并报了fully constraint，我们报的no constraint    
-2.分析NFI_TOP的conv部分，发现有80条是属于当一个qualifier与一个other data clock的信号汇聚之后再与其他的qualifier汇聚，这种情况下我们会报这个qualifier汇聚，但SG不会报出这个qualifier  
-3.分析NFI_TOP setup丢失的数据"
-
-"TZB
-今日分析msg数：80
+今日分析msg数：56
 今日发现issue数：1
 今日回传case数：
 日报：
-1.分析hiphy_sub setup部分，主要为diff174 diff158
-2.分析HIS_TOP中Ar部分，标记的Diff85,issue:对于UDP综合问题，我们工具综合成黑盒sg综合成FF导致enno漏报AR_sync,DTS202505130141
-3.参加430节点差异遗留问题对齐会议"
+1.分析射频新增的误报漏报
+2.和子奇看射频两拍漏报的Ac_conv01
+3.回归issue
+DTS2025042122659 -- issue未解决但RD已经develop
+DTS2025032636676 -- RD已经develop但增量原理图稳定crash(issue编号：DTS2025042816071  -- 未develop)
+DTS2025040706259 -- RD已经develop但增量原理图稳定crash(issue编号：DTS2025052024823)
+DTS2025040910335 -- 已回归，标记差异Diff233-report-multi_bits_merge 
+DTS2025041809575 -- 已回归
+DTS2025041610816 -- 已回归
+4.分析ziqi的debug包"
 
+"CXY
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报： 
+1完成脚本proc，实现对于enno多报的ac_conv相关msg，去定位链路打拍之后扇出到不同domain，导致enno多报ac_conv相关msg的场景。用于辅助分析Diff122的场景
+2.用冯敏的测试包跑Lighting/HIPHY_SUB的对比脚本
+3.用冯敏的测试包看目前ClkTiedToConst的行为，根据最新的差异PPT，完成脚本proc diff178，在门禁上测试的结果：新的diff178 在门禁上标记无问题。同时这个测试包因为报告的ClkTiedToConst的个数减少了，对门禁反标会有一些影响，因为daily包中有些误报内容是在bus上，测试包的行为是对于DFF的clk连到同一个net上时只选一个报，所以对于反标来说，obj有变化，影响到门禁反标11条。proc在新泛化上的行为正在测试中
+4.发现对比脚本在对比ClkTiedToConst时，建key不太完整。这条msg ecdc和sg都报告出了clk_pin和DFF信息，但是脚本建key对比时，只对比了DFF信息。正在调查为什么最初脚本是这样子做的
+5.处理射频cfg1_1 builtin的sg rpt和实际跑sg的结果对不上的问题。是由于脚本解析的sg rpt路径不正确，已经修改"
 
+"CJR
+今日分析msg数：596
+今日发现issue数：1
+今日回传case数：1
+日报：1.分析APP_CORE的漏报误报问题。
+1.1 clock_info03b的漏报（14条）：SG bug,属于差异Diff213
+1.2 clock_info03b的漏报（150条）：比较器之后SG推出了常值，ECDC没有推，导致漏报，正在复现中。
+1.3 IntegrityRstConvOnComb（33条）：SG报converge在bus上，ECDC分开报。报的并没有问题，目前没有适合此rule差异，如果ECDC能够合并bus更好，提单DTS2025052025431。
+1.4 clock_in03b(170条):SG报的bit（[145:141]）位属于ECDC报的子集([145:141])，属于ECDC多报了，标注pass-const
+1.5 clock_info03b(229条)漏报：SG bug没有报出其余比特位为常值，属于Diff171。
+2.分析cfg11射频setup新增，属于新差异Diff235"
+
+"TZQ
+今日分析msg数：129
+今日发现issue数：
+今日回传case数：
+日报：1.跑NFI_TOP的const和conv的对比脚本 2.分析lighting的NFI_PHYG，Ac部分全都为Diff222；Setup部分，SG报了incorrectly constrained，我们作为output报了no constraint，作为input报了fully constraint，属于Diff218；Ac_coherency这一条是打开了infer_abstract_port但SG给port推了虚拟时钟导致我们漏报，是SG的BUG属于DIff18            3.关于SetupClkMuxNotRcvClk这个rule，在分析中发现当mux的output连接到latch的gate端也会报出这条rule，但手册中只说明了连到clk pin或者bbox才会报出，已经反馈给亚娟               4.在NFI_PHYG这个module中SetupClkMuxNotRcvClk这个msg疑似出现了随机性的问题，SG一共报了72条，我们工具每个版本报的条数或者报的内容都会不一样，这72条是分别在不同的包中都报出来过，但没有同时报出72条的情况"
+
+"TZB
+今日分析msg数：98
+今日发现issue数：1
+今日回传case数：
+日报：
+1.分析HIS_TOP的Ar（已分析完），setup部分，主要差异有Diff174,Diff191,Diff502,Diff97
+2.DTS2025052019430:对于ar的multiflop同步结构，若3拍后的输出接入一个datatiedtoconst的ff/reset端，enno会报arsync，sg不会。"
+
+"SYH
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.关单DTS2025042930080
+2.测试DFX功能get_const_seq_independent_objs 命令，（用来过滤常值传播路径上的Dff），测试结果该命令存在随机性错误，在两条完全无关的path上，输入参数PathA中的Dff，再输入PathB中的Dff，依然会得到PathA中的Dff，且每次获得的DFF不确定
+3.在新泛化上试用get_hdl_info命令及脚本，发现脚本资源不适用于CA，正在更改
+4.用冯敏的新debug包跑NAU_CAU_WRAP"
