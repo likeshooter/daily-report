@@ -1,72 +1,77 @@
 "XLL
-今日分析msg数：71
+今日分析msg数：61
 今日发现issue数：
 今日回传case数：
-日报：1.分析HIS_TOP AC的message 71条，主要是为差异、脚本问题和常值影响，脚本问题已知会心雨"
+日报：1.分析HIS_TOP Ac message 61条，有一个问题跟瑞风已提的issue DTS2025052213669类似，也与RD交流过了，其他均为差异，主要是Diff59、Diff63
+2.参加GUI IS回归录制培训会议"
+
+"HQ
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1. 跑Lighting和1813的部分case性能和对比结果（很长时间没有跑）
+2. 跑Hi18XXE的NFI_TOP的bbox对比结果（set_param cdc.only_report_first_inst_of_bbx false）
+3. 统计新跑出来的dataTiedToConst的对比结果（误报漏报数、proc的覆盖率等）
+4. 解决隔离区传包问题（中转站内存不足，脚本里保留了近10天的所有包，最近10天包比较多）
+5. 参加GUI的分享会"
 
 "ZWL
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1、关闭问题单DTS2025041839875
-2、分析a55_wrap.v中漏报and gate同步（enno应该报MuxSelect同）部分、误报NoDestMuxDataPin、MissingSynchronizer、MuxSelect部分，提DTS2025052134795，并复现case"
-
-"LRF
-今日分析msg数：23
-今日发现issue数：
-今日回传case数：
-日报：
-1.协助子奇分析射频两拍漏报Ac_conv01的issue
-2.已完成子奇debug包在USBC上的conv的分析工作，发现sg与ecdc在conv检查上最大的影响其实是Diff122带来的影响：同步器在最后一拍Fan_out到一个不同于destination的clock domain的情况，sg并不会将此同步器进行汇聚的检查，导致ecdc天然比sg多部分qualifier,且会导致最终收敛点不一致"
+1、分析完a55_wrap.v的msg，包括DTS2025041839875（影响30条），diff59，3个脚本问题
+2、分析async_apb2apb_brg.v中漏报误报部分，有diff59差异，有sg推断常值，但enno没有推断常值的情况，初步分析时因为比较器的原因，但还要需要继续分析为什么比较器在sg中会推断常值，而enno不推断
+3、参加GUI会议"
 
 "CXY
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.根据最新的差异PPT，完成脚本proc diff178,在门禁和新泛化Lighting/HIPHY_SUB上测试结束，脚本proc在新泛化Lighting/HIPHY_SUB上标注率为84%。测试建议：因为ecdc和sg报的DFF不一样，所以会有行号和文件名从差异，脚本走了这个proc之后也会有因为行号，文件名不一致导致的unmatch，建议这个差异可以追加不比行号和文件名的说明
-2.完成proc帮助ac_conv的分析对于1）ecdc报的quailifer和sg相同，但是conv net不同
-2）ecdc和sg报的conv net相同，但是quailifer个数不同，sg报的quailifer是ecdc的子集
-针对上面两个情况，脚本会在csv的unmatch_Reason列写出属于上面哪种原因导致的unmatch，并且列出双方工具不同的点。用于帮助大家快速筛选出ecdc和sg对应的msg。proc在USBC上测试通过
-3.处理现场的一些脚本疑问"
+1.修复脚本在APP_CORE上的bug
+2.参加GUI分享会
+3.参加脚本周会
+4.调试"
 
 "CJR
-今日分析msg数：339
-今日发现issue数：
-今日回传case数：
+今日分析msg数：61
+今日发现issue数：1
+今日回传case数：1
 日报：1.分析APP_CORE的漏报误报问题。
-1.1 clock_info03b的漏报（127条）：比较器之后SG推出了常值，ECDC没有推，导致漏报，同一问题。
-1.2 clock_info03b的漏报（64条）：SG报的bit位属于ECDC报的子集，属于ECDC多报了，标注pass-const
-1.3 clock_info03b的漏报误报（132条）：ECDC与SG推到常值相反，属于差异Diff212
-1.4 clock_info03b的漏报（8条）：SG报了一个bit，ECDC报了整个bus，标注为pass-const
-1.5 clock_in03b(2条):SG报的bit（[144:141]）位属于ECDC报的子集([145:141])，属于ECDC多报了，标注pass-const
-1.6 clock_info03b的漏报（6条）：SG bug,属于差异Diff213
-2.脚本Diff212优化建议：如果ECDC报了一个bus为常值0，SG报了其中一个为常值1，其他bit位为常值0；脚本会将漏报常值1的标记为Diff212，其他SG报的比特位标记为漏报，应该标为match最好。"
+1.1 提单DTS2025052205704：ECDC在泛化中对于临界值比较有误导致漏报SetupDataTiedToConst，例如0000_0001_1111 < {3'b0,bus_a[4:0]}（不满足此条件则输出零）,无论bus_a[4:0]为多大，此条件是无法满足的，而在泛化中，ECDC比较结果不为零。另外，通过构建类似的小测例，从小测例比较器内部逻辑电路观察到，当mux的a0为零，a1及sel端都不是常值零，结果mux输出推到出了常值零。可能对于比较器的处理需要优化。
+1.2 分析Ac_conv02误报漏报：8条属于Diff150。53条属于pass_const,导致漏一条qualifier。
+
+2.APP_CORE的常值漏报已分析完成总结如下：
+2.1 由于比较器结果错误导致的漏报占371条
+2.2 属于差异Diff171的占229条
+2.3 属于差异Diff212占54条
+2.4 属于差异Diff213占19条
+2.5 Pass_const:ECDC多报了，SG报的是ECDC的子集占297条"
 
 "TZQ
-今日分析msg数：62
-今日发现issue数：2
-今日回传case数：2
-日报：1.跑NFI_TOP的const和conv的对比脚本
-2.分析冯敏的包在门禁上的新增，ECDC修改了clk tie to const的算法，在同一个clk net上只会报出一条msg，但跟SG报的可能会不同，属于Diff178;我们对<<<会直接推到为常值，属于pass-const;发现一个bug，在关闭infer的情况下，对于TOP.clk 
-SG工具报了unconstrained，ECDC在其他的包中报了SetupClkNetUndefined，但在该包中没有报，已提issue，DTS2025052132196    
-3.分析daily包门禁新增的msg，发现一个bug，TOP.clk连接到了DFF的clk pin但ECDC报的SetupClkNotPropagated，已提issue，DTS2025052137192"
+今日分析msg数：73
+今日发现issue数：
+今日回传case数：
+日报：1.分析完成NFI_TOP的Ar部分，全都为差异，Diff85和Diff191，目前NFI_TOP之前丢失的数据除了const和conv之外已经全部补充完
+2.跑NFI_TOP的const和conv的对比脚本
+3.参加GUI-IS回归录制培训会议"
 
 "TZB
-今日分析msg数：145
+今日分析msg数：52
 今日发现issue数：
 今日回传case数：
 日报：
-1.分析HIS_TOP的setup部分145条，主要差异有Diff174，pass-const，diff115。"
+1.分析HIS_TOP的setup部分45条，主要差异有Diff174，diff115。还有conv的误报漏报中存在常值的情况标记的pass-const
+2.参加GUI-IS回归录制培训会议"
 
 "SYH
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.关单DTS2025042940047，DTS2025031330812
-2.帮冯敏看新算法下的DTS2025050717671，mux的sel、input pin推导没有问题，但是常值没有传递到output pin上，待冯敏修改，和子奇苏黎一起确认了DTS2025051902480，确认是msg合并导致的问题，根据苏黎的要求更新了issue描述
-3.get_hdl_info的使用：修改脚本后在DDR_SUB模块上进行试用
-3.1提取脚本在对参数的处理上扔有缺陷，对于localparam/parameter A = `B的情况，宏B没有被解析到文件中
-3.2,脚本没有对sdc文件做特殊处理的，提取的RTL中不一定含有sdc涉及的所有obj，导致read_cdc命令报错"
+1.帮冯敏看DTS2025050717671，目前在LessThan ins中前两个MUX已经被推为常值，但是第三个mux不认为是常值，冯敏反馈为函数接口有问题。需修改
+2.分析HIS_TOP的Ac部分
+3.参加GUI-IS回归录制培训会议
+"
