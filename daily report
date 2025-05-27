@@ -1,77 +1,150 @@
 "XLL
-今日分析msg数：61
+今日分析msg数：143
 今日发现issue数：
 今日回传case数：
-日报：1.分析HIS_TOP Ac message 61条，有一个问题跟瑞风已提的issue DTS2025052213669类似，也与RD交流过了，其他均为差异，主要是Diff59、Diff63
-2.参加GUI IS回归录制培训会议"
+日报：1.分析HIS_TOP AC message 143条，主要为差异和脚本问题
+2.参加周会"
 
 "HQ
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1. 跑Lighting和1813的部分case性能和对比结果（很长时间没有跑）
-2. 跑Hi18XXE的NFI_TOP的bbox对比结果（set_param cdc.only_report_first_inst_of_bbx false）
-3. 统计新跑出来的dataTiedToConst的对比结果（误报漏报数、proc的覆盖率等）
-4. 解决隔离区传包问题（中转站内存不足，脚本里保留了近10天的所有包，最近10天包比较多）
-5. 参加GUI的分享会"
+1. 和焕东更新跑dc常值的flow，增加拆分模块的功能
+2. 参加周会
+3. 定期批量跑节点交付case 
+4. 回传TieToConst数据和各case的性能数据
+5. 修改APP_CORE的sg session，有错误"
 
 "ZWL
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1、分析完a55_wrap.v的msg，包括DTS2025041839875（影响30条），diff59，3个脚本问题
-2、分析async_apb2apb_brg.v中漏报误报部分，有diff59差异，有sg推断常值，但enno没有推断常值的情况，初步分析时因为比较器的原因，但还要需要继续分析为什么比较器在sg中会推断常值，而enno不推断
-3、参加GUI会议"
+1、分析async_apb2apb_brg.v完成，DTS2025052205704常值影响8条；diff59影响8条
+2、分析gtech_lib.v中的漏报误报，发现全是由于upd综合不一致导致，影响12436条，是diff237，sg能综合出正常的带clear/set的DFF，enno综合为i4的blackbox；已经和心雨沟通用脚本实现
+3、分析int_wc_reg.v，全是漏报，因为enno误报常值导致，标记2 pass-const
+4、分析qic_cbb_fifo_wrap.v，其中差值影响148条，标记2 pass-const"
 
 "CXY
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.修复脚本在APP_CORE上的bug
-2.参加GUI分享会
-3.参加脚本周会
-4.调试"
+1.修复HIS_TOP上的脚本问题
+2.修复APP_CORE上的脚本问题
+3.写Diff237-Diff48-UDP，这个diff场景在APP_CORE上比较多，正在测试中"
 
 "CJR
-今日分析msg数：61
+今日分析msg数：35
 今日发现issue数：1
-今日回传case数：1
-日报：1.分析APP_CORE的漏报误报问题。
-1.1 提单DTS2025052205704：ECDC在泛化中对于临界值比较有误导致漏报SetupDataTiedToConst，例如0000_0001_1111 < {3'b0,bus_a[4:0]}（不满足此条件则输出零）,无论bus_a[4:0]为多大，此条件是无法满足的，而在泛化中，ECDC比较结果不为零。另外，通过构建类似的小测例，从小测例比较器内部逻辑电路观察到，当mux的a0为零，a1及sel端都不是常值零，结果mux输出推到出了常值零。可能对于比较器的处理需要优化。
-1.2 分析Ac_conv02误报漏报：8条属于Diff150。53条属于pass_const,导致漏一条qualifier。
-
-2.APP_CORE的常值漏报已分析完成总结如下：
-2.1 由于比较器结果错误导致的漏报占371条
-2.2 属于差异Diff171的占229条
-2.3 属于差异Diff212占54条
-2.4 属于差异Diff213占19条
-2.5 Pass_const:ECDC多报了，SG报的是ECDC的子集占297条"
+今日回传case数：
+日报：1.分析APP_CORE的Setup漏报误报问题。
+1.1 conv02:19条pass_const;
+conv01:10条属于Diff150；
+1.2 setup_port（3条）：约束不同，属于差异Diff213导致，设置infer_enabled_flop 为false则和ECDC相同。
+1.3 setup_bbox（3条）:误报约束infer reset，已提单DTS2025052322315
+2.跑APP_CORE比对"
 
 "TZQ
-今日分析msg数：73
+今日分析msg数：45
 今日发现issue数：
 今日回传case数：
-日报：1.分析完成NFI_TOP的Ar部分，全都为差异，Diff85和Diff191，目前NFI_TOP之前丢失的数据除了const和conv之外已经全部补充完
-2.跑NFI_TOP的const和conv的对比脚本
-3.参加GUI-IS回归录制培训会议"
+日报：1.分析NFI_TOP的setup的误报漏报问题 1.1 Ac_conv03:pass-const    
+2.跑NFI_TOP的conv和const的比对        
+3.分析门禁新增，发现builtin的csv中新增的再工具中没有报已反馈给景烁，Setup部分新增的都为Ac_conv04  
+4.参加PV周会               "
 
 "TZB
-今日分析msg数：52
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："
+
+"SYH
+今日分析msg数：80
 今日发现issue数：
 今日回传case数：
 日报：
-1.分析HIS_TOP的setup部分45条，主要差异有Diff174，diff115。还有conv的误报漏报中存在常值的情况标记的pass-const
-2.参加GUI-IS回归录制培训会议"
+1.试用get_info_hdl命令，新发现一个issue
+1.1 CDC-4050:get_hdl_info对generate_for结构中的begin：XXX没有提取到，导致read_design报错
+2.分析HIS_TOP的ac误报漏报，为Diff59，Diff63
+3.PV周会"
 
-"SYH
+
+
+"XLL
+今日分析msg数：12
+今日发现issue数：
+今日回传case数：
+日报：1.分析HIS_TOP AC mesage 12条，主要为差异Diff147、Diff92，部分问题已请RD查看，待提取小case后提issue"
+
+"ZWL
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.帮冯敏看DTS2025050717671，目前在LessThan ins中前两个MUX已经被推为常值，但是第三个mux不认为是常值，冯敏反馈为函数接口有问题。需修改
-2.分析HIS_TOP的Ac部分
-3.参加GUI-IS回归录制培训会议
-"
+1、提issue DTS2025052614568；关于msg中的clock和属性显示的clock不一致的问题；提issue CDC-4051（误报常值），CDC-4053（关于dest为不连续的多比特时建议分msg报，能更好的分辨source和dest）
+2、分析qic_cbb_fifo_wrap.v中的误报漏报，目前分析的是因为常值影响，和报的reason不一致"
+
+"JR
+今日分析msg数：97
+今日发现issue数：1
+今日回传case数：
+日报：
+1.回归4个DTS单；
+2.分析Hi18XXE TOP_LGC:
+ 2.1 ac新增的误报漏报，新增的误报漏报是因为ECDC报validgate，而SG报SrcConverge导致的，已提issue：DTS2025052613256；
+ 2.2 setup新增的误报是差异Diff3;
+3.分析Hi18XXE APP_CORE的ac:
+ 3.1 20条是issue：DTS2025052618643；
+ 3.2 4条是issue：DTS2025052205704；
+ 3.3 3条是差异Diff80和Diff63"
+
+"CXY
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.参与Diff59脚本讨论会
+2.修复Hi18XXE/NFI_PHYG_TOP上发现的脚本bug，原因是因为工具的get_clocks命令不支持get_clocks {{a}}这种写法，脚本目前已经打了补丁，但是还是建议工具可以支持list的嵌套
+3.和艺豪一起debug 门禁Ac_Conv04出现很多误报漏报的情况，发现是参数open_enhance_merge_bits设置成false之后，fold_bus_bits命令不能再折叠bus信号，脚本中已经处理
+4.写Diff237，因为这个Diff和现有的Ac对比脚本逻辑不太符合，diff还在开发中"
+
+"CJR
+今日分析msg数：83
+今日发现issue数：
+今日回传case数：
+日报：1.分析APP_CORE的CONV漏报误报问题。
+1.1 由于常值影响导致qualifier数量不匹配，属于Diff229及Diff171（4条）
+1.2 由于udp无法综合成时序逻辑导致打拍不成功，属于DTS2025051530141（10条，UDP）
+1.3 因为SG报的qualifier属于ECDC报的子集，因此属于差异Diff229（59条）
+1.4 常值影响导致漏报一条qualifier，属于差异Diff171(6条)
+1.5 SG bug报在了multimux上，属于差异DIff156（4条）
+2.跑app_core conv比对"	"TZQ
+今日分析msg数：80
+今日发现issue数：
+今日回传case数：
+日报：1.分析Hi18XXE的NFI_TOP的setup部分的误报漏报                                   
+1.1 conv的误报漏报，其中有58条属于Diff150  1.2 20条属于Diff229                
+1.3 2条属于Diff150;Diff172          
+2.参加Diff59脚本处理会议"
+
+"TZB
+今日分析msg数：38
+今日发现issue数：
+今日回传case数：
+日报：分析HIS_TOP的setup部分，主要差异为diff229 diff122 pass-const"
+
+"SYH
+今日分析msg数：164
+今日发现issue数：1
+今日回传case数：
+日报：
+1.分析HIS_TOP的Ac误报漏报，发现两个csv问题，提了一个DTSissue
+1.1 Sg的行，sg_source中的obj和实际msg中对应不上。以反馈心雨
+1.2 Enno的部分source obj与SG相比缺少最后U_DFF_X一层hierarchical结构，导致脚本match不上。
+1.3 DTS2025052630567：相同的src和des，src的clk和des的clk也相同，Enno报Unsync，A工具报Sync。但增量原理图中的path不同，Enno的增量原理图使用的qualifier在A工具中和des不相连，而A工具使用的qualifier在Enno中是与des相连的
+2.在TOP_LGC上试用的get_hdl_info配套脚本，成功率98%以上，fail部分为CDC-4050造成。其他module待试用
+3.帮冯敏跑debug包，分析DTS2025050717671
+4.分析NFI_PHYG_TOP的新增msg，均为Diff229"
