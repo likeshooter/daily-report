@@ -1,150 +1,86 @@
 "XLL
-今日分析msg数：143
-今日发现issue数：
+今日分析msg数：167
+今日发现issue数：2
 今日回传case数：
-日报：1.分析HIS_TOP AC message 143条，主要为差异和脚本问题
-2.参加周会"
-
-"HQ
+日报：1.分析HIS_TOP AC message 167条，提了2个issue，其余为差异和待确认问题
+1）DTS2025052729293：qualifier与源domain的信号1汇聚后，再与源domain的信号2汇聚，此时工具应该报merge with other source，但是工具报的valid gate
+2）CDC-4055：【Crash】原理图复制一条net，运行get_attributes [get_symbols [get_object_from_clipboard]]命令，工具crash"	"HQ
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1. 和焕东更新跑dc常值的flow，增加拆分模块的功能
-2. 参加周会
-3. 定期批量跑节点交付case 
-4. 回传TieToConst数据和各case的性能数据
-5. 修改APP_CORE的sg session，有错误"
-
-"ZWL
+1. 统计DTS状态表单
+2. 统计DataTieToConst反标DC结果数据
+3. 将反标DC的流程集成到run对比流程中
+4. 统计脚本增加泛化case的net总数和pin总数至performance表格内"	"ZWL
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1、分析async_apb2apb_brg.v完成，DTS2025052205704常值影响8条；diff59影响8条
-2、分析gtech_lib.v中的漏报误报，发现全是由于upd综合不一致导致，影响12436条，是diff237，sg能综合出正常的带clear/set的DFF，enno综合为i4的blackbox；已经和心雨沟通用脚本实现
-3、分析int_wc_reg.v，全是漏报，因为enno误报常值导致，标记2 pass-const
-4、分析qic_cbb_fifo_wrap.v，其中差值影响148条，标记2 pass-const"
-
-"CXY
+1、关闭问题单DTS2025042307057；验证DTS2025042422004，但未合进develop包，导致无法验证
+2、分析完qic_cbb_fifo_wrap.v，其中DTS2025052205704影响24条，比较器漏报常值；diff63影响59条或更多，因为常值影响的部分没有标记diff63；常值影响244条"	"LRF
+今日分析msg数：46
+今日发现issue数：2
+今日回传case数：2
+日报：
+1.分析APP_CORE的ac的误报漏报，共提了2个issue
+DTS2025052713690 -- 误报QualMergesOtherSrc
+DTS2025052725814 -- 漏报ValidGate
+2.回归APP_CORE的issue
+DTS2025041535500
+DTS2025042816071
+DTS2025032636676
+3.USBC新提2个issue
+DTS2025052733351
+DTS2025052729464"	"JR
+今日分析msg数：92
+今日发现issue数：3
+今日回传case数：
+日报：
+1.分析Hi18XXE APP_CORE的ac:
+ 1.1 8条是issue：DTS2025052205704；
+ 1.2 51条是issue：DTS2025052707341；
+ 1.3 2条是issue：DTS2025052613256；
+ 1.4 4条是差异Diff87;
+ 1.5 15条Diff63;
+ 1.6 6条是Diff147;
+ 1.7 6条是pass-const;
+2.DTS2025052707341:destination多比特合并导致QualMergesOtherSrc match不上,有4个source：src1、src2、src3、src4，这4个source的clock相同，各自对应的destination是同一个bus，这个bus有23位：des[23:0]，src1对应的destination为des[23:0]，src2对应的destination为des[10:0]，src3对应的destination为des[10:0]，src4对应的destination为des[23:0]，SG报的时候把这4个source的destination合并报成了des[23:0]，导致ECDC报的source为src2和src3的两条QualMergesOtherSrc和SG match不上，因为src2和src3对应的destination为des[10:0]，而SG报的destination为des[23:0]，但实际上在ECDC和SG中src2和src3的destination都为des[10:0];
+3.CDC-GUI-4054：大泛化中，在message summary里，点一次message然后用ctrl+f打不开搜索框，点两次message然后用ctrl+f才能打开搜索框；
+4.DTS2025052739038：qualifier的链路上没有除source和destination的clock之外的clock，所以不应该报QualMergesOtherSrc；
+5.回归1个DTS单"	"CXY
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.修复HIS_TOP上的脚本问题
-2.修复APP_CORE上的脚本问题
-3.写Diff237-Diff48-UDP，这个diff场景在APP_CORE上比较多，正在测试中"
-
-"CJR
-今日分析msg数：35
-今日发现issue数：1
-今日回传case数：
-日报：1.分析APP_CORE的Setup漏报误报问题。
-1.1 conv02:19条pass_const;
-conv01:10条属于Diff150；
-1.2 setup_port（3条）：约束不同，属于差异Diff213导致，设置infer_enabled_flop 为false则和ECDC相同。
-1.3 setup_bbox（3条）:误报约束infer reset，已提单DTS2025052322315
-2.跑APP_CORE比对"
-
-"TZQ
-今日分析msg数：45
-今日发现issue数：
-今日回传case数：
-日报：1.分析NFI_TOP的setup的误报漏报问题 1.1 Ac_conv03:pass-const    
-2.跑NFI_TOP的conv和const的比对        
-3.分析门禁新增，发现builtin的csv中新增的再工具中没有报已反馈给景烁，Setup部分新增的都为Ac_conv04  
-4.参加PV周会               "
-
-"TZB
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报："
-
-"SYH
-今日分析msg数：80
+1.完成Diff237，在小case上测试通过，目前正在APP_CORE上测试中
+2.适配常值对比的新思路修改脚本
+3.修改ac对比脚本中的给常值影响的内容打tag的部分"	"CJR
+今日分析msg数：49
 今日发现issue数：
 今日回传case数：
 日报：
-1.试用get_info_hdl命令，新发现一个issue
-1.1 CDC-4050:get_hdl_info对generate_for结构中的begin：XXX没有提取到，导致read_design报错
-2.分析HIS_TOP的ac误报漏报，为Diff59，Diff63
-3.PV周会"
-
-
-
-"XLL
-今日分析msg数：12
+1.分析APP_CORE的Conv01漏报误报问题。
+1.1 qualifier均连接到了mux的input属于差异Diff156（7条）
+1.2 由于conv net不同属于差异Diff150 6条
+1.3 由于udp无法综合成时序逻辑导致打拍不成功，属于DTS2025051530141（1条，UDP）
+2.分析Conv03误报漏报
+2.1 conv net不同，行号相同，属于Diff150（6条）
+2.2 sg报的qualifier是ECDC的子集，属于差异Diff229（2条）
+2.3  由于SG bug导致漏报属于差异DIff156（27条）                               "	"TZQ
+今日分析msg数：68
 今日发现issue数：
 今日回传case数：
-日报：1.分析HIS_TOP AC mesage 12条，主要为差异Diff147、Diff92，部分问题已请RD查看，待提取小case后提issue"
-
-"ZWL
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：
-1、提issue DTS2025052614568；关于msg中的clock和属性显示的clock不一致的问题；提issue CDC-4051（误报常值），CDC-4053（关于dest为不连续的多比特时建议分msg报，能更好的分辨source和dest）
-2、分析qic_cbb_fifo_wrap.v中的误报漏报，目前分析的是因为常值影响，和报的reason不一致"
-
-"JR
-今日分析msg数：97
-今日发现issue数：1
-今日回传case数：
-日报：
-1.回归4个DTS单；
-2.分析Hi18XXE TOP_LGC:
- 2.1 ac新增的误报漏报，新增的误报漏报是因为ECDC报validgate，而SG报SrcConverge导致的，已提issue：DTS2025052613256；
- 2.2 setup新增的误报是差异Diff3;
-3.分析Hi18XXE APP_CORE的ac:
- 3.1 20条是issue：DTS2025052618643；
- 3.2 4条是issue：DTS2025052205704；
- 3.3 3条是差异Diff80和Diff63"
-
-"CXY
-今日分析msg数：
+日报：                                          1.分析Hi18XXE的NFI_TOP的setup:                          1.1 30条是我们报的汇聚点与SG不一致属于Diff150                                  1.2 38条是由于常值导致我们报的qualifier比SG少一个，属于Diff171；Diff150                  1.3 有200多条是属于当某一些qualifier与data of source clk domain汇聚之后再汇聚，我们报的跟SG不一致的问题                            2.分析门禁新增的msg，属于差异Diff56和built_in-011                                  3.回归1个DTS单DTS2025050718438"	"TZB
+今日分析msg数：133
 今日发现issue数：
 今日回传case数：
 日报：
-1.参与Diff59脚本讨论会
-2.修复Hi18XXE/NFI_PHYG_TOP上发现的脚本bug，原因是因为工具的get_clocks命令不支持get_clocks {{a}}这种写法，脚本目前已经打了补丁，但是还是建议工具可以支持list的嵌套
-3.和艺豪一起debug 门禁Ac_Conv04出现很多误报漏报的情况，发现是参数open_enhance_merge_bits设置成false之后，fold_bus_bits命令不能再折叠bus信号，脚本中已经处理
-4.写Diff237，因为这个Diff和现有的Ac对比脚本逻辑不太符合，diff还在开发中"
-
-"CJR
-今日分析msg数：83
+分析HIS_TOP的setup部分133条，主要差异为diff229 diff122 pass-const diff156"	"SYH
+今日分析msg数：2324
 今日发现issue数：
-今日回传case数：
-日报：1.分析APP_CORE的CONV漏报误报问题。
-1.1 由于常值影响导致qualifier数量不匹配，属于Diff229及Diff171（4条）
-1.2 由于udp无法综合成时序逻辑导致打拍不成功，属于DTS2025051530141（10条，UDP）
-1.3 因为SG报的qualifier属于ECDC报的子集，因此属于差异Diff229（59条）
-1.4 常值影响导致漏报一条qualifier，属于差异Diff171(6条)
-1.5 SG bug报在了multimux上，属于差异DIff156（4条）
-2.跑app_core conv比对"	"TZQ
-今日分析msg数：80
-今日发现issue数：
-今日回传case数：
-日报：1.分析Hi18XXE的NFI_TOP的setup部分的误报漏报                                   
-1.1 conv的误报漏报，其中有58条属于Diff150  1.2 20条属于Diff229                
-1.3 2条属于Diff150;Diff172          
-2.参加Diff59脚本处理会议"
-
-"TZB
-今日分析msg数：38
-今日发现issue数：
-今日回传case数：
-日报：分析HIS_TOP的setup部分，主要差异为diff229 diff122 pass-const"
-
-"SYH
-今日分析msg数：164
-今日发现issue数：1
 今日回传case数：
 日报：
-1.分析HIS_TOP的Ac误报漏报，发现两个csv问题，提了一个DTSissue
-1.1 Sg的行，sg_source中的obj和实际msg中对应不上。以反馈心雨
-1.2 Enno的部分source obj与SG相比缺少最后U_DFF_X一层hierarchical结构，导致脚本match不上。
-1.3 DTS2025052630567：相同的src和des，src的clk和des的clk也相同，Enno报Unsync，A工具报Sync。但增量原理图中的path不同，Enno的增量原理图使用的qualifier在A工具中和des不相连，而A工具使用的qualifier在Enno中是与des相连的
-2.在TOP_LGC上试用的get_hdl_info配套脚本，成功率98%以上，fail部分为CDC-4050造成。其他module待试用
-3.帮冯敏跑debug包，分析DTS2025050717671
-4.分析NFI_PHYG_TOP的新增msg，均为Diff229"
+1.分析NAU_CAU_WRAP新增msg，主要为Diff237
+2.分析NFI_PHYG_TOP新增msg2314条，涉及差异有Diff222，Diff229，Diff59/63，Diff92，一个已知issue：DTS2025051902480，一个脚本问题
+3.关单DTS2025051902480"
