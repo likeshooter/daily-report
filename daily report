@@ -1,83 +1,64 @@
 "XLL
-今日分析msg数：153
+今日分析msg数：25
 今日发现issue数：1
 今日回传case数：
-日报：1.分析HIS_TOP AC message 153条，提了1个issue，其余为差异
-1）DTS2025052816969：工具漏报AcNoSyncScheme，与A工具有综合不一致的地方
-2.与RD现场查看遇到的问题"
-
-"HQ
+日报：1.分析HIS_TOP AC message 25条，提了1个issue，其余为差异
+1）DTS2025052920772：A工具与Ecdc工具所选择的Qualifier与Src信号汇聚的点不同，造成各自报的message不同，A工具报的Sync，Ecdc报的Unsync，且ecdc报QualMergesWithSameSrc似乎更合适，从原理图上看，标识出来的qualifier与src信号的merge点跟实际生效的qualifier与src信号merge点不一致
+2.帮助rd验证crash 场景，当使用命令get_attributes [get_symbols [get_nets XXX]]时，0529的版本依然crash了"	"HQ
 今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：
-1. 跑HIS_TOP最新对比
-2. 完善dataTieToConst的反标流程
-3. 帮助焕东完善DC流程
-4. 脚本中增加自动保存更新ecdc session到一个路径内，记录其verison"
 
 "ZWL
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1、关闭问题单DTS2025050721973
-2、分析ram_msk_two_port.v，由diff63和常值影响导致
-3、和高强一起看sg和enno对于sync reset不同之处；sg对于mux+flop或者有fanout的情况都不会报sync reset；高强做部分处理
-4、提单DTS2025052827169，关于无法使用editor打开sdc源码，此外验证客户使用vim也会报错的问题，是由于客户的环境不支持导致"
+1、提了3个优化建议：CDC-4057（文档优化）、CDC-gui-4058（搜索优化），CDC-4059（原理图中固定显示常值）
+2、分析完qic_tbp_inf.v，为比较器漏报常值和误报常值影响
+3、分析完qic_ibq_cfg.v，为误报常值和diff63影响
+4、帮新心雨造source为udp，qualifier为udp打拍链，dest为正常DFF并报and gate的case，我们报MissingSynchronizer"
 
 "LRF
-今日分析msg数：37
-今日发现issue数：
+今日分析msg数：56
+今日发现issue数：2
 今日回传case数：
 日报：
-1.帮研发构造抽象出的小case
-2.协助研发分析issue
-3.分析APP_CORE的ac的误报漏报
-4.回归USBC的issue"
+1.参加差异评审会议
+2.分析USBC的Ac_conv的新增误报漏报的message和标Diff143的message(需重新分析)，共提了2个issue
+a.DTS2025052931659 -- 漏报ChyDiffSrcConv
+b.DTS2025052940620 -- 漏报ChySameSrcConvExcSeq
+c.标记的差异为Diff229和Diff122"
 
-"CXY
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：
-1.和艺豪一起debug 重构的Diff56proc
-2.更新现在对比脚本，加入新写的Diff178内容，测试更新的代码
-3.debug 新包builtinmatch不上的原因。因为builtin对比中需要对比两边工具停和走是否一致的情况，对比脚本中是通过report_message -message_id EchoCommand的返回值去判断工具的阶段的，
-但是新包中同一个case的这个message返回值发生了变化，正常design case中，之前会报出check_cdc，现在只报到read_cdc了"
-
-"CJR
+"JR
 今日分析msg数：42
 今日发现issue数：
+今日回传case数：1
+日报：
+1.复现出DTS2025052707341的case，已回传；
+2.分析Hi18XXE APP_CORE的ac:
+ 2.1 24条是差异Diff234、Diff80、Diff63；
+ 2.2 18条是差异Diff234、Diff80；
+ 2.3 有一些漏报是因为ECDC和SG的综合差异导致的有一些source和destination在ECDC中没有连接关系，而在SG中有连接关系导致SG报了，而ECDC未报，这种场景不是常值影响，还需要进一步结合代码分析"
+
+"CJR
+今日分析msg数：156
+今日发现issue数：
 今日回传case数：
-日报：1.验证DTS2025052322315，没有推断bbox reset，行为和SG相同。
-2.验证DTS2025052205704，新包可以推断出比较器的输出为常值。
-3.分析APP_CORE的conv误报漏报：
-3.1 ECDC报的qualifier要多于SG，属于差异Diff229（4条）
-3.2 由于conv net不同，属于差异Diff150（34条）
-3.3由于常值影响导致（Diff171，属于Sg bug），SG和ECDC报的qualifier不同，漏报属于Diff171，误报属于Diff229
-4.跑APP_CORE setup conv比对"
+日报：1.参加差异评审会议
+2.分析APP_CORE新比对表格:8条setup_bbox01属于Diff224，148条clock_info03c漏报属于Diff178.Setup分析完成  
+3.跑APP_CORE conv比对"
 
 "TZQ
-今日分析msg数：79
+今日分析msg数：248
 今日发现issue数：
 今日回传case数：
-日报：1.分析Hi8XXE的NFI_TOP的setup部分
-1.1 常值导致ECDC报的比SG少一个qualifier，属于Diff171
-1.2 SG报的conv的incremental schematic中的所有qualifier都连接到一个multi mux的data pin，属于Diff156
-1.3 目前NFI_TOP的conv只剩下31条"
+日报：1.参加差异评审会议
+2.分析NFI_TOP的conv部分，发现有一些误报漏报是属于综合不同导致的，我们综合成了两个qualifier都连接到mux的data pin，SG综合成连接mux的data和sel pin，所以导致我们漏报
+3.跑NFI_TOP的比对"
 
 "TZB
-今日分析msg数：49
+今日分析msg数：50
 今日发现issue数：
 今日回传case数：
 日报：
-1.分析HIS_TOP的setup部分49条，主要差异为diff229 diff122 pass-const diff156"
-
-"SYH
-今日分析msg数：1112
-今日发现issue数：
-今日回传case数：
-日报：
-1.分析HIS_TOP的ac误报漏报1112条，均为差异，主要为Diff59，Diff59和Diff63合标，Diff92。
-2.和何琴，应康一起看DTS2025052630567，Enno的综合结果中多输入的mux结构的select pin没有qualifier，符合何琴和应康的代码判断逻辑。报unsync没有问题，建议提差异。"
+1.分析HIS_TOP的setup部分，主要差异为diff229 diff122 
+2.回归DTS2025052019430  DTS2025050821773，DTS2025032902695（此问题依然存在）"
