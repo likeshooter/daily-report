@@ -1,92 +1,122 @@
 "XLL
-今日分析msg数：252
+今日分析msg数：
 今日发现issue数：
 今日回传case数：
-日报：1.分析HIS_TOP AC message 252条，均为差异，主要是Diff59、Diff63、Diff233
-2.merge大家分析的csv，并run新版本HIS_TOP AC的比对"	"HQ
-今日分析msg数：15
-今日发现issue数：
-今日回传case数：
-日报：
-1. 分析DME新增的setup误报漏报15条
-2. 分配现场任务
-3. 解决资源问题
-4. 发日报，汇报现场分析进度
-当前：
-app_core：一轮分析全部清零
-his_top：ac：118  ar：done  setup：1  builtin：done
-5. 跑fom包的NFI_TOP"	"ZWL
+日报：1.分析HIS_TOP AC message，分析完5月29日的csv中剩余的message，为已知问题和差异，主要是Diff59、Diff63、Diff233
+2.merge大家分析的csv"	"HQ
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1、分析完sds_dmac_rx_iptt.v，为差异diff233、Diff63和常值影响；分析sas_dmac_tx_bws.v，提issue DTS2025060527083影响13条，都是sg报QualMergesOtherSrc。我们报andgate
-2、关闭问题单DTS2025051237170、DTS2025050717855
-3、提单DTS2025060518958，关于完整展示obj name"	"LRF
-今日分析msg数：276
+1. 跑新版本各模块对比，ac部分由于bug的修改，新增较多，大家分析了一部分差异占多数
+2. 反标dc数据在ac的csv里
+3. 在对比流程里加入是否在对比前先进行反标的选项，这样做会让对比时间加快
+4. 发日报，反馈现场进度
+"	"ZWL
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1、分析sas_port_oc.v，提DTS2025060623980，sg和enno出现综合不一致导致enno报unsync，sg报sync，需要给出新的差异编号，或者看是否是工具bug
+2、分析hipciec50_asyn_dff_fifo.v，为差异diff237、常值和版本差异导致"	"LRF
+今日分析msg数：36
 今日发现issue数：3
+今日回传case数：1
+日报：
+1.分析HIS_TOP的ac的漏报误报，共提了3个issue
+a.DTS2025060618183
+b.DTS2025060626768
+c.DTS2025060629315"	"JR
+今日分析msg数：152
+今日发现issue数：
 今日回传case数：
 日报：
-1.分析射频3拍的Setup的SetupClkTiedToConst漏报问题，已提DTS单
-DTS2025060509286 - 在ecdc中，同一个module下的1'b0的flat net是相同的，导致ecdc会漏报SetupClkTiedToConst
-2.分析射频3拍的conv的新增 
-a.标记差异为Diff150/Diff112
-3.分析0605当天跑出的USBC的ac的误报漏报,标记差异为Diff59/Diff1
-4.分析HIS_TOP的ac的误报，提了一个单
-a.DTS2025060525582
-5.关闭DTS单
-a.未关闭的DTS单与正在修复的DTS单相关联，暂无法回归
-6.协助PV/AE分析Ac的相关误报漏报
-7.提了一个GUI的issue
-CDC-gui-4065 -- 打开GUI时，Terminal提示Failed to create secure directory(/run/user/2000000443/pulse):No such file or directory"	"JR
-今日分析msg数：284
-今日发现issue数：1
-今日回传case数：
-日报：
-1.分析完成Hi18XXE APP_CORE的ac:
- 1.1 242条是差异Diff234、Diff80、Diff63；
- 1.2 11条是issue：DTS2025053040910；
- 1.3 25条是issue：DTS2025060523191，对于一对source和destination，ECDC未报任何ac相关的message，而SG报了SrcConverge，ECDC和SG综合不一样，从ECDC综合出的电路来看，这对source和destination没有连接关系，destination也没有跨时钟域，因此，根据ECDC综合出的电路来看，ECDC漏报是合理的；
-2.分析完成Hi18XXE APP_CORE的builtin：
- 2.1 2条是因为约束写错了导致的误报漏报，已向何琦反馈并修改；
- 2.2 4条误报在最新的包没有报了"	"CXY
+1.分析完成Hi18XXE TOP_LGC中ac新增误报漏报:
+ 1.1 3条是Diff230;
+ 1.2 5条是Diff75;
+ 1.3 129条是issue：DTS2025052707341;
+2.分析Hi18XXE APP_CORE的setup:
+ 2.1 15条是差异Diff234;"	"CXY
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.debug昨天日报中反映的反标掉了的问题，非脚本问题，实际上是因为oldcsv处理不正确导致的，已经帮助分析手动merge
-2.在新泛化上测试Ac对比脚本逻辑修改后的结果。用Hi18XXE/DDR_SUB测试结果：该模块Ac报告487条。Ac对比时间由14min-->4min
-Hi18XXE/TOP_LGC测试结果：该模块Ac报告2616条，Ac对比时间158min-->19min
-3.整理近期的代码修改，代码回传给家里"	"CJR
+1.参加周会和脚本例会
+2.修复Hi18XXE/HIS_TOP上的脚本issue 6条，分析发现其中4条非脚本问题，属于被多个diff同时覆盖的场景，目前脚本还没有做到可以覆盖多个diff的情况"	"CJR
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："	"TZQ
+今日分析msg数：103
+今日发现issue数：
+今日回传case数：
+日报：1.参加PV周会
+2.分析HIS_TOP的ac的误报漏报，分析到的都是我们误报QualMergeOtherSrc和MuxSelect的问题，标记了issue，DTSDTS2025060618183"	"TZB
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："	"SYH
+今日分析msg数：1552
+今日发现issue数：
+今日回传case数：
+日报：
+1.PV周会
+2.NFI_PHYG_TOP的Ac新增msg1552条，涉及主要差异Diff63.Diff59，以及两差异合标
+3.尝试复现DTS2025060523119，仅复现出相同电路结构，未复现出原始场景"
+
+
+
+
+"HQ
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.分析APP_CORE conv04误报问题。已复现DTS2025060507072：ENNO误报了ChyDataBusDiffSyncScheme及ChyDataBusDiffEnable；A工具没有报出对应的Ac_conv04的信息。同时ENNO和A工具都是报了这四条信号的Ac_sync02的。从电路上分析感觉ENNO报的没有问题。待确认是否为版本差异。
-2.分析射频cfg1_2的ac新增，部分是由于脚本问题导致；误报1条属于差异，现在和SG报的reason相同了。
-3.分析HIS_TOP：
-3.1 DTS2025060513718：通过load session打开的增量原理图是不完整的，连接关系中断了。而正常跑出来的增量原理图是有完整的连接关系的。
-3.2 AcNoSyncScheme(Ac_unsync02):SG的destination是合并的，ENNO报实际连接的bit位，属于差异Diff59
-3.3 AcUnsyncDataPath:ENNO报QualifiermergeOtherSrc，感觉不太合理，正在复现中。"	"TZQ
-今日分析msg数：153
+1. 协调现场工作分配
+2. 查看case 对比脚本结果，HIS_TOP的ac对比中断，重新跑
+3. 反馈现场进度
+4. 整理dataTieToConst数据及分析策略
+5. 整理DTS待回归部分"	"ZWL
+今日分析msg数：
 今日发现issue数：
 今日回传case数：
-日报：1.分析BCP和DME的setup的新增部分，都是属于Diff178
-2.分析门禁新增的部分，也都是属于DIFF232
-3.分析HIS_TOP的Ac部分：
-3.1 old csv中有一些漏报，但在现版本ECDC已经报出了对应的msg
-3.2 其他大部分属于差异Diff59和Diff63
-3.2 分析中发现有一条QuallifierMergesOtherSrc报的有问题，SG报的是同步。目前正在复现中"	"TZB
-今日分析msg数：52
-今日发现issue数：2
+日报：
+1、DTS2025042422004、DTS2025052134795
+2、回归DTS2025053016348发现研发觉得是diff178,每个dff使用同一条net，但实际上每个dff/clk是直接赋值1'd0,这样并不算连接同一条flat net，因此标记diff178不合理
+3、分析TSSC_WRAP中标记pass-const部分，都是setup_port01，主要是由于前面的ff被推断为常值导致误报set_case_analysis(propagated)，前面ff被脚本标记diff171.因此该msg也标记diff171
+3、分析FE_TSS新增ac漏报误报部分，为diff59；常值影响的msg为脚本标记的diff171；还有diff233是非连续的多比特，enno会合并报，sg分多条msg报，为diff233，希望脚本支持；setup_port01受常值影响部分脚本对于前ff标记的diff171，所以因为ff常值影响的port也标记diff171
+4、和研发一起看DTS2025060623980的问题，结论是需要提一个小case，因为出现综合不一样导致两边工具行为不一样，所以需要提小case来验证我们工具综合是否是正确的；和研发一起看DTS2025060527083，在分支包中已经被修复"	"LRF
+今日分析msg数：
+今日发现issue数：
 今日回传case数：
 日报：
-分析HIS—TOP的setup部分大多为差异
-DTS2025060509325（对于一个bus的不同比特使用and门or门同步，ECDC工具认为都是属于vaild gate同步，所以没报ChyDataBusDiffSyncScheme，在A工具里认为and门or门同步方式是不一样所以报了Ac_conv04：different sync scheme。） DTS2025060419174（黑盒连接一个mux，且mux/sel data1的domain是一样的，但是这个mux的output没有domain，导致漏报Acsyncdatapath）"	"SYH
-今日分析msg数：234
+1.协助研发分析HIS_TOP上AC误报漏报的场景"	"JR
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+"	"CXY
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："	"CJR
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："	"TZQ
+今日分析msg数：89
 今日发现issue数：1
+今日回传case数：1
+日报：1.分析BDP、DME和NAU_CAU的Ac新增和const，Ac新增主要是属于Diff59;Diff63，提了一个issue：DTS2025060710708,主要是关于SG报了clock_info03b，但是没有传到FF的D和Q端，我们传到了
+"	"TZB
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："	"SYH
+今日分析msg数：1822
+今日发现issue数：
 今日回传case数：
 日报：
-1.看HIS_TOP的ac部分，涉及差异主要为Diff59，Diff63，Diff92，以及已知问题DTS2025041627010提了一个新issue：
-1.1 DTS2025060523119 如图，相同的path结构，只有hal_sasip_rx_open_hct[7]为MuxSelect，hal_sasip_rx_open_hct[6:0]为NoDestMuxDataPin。A工具全部为Enabled based Synchronizer
-2关单DTS2025051204386，DTS2025050717671，DTS2025031424274"
+1.分析NFI_PHYG_TOP新增msg1822条，涉及差异主要有Diff147，Diff233，Diff59，Diff63。acb分析完毕，目前还有受const影响的Ac待分析。
+1.1焕东脚本结果中只有Enno的obj name。没有SG/DC的obj name，无法自动标记受const影响的Ac漏报。
+2.和何琴一起看DTS2025060523119，分析发现Enno行为没有问题，issue属于误提。"
