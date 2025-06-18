@@ -1,70 +1,62 @@
-"LRF
-今日分析msg数：20
-今日发现issue数：2
-今日回传case数：
-日报：
-1.回归DTS单
-a.Hi18XXE-APP_CORE
-DTS2025052725814/DTS2025052713690
-b.Hi18XXE-HIS_TOP
-DTS2025060618183/DTS2025060525582
-c.USBC
-DTS2025052729464/DTS2025052733351
-2.分析Hi18XXE-APP_CORE的ac的新增误报漏报
-Diff:
-Diff147-report21-multi_bits_merge(12);pass-dc(6)
-Diff59-report-multi_bits_merge(6)
-Issue:
-3.分析USBC的ac的新增误报漏报
-DTS2025061625881(6)
-DTS2025061626489(2)"	"JR
-今日分析msg数：79
-今日发现issue数：1
-今日回传case数：
-日报：
-1.给Hi18XXE NFI_PHYG_TOP中因受常值影响而标记了常值相关差异的其他message补充标记enno_const或者sg_const，方便后面统计数据；
-2.分析Hi18XXE APP_CORE新增的误报漏报，在分析过程中发现一个issue--DTS2025061626013：在RecirculationMux中因为source多比特合并有误，导致source报的不对，message objects中source是TOP/U_TOP1/GT.LOOP[0].src[9:0]，这是正确的，而在RecirculationMux这条message中source被合并为了TOP/U_TOP1/GT.LOOP[0][9:0]，这是错误的，目前分析到的其他的都是Diff59；
-3.和伟豪讨论因工具行为改变，lint相关差异不能用的问题，可能后续会修改lint的行为；
-4.回归一个DTS单--DTS2025052707341"	"CXY
+"ZWL
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.debug上周跑的新泛化结果中setup反标不上的问题
-2.修复USBC中新增的由于脚本导致的不match的问题
-3.debug新泛化中部分case因为脚本变量过大导致工具崩掉的问题"	"CJR
-今日分析msg数：72
+1、关闭DTS2025053036035、DTS2025052614568、DTS2025060527083、DTS2025042520969
+2、和燕宁沟通GUI遗留问题；家里都已经验证通过，现场这边会再次验证关单"	"LRF
+今日分析msg数：66
 今日发现issue数：
 今日回传case数：
 日报：
-1.关单DTS2025060931048，LEC验证通过属于差异。
-2.关单DTS2025061007526，conv01没有报在常值net上了。
-3.由于修复了conv的bug，射频conv01报的和sg不同，sg报的是ECDC的子集属于差异Diff229
-4.分析APP_CORE ac新增问题：
-4.1  56+条msg： dest bus合并问题和reason模糊匹配，属于Diff63及Diff59；
-4.2 10条msg:常值问题导致src少了1bit。属于差异Diff234，Diff80，Diff63
-5.分析射频depth2及depth5：conv04误报是已知问题DTS2025061218957。修改depth5的conv01差异Diff143->Diff229.Diff229更加合理。
-6.FE_TSS新跑出来的setup存在""is_analysis""列标注了7但是没有差异，旧表里面是pass-dc,可能是脚本反标问题。
-7.帮助何琦debug脚本问题，及新需求实现。"	"TZQ
-今日分析msg数：37
+1.协助何应康分析DTS2025061625881和DTS2025061626489
+2.分析Hi18XXE-APP_CORE的ac的新增误报漏报
+Diff:
+Diff171-diff28-logic_optimization-data_const;pass-enno_const(2)
+Diff59-report-multi_bits_merge(24)
+Diff63-synth14-vague_match(3)
+Diff147-report21-multi_bits_merge(3)
+Pass-dc(36)
+3.帮忙查看DTS2025060505428这个issue并补充差异截图"	"JR
+今日分析msg数：68
+今日发现issue数：2
+今日回传case数：1
+日报：
+1.分析Hi18XXE APP_CORE新增的误报漏报，今天分析到的都是差异Diff59、Diff80、Diff147、Diff234，大部分分析完后merge了csv并处理了merge后csv里出现的标记冲突；
+2.分析6.16develop包门禁builtin新增的误报漏报，有三个issue，其他跑lec是通过的，所以都是差异Diff192，：
+ 2.1 CDC-3309：之前提过的issue又反弹了，已reopen；
+ 2.2 CDC-4074：clk_tmp = clk[0]/clk[0],如果clk[0]为0，0除以0不为1，所以不能把clk_tmp推为1，因此ECDC不应该报SetupClkTiedToConst；
+ 2.3 CDC-4075：ECDC报了SetupClkTiedToConst：reg_tmp-->1,而SG未报"	"CXY
+今日分析msg数：
 今日发现issue数：
 今日回传case数：
-日报：1.关单DTS2025060710708，A工具报了ff的D端为常值，但没有传递到Q端，导致A工具误报AcUnsync，是属于差异Diff234-bug67-setup_port01
-2.上周五反馈给应康的问题，经过跟应康讨论后是DTS2025052618643这个issue修改了，现在是标差异Diff8
-3.NFI_TOP的dc反标成功，分析NFI_TOP中受常值影响的其他msg，将其中符合的修改为pass-dc
-4.跑NFI_TOP的Ac和Conv的对比"	"TZB
-今日分析msg数：45
+日报："	"CJR
+今日分析msg数：5692
+今日发现issue数：1
+今日回传case数：1
+日报：1.分析APP_CORE ac新增问题
+1.2 6条msg:常值问题导致，属于差异Diff234，Diff80，Diff63
+1.3 5000+条属于UDP综合差异Diff237，导致SG报同步，ENNO报不同步。ENNO综合成了黑盒，导致打拍不成功。
+1.4.A工具综合电路与ENNO存在差异，导致ENNO的destination仅报了部分比特位，没有报出来的比特位在ENNO电路里面是没有crossing的，而A工具src到整个destination（TOP.pld_out_pld_reg[42:0]）的bus都是存在crossing的。已复现提单DTS2025061748980（48条）
+2. 关单DTS2025060513718"	"TZQ
+今日分析msg数：42
+今日发现issue数：
+今日回传case数：
+日报：1.分析NFI_PHYG_TOP的ac新增问题
+1.1分析到的clk_nfi_2x.v这个文件的误报都是由于脚本在抓取SG报的Ac中一个destination有多个source的情况下会漏抓一些source导致的
+2.分析NAU_CAU_WRAP的Ac的误报漏报，属于Diff8
+3.跑NFI_TOP的Ac的对比"	"TZB
+今日分析msg数：89
 今日发现issue数：
 今日回传case数：
 日报：
-1.重新分析了之前标记的一些diff，提了一个issue DTS2025061622316：ECDC电路中一个ff/q连到latch/gate端（这个latch的输出端为空）导致这个ff/q存在clock属性，但是A工具中可能把这个输出为空的latch优化掉了，导致误报IntegrityClockConverge
-2.跑HIS_TOP的对比"	"SYH
-今日分析msg数：100
-今日发现issue数：3
+1.分析APP-CORE里Ac的新增部分，主要标记的pass-dc、diff59、diff63、diff223
+2.分析了HIS-TOP中conv的新增，都属于Diff225
+3.回归DTS2025060509325"	"SYH
+今日分析msg数：4159
+今日发现issue数：
 今日回传case数：
 日报：
-1.分析HIS_TOP的新增msg，发现2个issue，一个脚本问题
-1.1 DTS2025061627182 qualifer和source在或门i64上，i64/o的cluster结果为state1 gated，但是在增量原理图片中显示为0，且最终的结果为unsync--QualMergeOtherSrc。应该报validgate
-1.2 DTS2025061636408 qualifier和source汇聚在与门i798，但是i798/o的cluster结果为UNGATED。值得注意的是在6.7的结果中，这条msg为同步报ValidGate，与A工具match
-1.3 A工具的Ac msg，存在多个source时，脚本抓取不全，导致漏报，已反馈给心雨 
-2.测试format_design，但现场应该是分支包和daliy搞混了，没有format_design命令"
+1.和康哥一起看DTS2025061627182、DTS2025061627182,问题已解决。和何琴一起看DTS2025061611658，Enno报告没有问题，确实是A工具的BUG，需要新评一个差异
+2.分析NFI_PHYG_TOP的ac新增msg，主要涉及差异Diff63，还有一些脚本漏抓的问题，另外发现了一个issue，multifanout漏报
+2.1 6.6号的Enno结果中此msg报sync，6.16版本报unsync，原理图通过get_fanout验证qual没有multifanout。和智强谈论后发现，cluster中都是qual与src汇聚时ungated，但des的D pin处为gated。应该是同一类问题，待康哥确认后提issue"
