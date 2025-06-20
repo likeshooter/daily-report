@@ -3,58 +3,59 @@
 今日发现issue数：
 今日回传case数：
 日报：
-1、验证save时，发现会打印两条sessionInfo信息，和燕宁讨论发现是因为多做了一次-log_only操作；这边让研发改为执行了多少命令就应该打印多少命令；
-2、验证violation diff和sg增量的不同之处，sg选择增量模式后run才会去做对比，而且是只和上次结果做对比，退出增量模式后再run，会删除之前的对比数据，再次增量模式，不会再有之前的对比数据；反观ecdc，则是会保存所有的运行数据，在使用save时也会把这所有数据保存下来，这数据是否会过于庞大呢，保存所有的数据是否有必要？"	"LRF
+1、CDC-4079---load_session会crash；CDC-4080---lint多次check的结果不一致；CDC-4081---read_design的-top选项没有兼容-elaborate_top的功能（客户质疑检查了不可达代码）
+2、先和李杰同步一些GUI问题点和优化点；在和燕宁和亚娟同步，对于gui的问题点，燕宁已复现，优化点是准备后续在优化；其中DTS2025042722465的issue还存在可以优化的点，具体流程是在未建工程时先run工具，再创建工程run，此时打开日志文件会包含第一次run的结果，但李杰的意思是只需要保存工程的日志"	"LRF
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.回归DTS单
-USBC:
-DTS2025060505428 -- Diff243-synth45-merge_with_other_source
-DTS2025061625881 -- Diff8-algorithm2
-DTS2025061626489 
-射频3拍
-DTS2025061218957
-2.帮RD构造小case"	"JR
-今日分析msg数：159
-今日发现issue数：
-今日回传case数：
+1.回归APP_CORE的issue
+DTS2025052613256  -> Diff240-diff50-merge_with_other_source(2)
+DTS2025053040910  -> Diff171-diff28-logic_optimization-data_const;pass-enno_const
+DTS2025053040910 -> Diff59-report-multi_bits_merge
+检查反标
+Pass:
+USBC/BCP_TSS
+"	"JR
+今日分析msg数：379
+今日发现issue数：3
+今日回传case数：1
 日报：
-1.分析Hi18XXE APP_CORE新增的误报漏报，今天分析到的都是差异pass-dc、Diff80、Diff147、Diff234，分析完成后merge了csv并处理了merge后csv里出现的标记冲突；
-2.在分析过程中发现，一些message应该标记为差异Diff80，但是脚本却把这些message标记为Diff91,已向心雨反馈"	"CXY
+1.根据和伟豪讨论的结果，修改门禁csv里不能用的差异标记：
+ 1.1 对于位宽越界，导致整个design都为blackbox，SG会比ECDC多报SGDC相关message，之前标记的是Diff227，现在改为Diff241；
+ 1.2 对于位宽越界，sg在read_design报了ErrorAnalyzeBBox，且综合的电路里也有blackbox，但是没有报setup_blackbox01这条message，ECDC报告了setup_blackbox01相关的message，这就导致ECDC误报，之前标记的是Diff227，现在改为Diff246；
+1.3 对于位宽越界，ECDC报错并把整个design综合为blackbox，所以ECDC未继续check_cdc，而SG报错后却没有综合为blackbox，所以SG继续check_cdc，这导致ECDC漏报CDC message，之前标记的是Diff227，现在改为Diff245；
+2.回归DTS2025060523191，发现给的差异和issue不符合，已反馈"	"CXY
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.根据最新的lint相关的cdc差异修改脚本
-2.debug新泛化上出现的漏抓sg message的bug，初步判断是由于脚本中在处理bus类的diff时，用regsub -all去掉了obj中的bit信号，但是对于新泛化这种obj层次比较复杂的情况，信号名中间有bit的情况（如信号：TOP/G_INP_FIFO[1].G_IP_FIFO_EN/fifo_ff[9:0]）会被误操作,导致在脚本后面流程中，会误将sg的message删除掉。已经修改这部分逻辑，正在测试中"	"CJR
-今日分析msg数：34
+1.参加脚本周会
+2.和万林哥一起debug客户反应我们的工具检查 完全不可达代码分支的行为，发现是没指定TOP的原因，把-elaborate_top加上，工具行为正确。但是之前430客户遗留问题中，要求我们将-elaborate_top功能和-top 合并，目前read_design时只加-top行为还是不正确
+3.处理现场脚本问题"	"CJR
+今日分析msg数：82
 今日发现issue数：
 今日回传case数：
-日报：1.分析APP_CORE ac新增问题：
-1.1  2条属于DTS2025061748980
-1.2 30条属于Diff234，Diff80，常值问题导致部分比特位没报
-1.3 2条由于常值问题导致漏报Ac，是因为常值影响导致ENNO不存在crossing。在源头处因为SG没有推常值，属于差异Diff171
-2.验证APP_CORE conv04问题（DTS2025060507072）
-3.跑门禁数据统计脚本。修改脚本
+日报：1.修改门禁合并csv脚本
+2.分析APP_CORE setup、conv新增，由于旧表行号问题，导致新表没有反标上，已重新标注差异问题Diff237，Diff114，Diff229，Diff150
+3.分析APP_CORE ac常值问题属于DIff234。解决merge后的冲突。
+4.分析射频，回归issue，均为差异
 "	"TZQ
-今日分析msg数：512
-今日发现issue数：1
-今日回传case数：
-日报：1.分析NFI_PHYG_TOP的Ac新增部分，发现ptg_tim_gather.v新增的误报漏报上个版本都是报的同步，本次报的都是不同步，经过分析，发现destination的d pin的cluster是gated，在增量原理图中没有画出qualifier或者是qualifier跟source merge的gate的cluster是ungated，已提单DTS2025061838027
-2.跑NFI_TOP的Ac的比对"	"TZB
-今日分析msg数：71
+今日分析msg数：
 今日发现issue数：
 今日回传case数：
-日报：
-1.分析NFI-PHYG-TOP中部分文件中ac的新增部分，都是同一类问题（一个destination有多个source的情况下会漏抓一些source）
-2.分析反标的csv，存在漏标问题，何琦已知晓
-3.分析DDR_SUB里Ac中原来已经标记为DTS2025052713690（DTS系统已经回归）但是在csv里还有issue号的message，属于差异Diff59"	"SYH
+日报："	"TZB
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.关单DTS2025060416360，DTS2025052920772，DTS2025053008592，DTS2025060416360，DTS2025060416360
-2.分析NFI_PHYG_TOP新增部分，和智强确认了昨天的问题情形，提单DTS2025061838027。
-3.帮涣东何琦debug，常值的dc对比流程，一个是脚本中正则使用问题，另一个是提取出来的小case给DC跑，DC不报常值，经分析，是因为提取出来的小case中常值DFF unload，导致在elaborate中被当作dead code被优化。需要get_hdl_info增加提取内容，保证提取出来的常值DFF至少能够load所在module的output。避免elaborate处就优化了代码。经试验，手动更改后，DC会在compile流程中多报OPT-1027(寄存器优化),需要脚本额外去处理这部分msg。"
+1.分析了HIS_TOP中ac标记常值的部分，主要标记的差异有Diff172、pass-Dc,
+2.回归issue:DTS2025061622316"	"SYH
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.常值对比DC失败：尝试PE提供dont_touch/KEEP/set环境变量等方案均无法屏蔽elaborate处对dead code的删除。和赵洲讨论绝对在命令代码中添加功能：添加一行assign，将always块的输出和module的output port连接起来。避免elaborate删除代码
+2.get_hdl_info发现了一个提取缺陷，已经提取了的if判断中""if(a&b)""，判断条件中a和b的定义处没有被提取，导致read_design处失败
+3. 关单DTSDTS2025052729293
+4.和袁洁应康哥一起看了DTS2025061611658，经分析，Enno的综合结果与SG不同，Enno的回路没有和src发生汇聚，SG的汇聚结构和src发生了汇聚，导致SG报unsync，适用Diff244"
