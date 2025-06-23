@@ -1,64 +1,114 @@
+"HQ
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1. 改进脚本统计逻辑，从新的保存路径里抓，并且将conv从setup里分离出来，单独统计conv的数据
+2. 现有资源跑交付case，使用19号的交付包"	"ZWL
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1、reopen DTS2025052618643；sg报QualMergesSameSrc，ecdc报validGate
+2、解决标记冲突的部分标记DTS2025041627010--？？Diff8的msg，经过再次分析，应该是issue DTS2025062019148---qualifier选的不同导致A工具报and gate同步，ecdc报InvalidGate
+3、分析32lrt7_macrolsslcs2ds_wrap.v新增误报漏报，是脚本之前走的unmatch逻辑，但现在变成误报漏报了，重新标记diff157
+"	"LRF
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.参加PV例行周会
+2.分析USBC的conv的conv的新增
+Diff:DIff122-bug30-conv(1)
+3.分析HIS_TOP的Ac的新增误报漏报
+DTS2025062019760 -- 漏报ValidGate"	"JR
+今日分析msg数：588
+今日发现issue数：
+今日回传case数：
+日报：
+1.回归3个DTS单:DTS2025060523191、DTS2025061626013、DTS2025053010940；
+2.分析6.19门禁新增误报漏报：
+ 2.1 因为取消了Diff59这个proc，所以门禁新增了一些误报漏报，其中普通和cfg1门禁的csv跑出来了，ac各新增了294条都已分析完成，大部分也还是Diff59,但有几条除了标记Diff59，还因为reason不一样应该加上其他差异；
+ 2.2 在分析过程中发现，Diff38这个差异不能用了，但是有8条message还标记为了Diff38，已在cav里去掉Diff38这个差异并重新分析，分析得出是差异Diff149"	"CXY
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.重构ac对比脚本逻辑
+2，debug ac对比脚本时间长的问题"	"CJR
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：1.跑daily包的3拍射频比对
+2.修改APP_core setup的const差异。
+3.参加周会
+4.分析修改射频depth5的差异Diff229为Diff232
+5.分析HIS_TOP ac：12条属于Diff59，"	"TZQ
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："	"TZB
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："	"SYH
+今日分析msg数：88
+今日发现issue数：
+今日回传case数：
+日报：
+1.分析HIS_TOP19号包的新增msg，9个Diff172，3个Diff171，6个Diff8，8个Diff136，50个DTS20250618387027，8个DTS2025062019760
+2.发现了一个GUI问题CDC-gui-4085：点击web browser中的跳转连接显示sorry，the current page faild to load
+描述：GUI中点击Ac/Ar相关的msg，Web Browser页面中【描述】title下的【在报告此信息的同时会报告以下原因】，点击不同的原因跳转至原因的介绍部分，Web Browser页面会转圈圈，10s内显示sorry，the current page faild to load"
+
+
+
+
+
+
 "ZWL
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1、CDC-4079---load_session会crash；CDC-4080---lint多次check的结果不一致；CDC-4081---read_design的-top选项没有兼容-elaborate_top的功能（客户质疑检查了不可达代码）
-2、先和李杰同步一些GUI问题点和优化点；在和燕宁和亚娟同步，对于gui的问题点，燕宁已复现，优化点是准备后续在优化；其中DTS2025042722465的issue还存在可以优化的点，具体流程是在未建工程时先run工具，再创建工程run，此时打开日志文件会包含第一次run的结果，但李杰的意思是只需要保存工程的日志"	"LRF
-今日分析msg数：
-今日发现issue数：
+1、分析HIS_TOP的ac，发现DTS2025062103148影响了80条左右，DTS2025061636408也影响了36条；整体分析下来，merge后HIS_TOP还剩24条没看完，主要问题都在于qualifier选的不同导致sg报sync、ecdc报unsync，也有反之情况；刚刚研发说可以标Diff240；但是Diff240存在一种风险，就是一个source到dest在sg中报了unsync，但我们报了sync的话，那这条unsync的问题就会漏掉，很可能出现cdc问题；因此需要确认Diff240的可行性
+"	"LRF
+今日分析msg数：42
+今日发现issue数：2
 今日回传case数：
 日报：
-1.回归APP_CORE的issue
-DTS2025052613256  -> Diff240-diff50-merge_with_other_source(2)
-DTS2025053040910  -> Diff171-diff28-logic_optimization-data_const;pass-enno_const
-DTS2025053040910 -> Diff59-report-multi_bits_merge
-检查反标
-Pass:
-USBC/BCP_TSS
+1.分析HIS_TOP的Ac的新增误报漏报
+DTS2025062019760(20)
+DTS2025062107884(22)
 "	"JR
-今日分析msg数：379
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："	"CXY
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.重构ac对比脚本逻辑
+2.修复对比脚本漏抓问题
+3.将NFI_TOP的ac对比按sync和unsync拆开跑对比结果；跑HIS_TOP，APP_CORE的ac对比结果"	"CJR
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："	"TZQ
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："	"TZB
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："	"SYH
+今日分析msg数：
 今日发现issue数：3
-今日回传case数：1
-日报：
-1.根据和伟豪讨论的结果，修改门禁csv里不能用的差异标记：
- 1.1 对于位宽越界，导致整个design都为blackbox，SG会比ECDC多报SGDC相关message，之前标记的是Diff227，现在改为Diff241；
- 1.2 对于位宽越界，sg在read_design报了ErrorAnalyzeBBox，且综合的电路里也有blackbox，但是没有报setup_blackbox01这条message，ECDC报告了setup_blackbox01相关的message，这就导致ECDC误报，之前标记的是Diff227，现在改为Diff246；
-1.3 对于位宽越界，ECDC报错并把整个design综合为blackbox，所以ECDC未继续check_cdc，而SG报错后却没有综合为blackbox，所以SG继续check_cdc，这导致ECDC漏报CDC message，之前标记的是Diff227，现在改为Diff245；
-2.回归DTS2025060523191，发现给的差异和issue不符合，已反馈"	"CXY
-今日分析msg数：
-今日发现issue数：
 今日回传case数：
 日报：
-1.参加脚本周会
-2.和万林哥一起debug客户反应我们的工具检查 完全不可达代码分支的行为，发现是没指定TOP的原因，把-elaborate_top加上，工具行为正确。但是之前430客户遗留问题中，要求我们将-elaborate_top功能和-top 合并，目前read_design时只加-top行为还是不正确
-3.处理现场脚本问题"	"CJR
-今日分析msg数：82
-今日发现issue数：
-今日回传case数：
-日报：1.修改门禁合并csv脚本
-2.分析APP_CORE setup、conv新增，由于旧表行号问题，导致新表没有反标上，已重新标注差异问题Diff237，Diff114，Diff229，Diff150
-3.分析APP_CORE ac常值问题属于DIff234。解决merge后的冲突。
-4.分析射频，回归issue，均为差异
-"	"TZQ
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：
-1.跑NFI_TOP的对比
-2.分析NFI-PHYG-TOP的ac
-"	"TZB
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：
-1.分析了HIS_TOP中ac标记常值的部分，主要标记的差异有Diff172、pass-Dc,
-2.回归issue:DTS2025061622316"	"SYH
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：
-1.常值对比DC失败：尝试PE提供dont_touch/KEEP/set环境变量等方案均无法屏蔽elaborate处对dead code的删除。和赵洲讨论绝对在命令代码中添加功能：添加一行assign，将always块的输出和module的output port连接起来。避免elaborate删除代码
-2.get_hdl_info发现了一个提取缺陷，已经提取了的if判断中""if(a&b)""，判断条件中a和b的定义处没有被提取，导致read_design处失败
-3. 关单DTSDTS2025052729293
-4.和袁洁应康哥一起看了DTS2025061611658，经分析，Enno的综合结果与SG不同，Enno的回路没有和src发生汇聚，SG的汇聚结构和src发生了汇聚，导致SG报unsync，适用Diff244"
+1.优化get_hdl_info脚本，将赵洲的get_hdl_info -extra_info_pin流程加入脚本，并验证了其功能正确性。
+2.debug脚本在跑全量提取新泛化常值小case中遇到的结果统计不全问题。（CDC-4091），提取出的小case，用ecdc再次读入并check_cdc,SetupDataTiedToConst中的Instances1不是由TOP开头的hierarchical name，例如，在原设计中hierarchical name为TOP/SUB1/SUB2/SUB3/OBJ, 提取的小case，在读入后，hierarchical name变为SUB3/OBJ，且在增量原理图中copy也只能获取SUB3/OBJ。使用get_instances SUB3/OBJ，返回值为空
+3.CDC-4087：get_hdl_info提取设计缺陷
+描述：get_hdl_info提取的case中，没有提取localpraram关键字，导致提取出来的小case，read_design fail,format_design和原设计提取都存在此问题
+4.CDC-gui-4088：读取一个很小的设计（read_design/cdc,check_cdc，平均每一步1s），打开TOP design的全量原理图，点击instance左上角的小三角展开instance，gui崩溃"
