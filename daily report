@@ -3,54 +3,53 @@
 今日发现issue数：
 今日回传case数：
 日报：
-1、和何琴一起看DTS2025052618643，最后认定为综合差异引起的误报漏报，标记Diff243
-2、分析完HIS_TOP除常值外的误报漏报，新增DTS2025062324825，DTS2025062325696两个issue"	"LRF
-今日分析msg数：37
-今日发现issue数：1
-今日回传case数：
-日报：
-1.统计HIS_TOP的误报率
-2.分析USBC的conv的一条新增误报的Ac_conv01,已标记差异Diff122
-3.分析HIS_TOP的ac的新增误报漏报
-Diff59(8)
-DTS2025062103148(12)
-DTS2025062324825(1)
-4.分析BCP_TSS的Setup的新增误报 -- Diff234"	"JR
-今日分析msg数：328
-今日发现issue数：
-今日回传case数：
-日报：
-1.回归1个DTS单--DTS2025061712164；
-2.分析Hi18XXE TOP_LGC新增误报漏报，都是差异Diff150;
-3.分析6.21交付包门禁新增的误报漏报：
-3.1 ac新增误报漏报共294条都已分析完成，大部分是Diff59,但有几条除了标记Diff59，还因为reason不一样应该加上其他差异；
-3.2 setup新增误报漏报共8条，2条是差异Diff236,6条是差异Diff31;
-3.3 ar和builtin无新增误报漏报"	"CXY
+1、漏报常值DTS2025062426740，输入为多个加法器
+2、关闭DTS2025031423462，为了解决这个issue而选择不穿flop，但在sg中是有可以选择去穿flop/blackbox/latch，因此可能后续需要加一个选项来控制
+3、分析HIS_TOP中漏报常值部分，都是我们报的bit位比sg多，或者是我们层次穿的比较深导致"	"LRF
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.重构ac对比脚本
-2.跑新泛化对比
-3.debug APP_CORE"	"CJR
+1.分析BCP_TSS的csv中标记pass-enno_const/pass-sg_const的message,并将其更正为Diff-const
+2.跑何琴的debug包，并反馈相应信息
+"	"JR
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
-日报："	"TZQ
-今日分析msg数：36
-今日发现issue数：
-今日回传case数：
-日报：1.分析NFI_TOP的Ac新增的误报漏报，发现新的csv中存在脚本漏抓SG报的msg的问题，已向心雨反馈；当destination是bbox时，sg报的obj是net，我们报的是obj是pin,属于差异Diff71
-2.用子奇的包zq_testMerge跑HIS_TOP，验证issue CDC-4086"	"TZB
+日报：
+1.给Hi18XXE APP_CORE中因受常值影响而标记了常值相关差异的其他message补充标记diff-enno_const或者diff-sg_const，方便后面统计数据；
+2.在分析过程中发现两个issue：
+ 2.1 CDC-4092：用6.24的develop包，design tree-->open in module schematic打开原理图，net TOP/din、pin TOP/U_TEST/din、port TEST/din、net TOP/U_TEST/dout、port TEST/dout、pin TOP/U_TEST/dout都是常值，但是在原理图里点击这些pin/port/net，attributes都没有inferred_constant；
+ 2.2 CDC-gui-4093:在原理图中点击TOP/dout这个port，右键点击show constant path，没有反应，没有把这条路径上的常值标出来"	"CXY
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
-日报："	"SYH
+日报：
+1.重构ac代码，大体框架完成，对于部分辅助性的proc目前还未做完。在门禁和TOP_LGC上测试无新增"	"CJR
+今日分析msg数：42
+今日发现issue数：
+今日回传case数：
+日报：1.分析FE_TSS,常值漏报
+1.1 常值推导相反，属于差异Diff212
+1.2 Sg报的常值属于ECDC的子集，标记为 Diff-enno_cosnt
+1.3 由于FF没有被置位或者复位，ENNO不推导常值，属于差异Diff213
+2.准备0621版本的射频数据
+3.修改统计脚本"	"TZQ
+今日分析msg数：55
+今日发现issue数：
+今日回传case数：
+日报：1.分析NFI_TOP的conv受常值影响的部分，大部分属于SG关闭infer_enabled_flop不会报常值，但打开这个参数就会报出来，在csv中data tie to const是match；剩余的部分都是pass-dc
+2.脚本漏抓的问题解决后，重新跑NFI_TOP的Ac的比对"	"TZB
+今日分析msg数：33
+今日发现issue数：
+今日回传case数：
+日报：
+分析HIS——TOP的常值漏报，遇到大多数情况属于sg报的常值的bit是我们的子集，而在我们误报的对应常值message脚本标记diff170以及pass-dc等，目前在对应漏报常值的地方标记的DIFF-enno_const,还有其他情况标记的Diff213"	"SYH
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
-日报：1.分析21号包NFI_TOP的新增ac msg，里面有部分已经解决了的DTS2025051902480，经分析为均差异Diff233
-2.协助艺豪优化dc对比流程，主要是工艺库的选择和改compile流程为一次。
-3.用TOP_LGC跑get_hdl_info的范围提取，发现了一个问题CDC-4094 ：使用get_hdl_info -extra_info_pin添加的assign output_port = regA；语句中，对output_port的选择没有限定，选用了一个output reg output_port，read_design读取报错
-4.优化了get_hdl脚本的提取case验证流程，对于提取case中hierarchy name可能不全的问题：遍历提取case中的obj，match不上后，正则匹配原始design中的obj。为其添加了相应的警告信息。
-5.在TOP_LGC上提取出的case，出现了大面积无法复现常值的情况，正在debug"
+日报：
+1.debug，提出小case的验证脚本，重构验证的流程，原本的验证流程使用字符串拼接和string first方法，无法对完全match的hierarchy name和bus处理。重构后依然存在问题，需继续优化
+2.写了一个小脚本，将Hi18XXE的所有module跑出对应的format_design并保存
+3.帮赵洲确认了get_hdl_info提取case无法复现目标常值点的问题，均为常值跨层级传播导致，目标常值点的d/ck pin直接被instance的port驱动，在该instance外的部分get_hdl_info没有进行提取，也就没有了常值的来源。是否考虑不予支持？
+4.KPI总结"
