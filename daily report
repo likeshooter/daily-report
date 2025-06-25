@@ -1,114 +1,56 @@
-"HQ
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：
-1. 改进脚本统计逻辑，从新的保存路径里抓，并且将conv从setup里分离出来，单独统计conv的数据
-2. 现有资源跑交付case，使用19号的交付包"	"ZWL
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：
-1、reopen DTS2025052618643；sg报QualMergesSameSrc，ecdc报validGate
-2、解决标记冲突的部分标记DTS2025041627010--？？Diff8的msg，经过再次分析，应该是issue DTS2025062019148---qualifier选的不同导致A工具报and gate同步，ecdc报InvalidGate
-3、分析32lrt7_macrolsslcs2ds_wrap.v新增误报漏报，是脚本之前走的unmatch逻辑，但现在变成误报漏报了，重新标记diff157
-"	"LRF
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：
-1.参加PV例行周会
-2.分析USBC的conv的conv的新增
-Diff:DIff122-bug30-conv(1)
-3.分析HIS_TOP的Ac的新增误报漏报
-DTS2025062019760 -- 漏报ValidGate"	"JR
-今日分析msg数：588
-今日发现issue数：
-今日回传case数：
-日报：
-1.回归3个DTS单:DTS2025060523191、DTS2025061626013、DTS2025053010940；
-2.分析6.19门禁新增误报漏报：
- 2.1 因为取消了Diff59这个proc，所以门禁新增了一些误报漏报，其中普通和cfg1门禁的csv跑出来了，ac各新增了294条都已分析完成，大部分也还是Diff59,但有几条除了标记Diff59，还因为reason不一样应该加上其他差异；
- 2.2 在分析过程中发现，Diff38这个差异不能用了，但是有8条message还标记为了Diff38，已在cav里去掉Diff38这个差异并重新分析，分析得出是差异Diff149"	"CXY
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：
-1.重构ac对比脚本逻辑
-2，debug ac对比脚本时间长的问题"	"CJR
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：1.跑daily包的3拍射频比对
-2.修改APP_core setup的const差异。
-3.参加周会
-4.分析修改射频depth5的差异Diff229为Diff232
-5.分析HIS_TOP ac：12条属于Diff59，"	"TZQ
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报："	"TZB
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报："	"SYH
-今日分析msg数：88
-今日发现issue数：
-今日回传case数：
-日报：
-1.分析HIS_TOP19号包的新增msg，9个Diff172，3个Diff171，6个Diff8，8个Diff136，50个DTS20250618387027，8个DTS2025062019760
-2.发现了一个GUI问题CDC-gui-4085：点击web browser中的跳转连接显示sorry，the current page faild to load
-描述：GUI中点击Ac/Ar相关的msg，Web Browser页面中【描述】title下的【在报告此信息的同时会报告以下原因】，点击不同的原因跳转至原因的介绍部分，Web Browser页面会转圈圈，10s内显示sorry，the current page faild to load"
-
-
-
-
-
-
 "ZWL
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1、分析HIS_TOP的ac，发现DTS2025062103148影响了80条左右，DTS2025061636408也影响了36条；整体分析下来，merge后HIS_TOP还剩24条没看完，主要问题都在于qualifier选的不同导致sg报sync、ecdc报unsync，也有反之情况；刚刚研发说可以标Diff240；但是Diff240存在一种风险，就是一个source到dest在sg中报了unsync，但我们报了sync的话，那这条unsync的问题就会漏掉，很可能出现cdc问题；因此需要确认Diff240的可行性
-"	"LRF
-今日分析msg数：42
-今日发现issue数：2
+1、和何琴一起看DTS2025052618643，最后认定为综合差异引起的误报漏报，标记Diff243
+2、分析完HIS_TOP除常值外的误报漏报，新增DTS2025062324825，DTS2025062325696两个issue"	"LRF
+今日分析msg数：37
+今日发现issue数：1
 今日回传case数：
 日报：
-1.分析HIS_TOP的Ac的新增误报漏报
-DTS2025062019760(20)
-DTS2025062107884(22)
-"	"JR
+1.统计HIS_TOP的误报率
+2.分析USBC的conv的一条新增误报的Ac_conv01,已标记差异Diff122
+3.分析HIS_TOP的ac的新增误报漏报
+Diff59(8)
+DTS2025062103148(12)
+DTS2025062324825(1)
+4.分析BCP_TSS的Setup的新增误报 -- Diff234"	"JR
+今日分析msg数：328
+今日发现issue数：
+今日回传case数：
+日报：
+1.回归1个DTS单--DTS2025061712164；
+2.分析Hi18XXE TOP_LGC新增误报漏报，都是差异Diff150;
+3.分析6.21交付包门禁新增的误报漏报：
+3.1 ac新增误报漏报共294条都已分析完成，大部分是Diff59,但有几条除了标记Diff59，还因为reason不一样应该加上其他差异；
+3.2 setup新增误报漏报共8条，2条是差异Diff236,6条是差异Diff31;
+3.3 ar和builtin无新增误报漏报"	"CXY
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
-日报："	"CXY
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
 日报：
-1.重构ac对比脚本逻辑
-2.修复对比脚本漏抓问题
-3.将NFI_TOP的ac对比按sync和unsync拆开跑对比结果；跑HIS_TOP，APP_CORE的ac对比结果"	"CJR
+1.重构ac对比脚本
+2.跑新泛化对比
+3.debug APP_CORE"	"CJR
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报："	"TZQ
-今日分析msg数：
+今日分析msg数：36
 今日发现issue数：
 今日回传case数：
-日报："	"TZB
+日报：1.分析NFI_TOP的Ac新增的误报漏报，发现新的csv中存在脚本漏抓SG报的msg的问题，已向心雨反馈；当destination是bbox时，sg报的obj是net，我们报的是obj是pin,属于差异Diff71
+2.用子奇的包zq_testMerge跑HIS_TOP，验证issue CDC-4086"	"TZB
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报："	"SYH
 今日分析msg数：
-今日发现issue数：3
+今日发现issue数：
 今日回传case数：
-日报：
-1.优化get_hdl_info脚本，将赵洲的get_hdl_info -extra_info_pin流程加入脚本，并验证了其功能正确性。
-2.debug脚本在跑全量提取新泛化常值小case中遇到的结果统计不全问题。（CDC-4091），提取出的小case，用ecdc再次读入并check_cdc,SetupDataTiedToConst中的Instances1不是由TOP开头的hierarchical name，例如，在原设计中hierarchical name为TOP/SUB1/SUB2/SUB3/OBJ, 提取的小case，在读入后，hierarchical name变为SUB3/OBJ，且在增量原理图中copy也只能获取SUB3/OBJ。使用get_instances SUB3/OBJ，返回值为空
-3.CDC-4087：get_hdl_info提取设计缺陷
-描述：get_hdl_info提取的case中，没有提取localpraram关键字，导致提取出来的小case，read_design fail,format_design和原设计提取都存在此问题
-4.CDC-gui-4088：读取一个很小的设计（read_design/cdc,check_cdc，平均每一步1s），打开TOP design的全量原理图，点击instance左上角的小三角展开instance，gui崩溃"
+日报：1.分析21号包NFI_TOP的新增ac msg，里面有部分已经解决了的DTS2025051902480，经分析为均差异Diff233
+2.协助艺豪优化dc对比流程，主要是工艺库的选择和改compile流程为一次。
+3.用TOP_LGC跑get_hdl_info的范围提取，发现了一个问题CDC-4094 ：使用get_hdl_info -extra_info_pin添加的assign output_port = regA；语句中，对output_port的选择没有限定，选用了一个output reg output_port，read_design读取报错
+4.优化了get_hdl脚本的提取case验证流程，对于提取case中hierarchy name可能不全的问题：遍历提取case中的obj，match不上后，正则匹配原始design中的obj。为其添加了相应的警告信息。
+5.在TOP_LGC上提取出的case，出现了大面积无法复现常值的情况，正在debug"
