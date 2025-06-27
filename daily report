@@ -3,48 +3,49 @@
 今日发现issue数：
 今日回传case数：
 日报：
-1、分析HIS_OTP漏报常值部分，为bit位比sg多，和Diff213导致
-2、debug川皓的display_const_path脚本，结果发现是get_fanin -on会报错跟的值无效，用{1 ！= 1}或者跟obj都报无效的错"	"LRF
+1、merge分析后的setup表格，整理冲突部分
+2、分析ac中由于常值影响的msg，主要为Diff172、Diff170、Diff171、Diff213，Diff95、Diff-dc影响；其中还有source和其他flop传过来的常值经过comb后为常值，dest不为常值，影响这条链路的检查，标记了flop常值传过来一样的diff编号"	"LRF
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
 1.分析HIS_TOP中常值漏报标记const的messgae,已标记为Diff171/Diff_enno_const
-2.跑何琴的debug包，并查看相应DTS单是否解决"	"JR
-今日分析msg数：79
+2.查看HIS_TOP上的issue是否在debug包上解决"	"JR
+今日分析msg数：156
 今日发现issue数：
 今日回传case数：
 日报：
-1.给Hi18XXE APP_CORE中因受常值影响而标记了常值相关差异的其他message和对应常值message补充标记diff-enno_const、diff-dc或者diff-sg_const，方便后面统计数据；
-2.处理Hi18XXE APP_CORE的csv的标记冲突"	"CXY
+1.已完成给Hi18XXE APP_CORE中因受常值影响而标记了常值相关差异的其他message和对应常值message补充标记diff-enno_const、diff-dc或者diff-sg_const；
+2.回归了Hi18XXE APP_CORE的csv里的issue：DTS2025060523191和DTS2025061748980，都改为了Diff59-report4-multi_bits_merge ；
+3.分析Hi18XXE APP_CORE中SetupDataTiedToConst未分析漏报，目前分析到的都是差异"	"CXY
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.重构ac对比脚本。重构后的脚本在HIS_TOP的ac对比上耗时减少，由原本的20h变成3h
-2.但是重构后的代码在APP_CORE上并无明显提速，具体问题正在debug中"	"CJR
-今日分析msg数：
+1.重构ac对比代码，整理代码flow
+2.重构isMatchAc proc，去掉原本的循环逻辑，改用建dict，通过dict get的方法获得对应reason，实现对比reason
+3.重构diff9代码。去掉原本的三次方算法，改成用dict存下已经match的msg，用剩下的误报作为key，去match dict中查找
+4.重构diff18 proc算法，去掉原本的n平方算法，改成在建key时就将sg的虚拟时钟统一到enno报告的时钟，在建key的时候就打上标记
+5.重构对比脚本中处理missing和false的逻辑，统一到一个指定proc中完成，增加代码可读性"	"CJR
+今日分析msg数：150
 今日发现issue数：
 今日回传case数：
-日报：1.修改隔离区生成Diff差异的脚本
-2.统计射频Diff差异，及汇总数据准备
-3.修改FE_TSS的差异；及Ar issue回归。"	"TZQ
-今日分析msg数：73
+日报：1.关单DTS2025061748980：属于差异Diff59
+2.标注FE_TSS差异
+3.分析修改APP_CORE常值漏报，属于均差异
+4.帮助景烁看nile脚本问题。"	"TZQ
+今日分析msg数：844
 今日发现issue数：
 今日回传case数：
-日报：1.分析NFI_TOP的Ac的新增
-1.1 不同的clock有相同的clock domain,SG只会报一个clock，我们会两个都报出来，且destination有两个bit是常值影响，属于Diff91;Diff171;pass-enno_const
-1.2 Source 的clocks 和 destination的clocks对于bus的两个bits都是一致的,SG 分开报，我们合在一起报，属于Diff147
-2.根据Ac的分析修改data tie to const中的Diff-enno_const"	"TZB
-今日分析msg数：43
-今日发现issue数：
-今日回传case数：
-日报：
-分析HIS——TOP的datatiedtoconst漏报，遇到大多数情况属于sg报的常值的bit是我们的子集，而在我们误报的对应常值message脚本标记diff170以及pass-dc等,主要标记的有Diff-dc、diff171\diff170;diff-enno_const;"	"SYH
-今日分析msg数：
+日报：1.分析NFI_TOP的Ac的新增和受常值影响的msg 532条；标记data tie to const的csv中影响其他msg Diff-enno_const 312条
+2.跑NFI_TOP的dataTieToConst的比对"	"TZB
+今日分析msg数：70
 今日发现issue数：
 今日回传case数：
 日报：
-1.完成了对verify_hdl.tcl脚本的重构，在TOP_LGC上全量提取试用，PASS率在93%左右，抽样验证正确性，全部通过。FAIL掉的几乎都是目标常值点没有报常值的问题。
-2.和赵洲讨论了CDC-4082，尝试忽略未定义wire的来源，直接添加一句wire a；read_design可以通过，但可能对常值有影响，考虑到实际这部分error很少，建议添加，但是要严格功能生效条件。
-3.和赵洲同步了现场使用的proc更改"
+分析HIS——TOP的datatiedtoconst漏报以及Ac中受常值影响的message，主要标记diff171\diff170\diff172\diff-dc"	"SYH
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.造小case尝试对output pin上设置dont_touch是否影响DC的常值优化：依然在begining pass 1 mapping根据OPT-1206优化，且报法依然不带hierarchy name。"
