@@ -1,51 +1,157 @@
+周五：
 "ZWL
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1、merge分析后的setup表格，整理冲突部分
-2、分析ac中由于常值影响的msg，主要为Diff172、Diff170、Diff171、Diff213，Diff95、Diff-dc影响；其中还有source和其他flop传过来的常值经过comb后为常值，dest不为常值，影响这条链路的检查，标记了flop常值传过来一样的diff编号"	"LRF
+1、分析TSSC_WRAP中新增的误报漏报conv，结果是反标掉了
+2、debug川皓的find_const脚本，用脚本有的图能画，有的不能，像port为常值时画不了，lsearch无法匹配；pin为常值，没有连net的都画不了
+3、参加周会"	"LRF
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："	"JR
+今日分析msg数：598
+今日发现issue数：
+今日回传case数：
+日报：
+1.分析完成Hi18XXE APP_CORE中SetupDataTiedToConst未分析漏报，共分析476条，分析到的都是差异Diff-false-bit和Diff213;
+2.处理Hi18XXE APP_CORE最新ac的csv里的差异冲突，共64条；
+3.分析Hi18XXE APP_CORE最新ac csv中新增的误报漏报，共分析58条，都是差异Diff59、Diff234、Diff147、Diff80和Diff-dc"	"CXY
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.分析HIS_TOP中常值漏报标记const的messgae,已标记为Diff171/Diff_enno_const
-2.查看HIS_TOP上的issue是否在debug包上解决"	"JR
-今日分析msg数：156
+1.重构Ac代码，重构后APP_CORE现在ac对比耗时9min
+2.和艺豪哥review setup对比脚本，讨论setup对比脚本性能提升方案
+3.参加pv周会"	"CJR
+今日分析msg数：
 今日发现issue数：
 今日回传case数：
-日报：
-1.已完成给Hi18XXE APP_CORE中因受常值影响而标记了常值相关差异的其他message和对应常值message补充标记diff-enno_const、diff-dc或者diff-sg_const；
-2.回归了Hi18XXE APP_CORE的csv里的issue：DTS2025060523191和DTS2025061748980，都改为了Diff59-report4-multi_bits_merge ；
-3.分析Hi18XXE APP_CORE中SetupDataTiedToConst未分析漏报，目前分析到的都是差异"	"CXY
+日报：1.分析APP_CORE常值漏报问题，已经全部分析完成，均属于Diff-false-bit；Diff212；Diff213；存在一条issue：DTS 2025051627801"	"TZQ
+今日分析msg数：364
+今日发现issue数：
+今日回传case数：
+日报：1.分析NFI_TOP的Ac的新增，今天分析到的都是属于差异Diff91；Diff63"	"TZB
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："	"SYH
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.重构ac对比代码，整理代码flow
-2.重构isMatchAc proc，去掉原本的循环逻辑，改用建dict，通过dict get的方法获得对应reason，实现对比reason
-3.重构diff9代码。去掉原本的三次方算法，改成用dict存下已经match的msg，用剩下的误报作为key，去match dict中查找
-4.重构diff18 proc算法，去掉原本的n平方算法，改成在建key时就将sg的虚拟时钟统一到enno报告的时钟，在建key的时候就打上标记
-5.重构对比脚本中处理missing和false的逻辑，统一到一个指定proc中完成，增加代码可读性"	"CJR
-今日分析msg数：150
-今日发现issue数：
-今日回传case数：
-日报：1.关单DTS2025061748980：属于差异Diff59
-2.标注FE_TSS差异
-3.分析修改APP_CORE常值漏报，属于均差异
-4.帮助景烁看nile脚本问题。"	"TZQ
-今日分析msg数：844
-今日发现issue数：
-今日回传case数：
-日报：1.分析NFI_TOP的Ac的新增和受常值影响的msg 532条；标记data tie to const的csv中影响其他msg Diff-enno_const 312条
-2.跑NFI_TOP的dataTieToConst的比对"	"TZB
-今日分析msg数：70
+1.解决Hi18XXE的NFI_PHYG_TOP中ac部分的差异冲突，并为常值标记添加Diff-enno-const
+2.周会
+3.用26号应康的分支包看了DTS2025061627182和DTS2025061636408，目前问题仍然存在，已反馈给应康
+4.关单DTS2025061611658
+5.编写get_hdl_info脚本使用文档"
+
+
+
+
+周六：
+"JR
+今日分析msg数：176
 今日发现issue数：
 今日回传case数：
 日报：
-分析HIS——TOP的datatiedtoconst漏报以及Ac中受常值影响的message，主要标记diff171\diff170\diff172\diff-dc"	"SYH
+分析Hi18XXE APP_CORE最新ac csv中未分析误报漏报，共分析176条，都是差异Diff59、Diff234、Diff147、Diff80和Diff-dc，还剩266条待分析"	"CXY
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.造小case尝试对output pin上设置dont_touch是否影响DC的常值优化：依然在begining pass 1 mapping根据OPT-1206优化，且报法依然不带hierarchy name。"
+1.检查周五跑的新泛化结果，目前脚本重构之后，一晚上可以跑完全部的新泛化case的对比。
+2.反馈27号交付分支包结果，发现有三个模块何琦周五跑错了包，今天重新跑对比结果
+3.发现conv系列csv未反标，手动反标后给大家分析，修复conv系列未成功反标问题 
+4.将脚本中的辅助性proc以及一次性proc（如diff59等）做成开关控制，不一定每次跑对比都需要用到这些proc
+5。和艺豪哥看setup对比脚本，讨论提高性能方式"	"CJR
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："	"TZQ
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："	"TZB
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："	"SYH
+今日分析msg数：95
+今日发现issue数：2
+今日回传case数：
+日报：
+1.分析HIS_TOP 27号包的结果，确认csv中仍然存在的DTS2025041627010和DTS2025052920772的情况与新增的msg，提了两个新issue：
+1.1DTS2025062822774：Enno报unsync--QualMergeOtherSrc,但是在增量原理图中i798/o的cluster为ungated，但是后面的other src并没有被画出来。右边绿框中的画出的qualifier取值也意义不明。
+1.2DTS2025062825102：src与qualifier的两次汇聚，clock信息完全相同，但是报QualMergeOtherSrc"
+
+
+
+
+
+
+
+周一：
+"XLL
+今日分析msg数：20
+今日发现issue数：
+今日回传case数：
+日报：1.分析HIS_TOP ac的message，分析新增message和issue已修复但是csv中还未替换的message，分析了20条，与何琴、应康讨论后，发现cluster的传递有问题（DTS2025063020786）；qualifier与src汇聚点的属性是gated，但却报了unsync（DTS2025063017442）；且qualifier与src的汇聚点有些时候不准确。"	"HQ
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："	"ZWL
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1、分析HIS_TOP中的msg，其中sg sync/ecdc unsync；经过何琴讲解，在我们算法中，如果只有一个qualifier，那就会从sync 信号的q pin开始算值，如果不能从始至终就是gate的值，那就不能算同步；但在sg中同一个qualifier和汇聚点，就是报的sync"	"LRF
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.分析HIS_TOP的DTS系统上已解决的但任然存在于csv中的issue
+DTS2025060618183 -> Diff8(16)
+2.协助何琴一起分析ecdc unsync <-> sg sync的问题
+3.构建小case复现泛化case上的场景 - 已复现
+4.复现小case过程中发现issue -- CDC-4096:
+ecdc报CmdFailedClockObjNotFound:Command 'assign_clock_domain' falied because the clock object with the name 'clk' specified for the option 'clocks' cannot be found这条message不合理;其实sdc文件中第2行的create_clock命令已经有错了,ecdc应该报create_clock这个命令没有-ports这个选项更加准确一点
+"	"JR
+今日分析msg数：266
+今日发现issue数：
+今日回传case数：
+日报：
+1.分析完成Hi18XXE APP_CORE最新ac csv中未分析误报漏报，共分析266条，都是差异Diff59、Diff234、Diff147、Diff80和Diff-dc；
+2.用冯敏的包验证DTS2025051627801是否修好，验证结果是没有修好，已反馈给冯敏；
+3.分析Hi18XXE TOP_LGC 27号csv新增的误报漏报，发现csv有问题，和之前的csv标的不一样，已请心雨重新跑"	"CXY
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："	"CJR
+今日分析msg数：230
+今日发现issue数：
+今日回传case数：
+日报：1.分析BDP新增，SetupDataTiedToConst存在12条新增，属于2 const。conv存在13条没有反标上，已手动标记，
+2.分析DME新增，conv也没有反标上，属于差异，已手动标记 
+3.分析FE_TSS新增，CONV存在的新增属于没有反标上导致，属于差异，已经手动标记
+4.分析NFI_PHYG_TOP新增，同上问题
+5.分析TSSC_WRAP新增，同上问题，已经手动标记
+6.NFI_TOP conv465条新增同上，已通过反标脚本反标完成。
+此类问题原因可能为：1.setup result表格拆分为setup和conv导致old csv选择问题 2.比对脚本反标问题（需要重新跑一次比对）"	"TZQ
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："	"TZB
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："	"SYH
+今日分析msg数：112
+今日发现issue数：2
+今日回传case数：
+日报：
+1.分析HIS_TOP中6.27号结果，经RD分析，发现过往csv中标记的相当部分issue是错提的，Enno的行为从算法逻辑上应理解为正确。错提的原因可以总结为一是msg的增量原理图显示和msg报法不统一，具有误导性，二是彼此沟通不足。故否定之前分析过的issue，重新分析。遇到问题仅可能同步，避免重复提相同问题
+1.1分析ac部分msg112条，涉及差异Diff59，Diff8，Diff244，Diff171，Diff172。经RD确认，新提了两个issue
+1.2 DTS2025063017442-如图所示结构，同一对src和qualifier第一次汇聚的时候，未能成功gated住src，但是第二次汇聚的时候，qualifier成功gated住src。而在后续传播的过程中（绿框部分），不存在src与qualifier的第三次汇聚，那么就应该认为src和qualifier是SYNC的，而msg报告的UNSYNC——QualMergeOtherSrc中应该是将紫色的other src当作了这条msg的主体src
+1.3DTS2025063020786-在增量原理图中标注着qualifier和src有效汇聚点处，i112/a0（qualifier）的cluster显示SYNC。但是往前推，i111/a1和i111/a2的cluster均显示推不出qualifier为稳定的0或1，属于cluster传递错误"
