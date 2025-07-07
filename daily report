@@ -1,66 +1,11 @@
-"ZWL
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：
-1、分析了考训中9个新增误报漏报的case，发现都是由一个问题导致，ff/d不是常值，但是ff/q是常值1，导致漏报误报
-2、分析HIS_TOP上ac的新增误报漏报"	"LRF
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：
-1.分析HIS_TOP上的Ac的新增误报漏报"	"JR
-今日分析msg数：79
-今日发现issue数：
-今日回传case数：
-日报：
-1.分析门禁6.30develop包新增误报漏报：
- 1.1 builtin和setup新增误报漏报大部分是差异Diff192，有一个issue:CDC-3309还未解决;
- 1.2 ac和ar没有新增误报漏报；
-2.用冯敏今天的debug包跑Hi18XXE HIS_TOP，帮助冯敏debug DTS2025051627801；
-3.分析Hi18XXE HIS_TOP何琴分支包跑出来的csv，目前分析到的都是差异Diff8"	"CXY
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：
-1.继续回传ac的重构代码，因为家里库上有些golden比较老，和现在的脚本表现不一样了，所以传代码挂掉了，处理这部分golden文件
-2.完成并行跑dc的脚本"	"CJR
-今日分析msg数：212
-今日发现issue数：
-今日回传case数：
-日报：1.review修改APP_CORE conv的差异。
-2.NFI_PHYG_TOP:ac 新增172条误报漏报，脚本变动导致。原来是脚本pass标了Diff63，现在Diff59的优先级要高于Diff63，因此新增了。
-3.分析NFI_PHYG_TOP:SG报的ECDC也报了，只是分开报了不同的reason，属于Diff63。（全部分析完成172）
-4.分析BCP常值问题：33条漏报均属于Diff-false-bit，5条Diff212；2条DIff213"	"TZQ
-今日分析msg数：355
-今日发现issue数：
-今日回传case数：
-日报：1.分析完成NFI_TOP中受常值影响的msg，都是属于Diff171；Diff-enno_const或者Diff-dc,共78条
-2.分析NFI_TOP中Clock_info03b的漏报，其中有220条属于SG报了FF的D是常值但没有传递下去，属于Diff234；有57条属于SG报的是我们的子集，属于Diff-false-bit"	"TZB
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报："	"SYH
-今日分析msg数：351
-今日发现issue数：
-今日回传case数：
-日报：
-1.分析HIS_TOP中setup的新增msg，均为SetupDataTiedToConst误报，主要涉及Diff171，Diff170，Diff172"
-
-
-
-
-
-
-
 "XLL
-今日分析msg数：68
-今日发现issue数：1
+今日分析msg数：
+今日发现issue数：
 今日回传case数：
-日报：1.分析何琴分支包报出的HIS_TOP的ac message 68条，几乎都是DTS2025063020786：cluster计算传递出错的问题，其他就是差异，主要涉及Diff8
-2.提了一个issue CDC-4097
-单个qualifer的blocking value gate不住source时，报QualMergesWithOtherSrc不合理
-描述：当src和qualifier merge时，如果到达source的qualifier只有一个，ecdc会计算blocking value，如果gate不住，我们会报unsync，目前工具报的QualMergesWithOtherSrc，但又没有另一个source与qualifier merge，报错不合理，是否应该报missing synchronizer。如果没有一个合适的reason，这种情况可能需要个新的messageid"	"HQ
+日报：1.参加导入平台Demo会议
+2.帮何琴用分支包跑工具，验证cluster计算传播出错的问题，验证结果是还未修复，回传了关键截图和关键点的symbol信息，供何琴分析问题
+3.验证issue：DTS2025061120274
+4.分析FOM包的门禁新增，主要是反标漏了，且参数run错了，需要重新出结果"	"HQ
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
@@ -69,47 +14,40 @@
 今日发现issue数：
 今日回传case数：
 日报：
-1、分析HIS_TOP上新增的ac误报漏报，都为diff8
-2、熟悉鲲鹏环境"	"LRF
+1、在鲲鹏系统上配置环境并手动跑USBC，结果和红区一致；等待客户把1813e的design都cp到鲲鹏环境下，就进行全case的测试以及脚本适配
+2、分析FOM包新增部分"	"LRF
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.分析何琴分支包跑出的HIS_TOP的ac的新增误报漏报
-2.跑何琴分支包在APP_CORE\TOP_LGC\USBC上的结果"	"JR
-今日分析msg数：68
+1.构造小case复现泛化上存在的Ac不匹配的场景，目前发现sg与ecdc对于Ac检查的不同点在于Funcation的计算，sg不会在同步器的最后一拍进行计算，sg只会在qualifier遇到其它source后再进行计算"	"JR
+今日分析msg数：56
 今日发现issue数：
 今日回传case数：
 日报：
-1.继续帮助冯敏debug DTS2025051627801，反馈打印信息；
-2.用get_hdl来试着提取DTS2025051627801的小测例，但是提取出来的小测例的sdc有几百行，.v有上千行，因此这个测例提取出来有点大，不好debug也不好传回来，且提取出的测例有错误，比如参数没有声明就直接使用，已向一航反馈；
-3.提了一个GUI的需求：在SG的原理图上方有两个按钮：expand all groups和collapse all groups，expand all groups是点一下能打开原理图中所有组合逻辑virtual cloud的按钮，collapse all groups是点一下能关闭原理图中所有组合逻辑virtual cloud的按钮，当原理图中组合逻辑virtual cloud很多时，想要把所有组合逻辑virtual cloud打开需要一个一个点，不太方便，所以建议增加这两个按钮，issue--CDC-GUI-4099"	"CXY
+1.用今天冯敏的debug包跑HIS_TOP，继续帮助冯敏debug DTS2025051627801，反馈打印信息；
+2.用get_hdl来提取DTS2025051627801的测例，因提取出的测例漏了localparam，导致提取的.v不正确，这是已知问题"	"CXY
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
-日报：
-1.和艺豪哥 debug王涵check_is_const脚本，修改脚本bug
-2.将check_is_const脚本放到对比脚本的flow中，验证脚本覆盖情况"	"CJR
+日报："	"CJR
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
-日报：1.分析DME_WRAP常值漏报：均为差异Diff-false_bit
-2.分析NAU_CAU_WRAP常值漏报：均为差异Diff-false_bit
-3.分析射频fom：仅是conv net变化，依旧属于差异Diff210
-4.daily包射频builtin新增属于已知常值传播问题"	"TZQ
-今日分析msg数：87
+日报：1.看fom报的NAU及HIS的setup新增问题，均存在脚本bug，导致setup_bbox01匹配问题。已反馈。
+2.发现run脚本bug问题，反馈给何琦修改。"	"TZQ
+今日分析msg数：
 今日发现issue数：
 今日回传case数：
-日报：1.分析NFI_TOP常值漏报，51条Diff213,少数是36条Diff-false_bit"	"TZB
+日报：1.分析NFI_TOP的Clock_info03b的漏报，发现当一个[0:0]的bus给他附了常值，但后续是用bus[x]的形式使用，我们综合出来是常值直连，但SG综合出来是常值跟x先做一个&运算，再连接到后面，导致ECDC误报；经过复现后进行lec比对是succeed的，标了Diff192"	"TZB
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报："	"SYH
-今日分析msg数：697
-今日发现issue数：1
-今日回传case数：2
+今日分析msg数：113
+今日发现issue数：
+今日回传case数：
 日报：
-1.分析HIS_TOP的常值误报，基本都是Diff170/171/172的问题
-2.帮赵洲复现CDC-4095和CDC-4087的小case，复现过程中发现了一个新issue
-2.1 CDC-4100:set_param cdc.enable_lint_check false,design中存在语法错误（HDL-1137）,用catch获取read_design执行结果，结果为0
-3.帮康哥一起看了DTS2025063017442，已经可以正确报告多次汇聚src与qual最终的同步情况，但仍需和何琴的代码合并后查看结果"
+1.分析HIS_TOP的常值误报，基本都是Diff170/171/172的问题。 HIS_TOP的setup分析完毕
+2.和李博讨论了get_hdl_info优化策略，尝试对get_hdl_info脚本添加提取多个常值点到一个文件的逻辑
+3.复现蒋蕊get_hdl提取问题，是CDC-4087"
