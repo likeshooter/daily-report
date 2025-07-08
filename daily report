@@ -1,11 +1,10 @@
 "XLL
-今日分析msg数：
+今日分析msg数：4
 今日发现issue数：
 今日回传case数：
-日报：1.参加导入平台Demo会议
-2.帮何琴用分支包跑工具，验证cluster计算传播出错的问题，验证结果是还未修复，回传了关键截图和关键点的symbol信息，供何琴分析问题
-3.验证issue：DTS2025061120274
-4.分析FOM包的门禁新增，主要是反标漏了，且参数run错了，需要重新出结果"	"HQ
+日报：1.协助何琴在现场验证分支包中qualifier传递出错的问题，并回传关键截图和关键点的symbol信息
+2.统计泛化case的各项数据
+3.Run新泛化FOM包的比对脚本，涉及TSSC_WRAP和TOP_LGC，TOP_LGC总共有9条新增，已分析完成，4条msg为Diff8差异，5条分析中"	"HQ
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
@@ -14,19 +13,24 @@
 今日发现issue数：
 今日回传case数：
 日报：
-1、在鲲鹏系统上配置环境并手动跑USBC，结果和红区一致；等待客户把1813e的design都cp到鲲鹏环境下，就进行全case的测试以及脚本适配
-2、分析FOM包新增部分"	"LRF
-今日分析msg数：
+1、分析FOM包的HIS_TOP结果中未分析的误报漏报，都为差异Diff229，Diff172、Diff125；其中0702的表中还有一个Setup_blackbox01的脚本问题23
+2、整理鲲鹏环境的数据，尝试跑起来"	"LRF
+今日分析msg数：18
 今日发现issue数：
 今日回传case数：
 日报：
-1.构造小case复现泛化上存在的Ac不匹配的场景，目前发现sg与ecdc对于Ac检查的不同点在于Funcation的计算，sg不会在同步器的最后一拍进行计算，sg只会在qualifier遇到其它source后再进行计算"	"JR
-今日分析msg数：56
+1.回归issue
+DTS2025062324825 -- RD已修复，但结果不正确，待RD确认
+DTS2025062107884 -- 已关闭
+2.跑FOM包的APP_CORE的比对
+3.分析DDR_SUB的Ac的误报漏报 - 按照ecdc现在的算法，报unsync是对的，以前报sync的cluster的symbol有问题"	"JR
+今日分析msg数：27
 今日发现issue数：
 今日回传case数：
 日报：
-1.用今天冯敏的debug包跑HIS_TOP，继续帮助冯敏debug DTS2025051627801，反馈打印信息；
-2.用get_hdl来提取DTS2025051627801的测例，因提取出的测例漏了localparam，导致提取的.v不正确，这是已知问题"	"CXY
+1.分析完成FOM包Hi18XXE APP_CORE新增误报，都是差异Diff150;
+2.FOM包门禁跑出来有新增，发现可能是old csv有问题或者脚本未反标上导致的，重新merge后没有新增误报漏报；
+3.get_hdl_info提取常值路径缺陷：一个信号S连在MUX的output，MUX的output又连在一个与门的a1，因为MUX的output是常值0，所以信号S和与门的a1也都是常值0，而与门的a0不是常值，但与门的a0直连到了顶层模块的一个net，当用get_hdl_info从信号S开始提取常值路径时，get_hdl_info直接从信号S提取到了与门的a1，而没有从信号S提取到MUX，这就导致常值没有提取到--CDC-4102"	"CXY
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
@@ -34,20 +38,25 @@
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
-日报：1.看fom报的NAU及HIS的setup新增问题，均存在脚本bug，导致setup_bbox01匹配问题。已反馈。
-2.发现run脚本bug问题，反馈给何琦修改。"	"TZQ
-今日分析msg数：
+日报：1.分析DDR_SUB，symbol现在传输正确，和SG存在算法差异，属于差异Diff8。Diff8描述过于绝对，需要对Diff8进行追加描述，已反馈给袁姐
+2.优化泛化数据统计脚本"	"TZQ
+今日分析msg数：25
 今日发现issue数：
 今日回传case数：
-日报：1.分析NFI_TOP的Clock_info03b的漏报，发现当一个[0:0]的bus给他附了常值，但后续是用bus[x]的形式使用，我们综合出来是常值直连，但SG综合出来是常值跟x先做一个&运算，再连接到后面，导致ECDC误报；经过复现后进行lec比对是succeed的，标了Diff192"	"TZB
+日报：1.分析NFI_TOP的setup的误报漏报，属于pass-clock_reset_info
+2.分析FOM包NFI_TOP新增的误报漏报，属于Diff229
+3.回归DTS2025061838027
+4.用最新的FOM包跑NFI_TOP，NAU_CAU_WRAP和NFI_PHYG_TOP的对比"	"TZB
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报："	"SYH
-今日分析msg数：113
+今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.分析HIS_TOP的常值误报，基本都是Diff170/171/172的问题。 HIS_TOP的setup分析完毕
-2.和李博讨论了get_hdl_info优化策略，尝试对get_hdl_info脚本添加提取多个常值点到一个文件的逻辑
-3.复现蒋蕊get_hdl提取问题，是CDC-4087"
+1.回归DTS2025062822774，DTS2025063017442，DTS2025063020786，DTS2025062107712，DTS2025061627182，DTS2025061636408，
+DTS2025062825102
+2.编写remove_non_const proc，仅提取constant逻辑在一个file内，运行发现受get_hdl_info -extra_info_pin影响，extra_info_pin执行仅返回一个list。仍需改进
+3.帮蒋蕊确认get_hdl_info提取无法复现常值问题，CDC-4102
+"
