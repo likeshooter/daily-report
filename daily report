@@ -1,10 +1,11 @@
+7.8：
 "XLL
-今日分析msg数：4
-今日发现issue数：
+今日分析msg数：5
+今日发现issue数：1
 今日回传case数：
-日报：1.协助何琴在现场验证分支包中qualifier传递出错的问题，并回传关键截图和关键点的symbol信息
-2.统计泛化case的各项数据
-3.Run新泛化FOM包的比对脚本，涉及TSSC_WRAP和TOP_LGC，TOP_LGC总共有9条新增，已分析完成，4条msg为Diff8差异，5条分析中"	"HQ
+日报：1.分析TOP_LGC FOM包新增msg 5条，为issue CDC-4015，误报了CmdFailedClockObjNotFound
+2.Run USBC的FOM包比对，并定位分析SetupRstInferred的result和emessage都为空的问题，是比对脚本问题
+3.统计新泛化的数据，统计过程中发现了2个bug，一个是处理USBC的统计有语法和逻辑错误，暂未修复；一个是NFI_TOP的数据明明清零了，但是却统计出有4474条误报，经定位分析确定是比对脚本写的running flag - pass-new-diff_const单独存在时，结尾多了个分号，与统计脚本有冲突，已决定由心雨修改比对脚本，以适配统计脚本"	"HQ
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
@@ -13,40 +14,109 @@
 今日发现issue数：
 今日回传case数：
 日报：
-1、分析FOM包的HIS_TOP结果中未分析的误报漏报，都为差异Diff229，Diff172、Diff125；其中0702的表中还有一个Setup_blackbox01的脚本问题23
-2、整理鲲鹏环境的数据，尝试跑起来"	"LRF
-今日分析msg数：18
-今日发现issue数：
-今日回传case数：
-日报：
-1.回归issue
-DTS2025062324825 -- RD已修复，但结果不正确，待RD确认
-DTS2025062107884 -- 已关闭
-2.跑FOM包的APP_CORE的比对
-3.分析DDR_SUB的Ac的误报漏报 - 按照ecdc现在的算法，报unsync是对的，以前报sync的cluster的symbol有问题"	"JR
-今日分析msg数：27
-今日发现issue数：
-今日回传case数：
-日报：
-1.分析完成FOM包Hi18XXE APP_CORE新增误报，都是差异Diff150;
-2.FOM包门禁跑出来有新增，发现可能是old csv有问题或者脚本未反标上导致的，重新merge后没有新增误报漏报；
-3.get_hdl_info提取常值路径缺陷：一个信号S连在MUX的output，MUX的output又连在一个与门的a1，因为MUX的output是常值0，所以信号S和与门的a1也都是常值0，而与门的a0不是常值，但与门的a0直连到了顶层模块的一个net，当用get_hdl_info从信号S开始提取常值路径时，get_hdl_info直接从信号S提取到了与门的a1，而没有从信号S提取到MUX，这就导致常值没有提取到--CDC-4102"	"CXY
+1、回归DTS2025062426740
+2、写鲲鹏环境下跑case的脚本；已完成，把新泛化的13个case已经全部跑起来
+3、帮客户看跑sdc失败原因，遇见以下几点问题：
+①、set_param db.use_hier_name_include_top true；get_ports/pins/instances/nets等get命令没有加顶层name，导致报错
+②、修改参数配置后，没有重新运行配置文件，导致配置没有生效
+③、set_case_analysis的选项是-objects，但客户用的是-name；
+④、带层次的name中间用的是点，应该用斜杠/"	"LRF
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
-日报："	"CJR
+日报：
+1.协助万林看一个Ac_conv的问题
+2.分析射频3flops和2flops的新增不匹配
+a.conv的新增已询问子奇，可能是最近DB的修改导致,已标记差异
+b.ac的新增为算法差异
+3.与PE看ecdc和sg在Ac上算法的区别，确认ecdc的做法符合预期"	"JR
+今日分析msg数：89
+今日发现issue数：
+今日回传case数：
+日报：
+1.get_hdl_info提取常值路径问题：一些需要提取的常值路径经过get_hdl_info提取后变成了ND，比如一条常值路径上的一个net经过4个buffer到达源头1'b0，用get_hdl_info提取，这个net变成了ND，已向赵洲和一航反馈，没有复现出来，赵洲说先不提issue，加一些debug信息看看；
+2.分析Hi18XXE HIS_TOP7.7FOM交付包新增误报漏报，目前分析到的都是差异Diff8和Diff243"	"CXY
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
-日报：1.分析DDR_SUB，symbol现在传输正确，和SG存在算法差异，属于差异Diff8。Diff8描述过于绝对，需要对Diff8进行追加描述，已反馈给袁姐
-2.优化泛化数据统计脚本"	"TZQ
-今日分析msg数：25
+日报：
+1.debug现场分析同事反映，TOP_LGC的builtin新增误报CmdFailedInvalidObjOption之前工具也报了但是没有被脚本抓成误报的问题。debug发现，非脚本问题。6月26号的包，工具未报这条msg，工具报的是CmdFailedClockObjNotFound，这条msg不在builtin需要对比的msg中，所以脚本一直未抓。大概从7月3号的包开始，工具没有报CmdFailedClockObjNotFound，而是报的CmdFailedInvalidObjOption，CmdFailedInvalidObjOption属于builtin需要对比的msg，所以有新增的误报。非脚本bug
+2.帮助db测试参数db.test_get_obj_support_union。在门禁上该参数打开会影响ac 1个case，2条新增，影响setup3个case，24条新增，builtin新增93条，初步分析新增并不合理，已经给对应开发范国炜反馈，并且提供case场景
+3.给对比脚本增加给oldcsv加引号的功能"	"CJR
+今日分析msg数：
 今日发现issue数：
 今日回传case数：
-日报：1.分析NFI_TOP的setup的误报漏报，属于pass-clock_reset_info
-2.分析FOM包NFI_TOP新增的误报漏报，属于Diff229
-3.回归DTS2025061838027
-4.用最新的FOM包跑NFI_TOP，NAU_CAU_WRAP和NFI_PHYG_TOP的对比"	"TZB
+日报：1.分析DME新增，脚本原来走的pass，现在没有走pass，手动标记属于差异Diff174。已反馈给心雨
+2.分析射频新增，conv新增均属于net变化，已标注差异。cfg2存在ac新增，单个qualifier打拍完成后symbol的@const0/1不能取到0或1且SYNC_ERROR，导致不能gate住src，误报AcNoSyncScheme.(CDC-4101)"	"TZQ
+今日分析msg数：26
+今日发现issue数：
+今日回传case数：
+日报：1.分析NFI_TOP，NAU_CAU_WRAP和NFI_PHYG_TOP 7.7FOM包的新增，其中NFI_PHYG_TOP中Ac的新增全是之前脚本走的pass-Diff147，现在没有走，手动标记；NFI_TOP的新增是conv我们报的qualifier比SG多报两个，且是合理的qualifier属于Diff229；
+2.帮助袁洁配置红区环境"	"TZB
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："	"SYH
+今日分析msg数：192
+今日发现issue数：
+今日回传case数：
+日报：
+1.分析7.7FOM包的HIS_TOPac结果，主要涉及Diff8，Diff171/172,Diff63"
+
+
+
+7.9：
+
+"XLL
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：1.用fm包run比对脚本，run了4个module；run的过程中发现TOP_LGC ac的csv中一个反标都没有，用python的merge脚本也报错，经定位分析后，发现是old csv有问题，名字是ac的csv，内容确实ar的，重新用正确的csv后，能正确反标
+2.用脚本统计fm包所有的对比数据，发现统计脚本存在bug，由于数据比较急，就先手动统计了，下来再修复脚本bug"	"HQ
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："	"ZWL
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1、帮客户看sdc跑失败的问题，遇见以下问题：
+①.导入平台缺少debug手段，只能给客户license后在终端debug
+②.客户反映read_cdc超级慢；向客户反应是在read_cdc过程做了clock、reset、常值、静态传播等操作
+③.get_*命令无法获取bit位有空格的情况；CDC-4106和CDC-A-001（同一个问题）
+④.客户反映，灵活性较低，top name应该是可加可不加的；向其解释是为了避免二义性；但客户说设计中不可能出现这样的命名方式，还导致丢失了灵活性
+⑤.客户反映报错不太清晰，比如set_abstract_port -ports [get_ports a]，get_ports获取的为空；但报错还是报在set_case_analysis上，如果报错在get_ports上会更加清晰（CDC-A-004）
+2、和心雨一起写批量跑arm版本对应的x86的脚本，并跑结果"	"LRF
+今日分析msg数：
+今日发现issue数：2
+今日回传case数：
+日报：
+1.构造ecdc同时报sync和unsync的小测例
+2.跑NAU的对比
+3.回归DTS2025062019760 -- 期望报ValidGate,但目前ecdc报的是QualMergesOtherSrc(以前报的是MissingSynchronizer),由于当前的的增量原理图的信息过于迷惑，无法确认是否为算法差异"	"JR
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.分析Hi18XXE HIS_TOP7.7FOM交付包新增误报漏报，分析到的都是差异Diff8;
+2.在SG中，src报的Mux-select sync，src1报的Enable Based Synchronizer，而ECDC因为算法不同应该报unsync，所以src和src1都报的QualMergesOtherSrc，但从电路来看ECDC报QualMergesOtherSrc这个reason是不合理的,这个问题现在标的算法差异，问了前哥，后面这种问题需要改成符合电路的reason，已复现并提issue--CDC-4107；
+3.在QualMergesOtherSrc的原理图中，source和other source汇聚后,电路颜色变成了other source的颜色，other source和qualifier汇聚后，电路颜色变成了qualifier的颜色，导致destination的D pin所连的电路也是qualifier的颜色，已提issue--CDC-4108"	"CXY
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.根据现场需求，写脚本实现批量跑x86 arm包的结果
+2.处理现场的脚本问题"	"CJR
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：1.用新包验证射频cfg2问题（已解决CDC-4101）
+2.跑射频7组配置的ac比对，没有新增。"	"TZQ
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：1.用fm的0708包跑NFI_TOP和NFI_PHYG_TOP的对比，跑NFI_PHYG_TOP会crash"	"TZB
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
@@ -55,8 +125,6 @@ DTS2025062107884 -- 已关闭
 今日发现issue数：
 今日回传case数：
 日报：
-1.回归DTS2025062822774，DTS2025063017442，DTS2025063020786，DTS2025062107712，DTS2025061627182，DTS2025061636408，
-DTS2025062825102
-2.编写remove_non_const proc，仅提取constant逻辑在一个file内，运行发现受get_hdl_info -extra_info_pin影响，extra_info_pin执行仅返回一个list。仍需改进
-3.帮蒋蕊确认get_hdl_info提取无法复现常值问题，CDC-4102
-"
+1.验证赵洲的CDC-4087和CDC-4095的修改结果，CDC-4095修改需要using_new_const_prop_algo为true，CDC-4087验证后未解决，赵洲反馈漏合上
+2.优化remove_non_const proc,和赵洲沟通使用，双for结构在const点较多的case上的时空间复杂度太高了。尝试优化逻辑结构"
+
