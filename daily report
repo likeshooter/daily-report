@@ -1,9 +1,10 @@
+周五：
 "XLL
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
-日报： 1.与何琦一起定位和修复最近遇到的统计脚本bug，实现run脚本适配FOM包等
-2.用交付包run新泛化比对脚本，APP_Core在比对脚本中卡住了，已经重新run，等待出结果；其他的脚本因为csv_file目录没有权限，导致加引号没有成功，run出的csv需要确认是否有反标"	"HQ
+日报：1.用7月10日的交付包run新泛化的比对，遇到了中途退出比对的问题，是因为old csv的处理没有权限就直接退出比对了，脚本已做优化处理
+2.检查run出来的csv结果，查看新增message，大多没有新增，极少数新增，对应同事也分析完成，无新增问题。run出来的许多csv出现了没有一个反标上的情况，也是old csv导致的，经过python的merge脚本merge后，全部标上了。"	"HQ
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
@@ -12,44 +13,93 @@
 今日发现issue数：
 今日回传case数：
 日报：
-1、写x86和arm的结果对比脚本，对比出来的结果为，NAU_CAU_WRAP、NFI_TOP、TOP_LGC 3个case的结果比对不上，arm包的结果比x86的少报message，初步分析差别在常值；没有具体分析，因为今天有新包，等新包结果出来后，再具体分析
-2、跑0710版本的x86和arm结果"	"LRF
+1、鲲鹏环境下的结果没有生成violation.csv，原因在与report_violation -csv无法单独使用导致（CDC-4117）；需要重新跑工具
+2、今天的比对结果为4个case（NAU_CAU_WRAP、NFI_TOP、TOP_LGC、USBC）对比失败；经过分析，NAU_CAU_WRAP为配置没有对齐导致，对齐后重新匹配，能比对成功；USBC的分析结果为conv01存在随机性，在x86环境很容易复现；TOP_LGC为部分文件在鲲鹏环境下没有权限访问，已向客户反映；NFI_TOP未跑出结果，等待明天出结果后分析，后续考虑存session，方便后续分析"	"LRF
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
-日报："	"JR
-今日分析msg数：
-今日发现issue数：1
+日报：
+1.补充门禁builtin差异的分析描述和截图，并处理差异冲突
+"	"JR
+今日分析msg数：380
+今日发现issue数：3
 今日回传case数：1
 日报：
-1.用0710的分支包跑HIS_TOP，用get_hdl_info [get_instance const_ins_obj] -debug file_name保存debug信息，和一航一起用debug信息debug CDC-4102；
-2.之前在分析泛化时发现Diff91的proc做得太宽泛了，对于ECDC和SG在SrcConverge中报的source clock不一样，ECDC报的source clock是clocklist：clk、clk2、clk3、clk4、clk5，每个clock的domain都不一样，而SG报的source clock是clock：clk，脚本标记的是Diff91,但这种场景不符合Diff91，就提了脚本问题，之前认为这个场景符合Diff80,昨天心雨问了袁姐，这个场景也不符合Diff80,需要请PE重新写差异，已复现并提issue：CDC-4113"	"CXY
+1.补充门禁ac分析描述和截图，处理差异标记冲突；
+2.发现3个脚本问题：
+ 2.1 对于TOP/path_begin_vld[0]-->TOP/din_ff1，ECDC报的multiflop，而SG报的是Combinational logic used between crossing，是因为case条件中rst[1]的位宽和case下面的1的位宽不匹配，导致SG综合出了MUX，而ECDC未综合出MUX，这个应该是差异Diff35,但是脚本却标记为了Diff3，已回传case并提issue--CDC-4119；
+ 2.2 脚本走了Diff8就不用再比告警等级了，但是现在脚本还是比了告警等级，已向心雨反馈；
+ 2.3 有三个case报的CGICUserDefinedQual和SG报的是一致的，但是脚本却在runingflag标记了pass-diff63,已向心雨反馈"	"CXY
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.参加脚本周会
-2.和万林写脚本实现arm包和x86包的violation对比 
-3.处理之前蒋蕊对脚本Diff91 proc的修改意见，对于src和dest一致，但是src_clk不一致，sg报的src_clk是enno的子集的情况，当enno多报的clk domain和sg的clock属于同一domain时，符合Diff91,。但是当当enno多报的clk domain和sg的clock属于不同一domain时，目前没有已知差异。脚本的Diff91 proc做宽泛了。蒋蕊已经提issue让PE写差异，为了尽量小的影响数据情况，脚本proc会在新差异出来之后，交付完成后进行修改"	"CJR
+1.测试参数db.test_get_obj_support_union。发现对于结构体的get命令会有影响。参数打开后，用get_nets TOP/in1.a.clk有返回值。但是使用set a {TOP/in1.a.clk} get_nets [lindex $a 0]就没有返回值，已经提供场景和复现方式给范国炜
+2.帮艺豪哥看跑dc的脚本，debug问题
+3.跑APP_CORE，NFI_TOP的dc结果
+4.和何琦对接反标客户脚本，用预交付包反标客户门禁，射频以及新范化结果"	"CJR
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
-日报：1.review射频差异，修改部分差异
-2.修改隔离区脚本"	"TZQ
-今日分析msg数：72
+日报："	"TZQ
+今日分析msg数：398
 今日发现issue数：
 今日回传case数：
-日报：1.分析之前lighting的NFI_PHYG遗漏的msg,之前出现的Clock_info05c的问题已修复
-2.用15号交付包跑NFI_TOP"	"TZB
+日报：1.补充门禁ar和ac的cfg1的分析描述和截图，并处理冲突的差异
+2.用交付包跑NFI_TOP的对比"	"TZB
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报："	"SYH
 今日分析msg数：
-今日发现issue数：1
-今日回传case数：1
+今日发现issue数：
+今日回传case数：
 日报：
-1.用7.10的cdc分支包验证CDC-4087，已修复；试用get_hdl_info -debug帮蒋蕊确认CDC-4102。帮艺豪看常值dc验证流程fail的原因，发现并了一个新issue：
-CDC-4111：get_hdl_info没有提取到由其他localparam定义的localparam，已复现回传case
-2.和赵洲讨论，放弃get_hdl_info -extra_info_pin的额外支持，extra_info_pin只是为了支持常值的dc验证流程，水璇璇之前提供了一种可以替代extra_info_pin的dc参数设置方法。讨论了get_hdl_info -locate对多个obj的处理。约定了返回值形式
-3.完成仅提取所有常值及其验证脚本，但需要赵洲完成2中修改后才能进行调试"
+1.补充setup的分析描述和截图，并处理冲突的差异。发现一个差异问题,Diff164-synth33-unsynthesizable-lint_error_SYNTH_SYNTH_5192:差异描述中说SG的行为是报SYHTH_5192, 但是现场版本的SG没有报SYHTH_5192，SG版本问题?若是请补充18版的SG行为在差异上
+2.分析预交付包的NAU_CAU_WRAP新增，发现了一个脚本问题，完全相同的msg，之前版本match，交付包match不上，已反馈心雨"
+
+
+
+
+周六：
+"XLL
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：1.检查NFI_TOP和HIS_TOP的比对脚本运行情况，全部运行完成
+2.检查NFI_TOP和HIS_TOP csv中的新增message，HIS_TOP有一条新增，已请对应同事分析完成，是以往csv中有的，只是old csv中有误操作，导致此条message在old csv中没有找到而成为新增；NFI_TOP也出现没有一个反标上的问题，python脚本merge后，没有新增
+3.发现统计脚本统计出来的数据跟csv中实际的数据不一致，修改了统计脚本并重新统计，数据正确了"	"HQ
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："	"ZWL
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1、修改鲲鹏环境下design路径，使其读到正确的路径和design
+2、HIS_TOP分析结果为reset_info的随机性问题（CDC-GEN-N-506）；TOP_LGC修改正确的design路径后，分析结果为SetupOutputMultiClkDriven的随机性问题，是instance的随机（CDC-GEN-N-507）
+
+0710比对结论：3个随机性问题，USBC（CDC-GEN-N-505）、HIS_TOP（*N-506）、TOP_LGC（*N-507）三个case均有随机性问题，其余比对成功；验证了TOP_LGC使用非FOM包是否出现随机，结果是会出现随机，因此可能是FOM改出的随机性问题
+3、反标隔离区射频case的csv，2拍的ac_conv02的conv net有随机性问题，从07_07和07_10的表里对比发现conv net不一致；depth5的setup缺少enno的csv，已经告知景烁，让其跑csv"	"LRF
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.补充门禁builtin差异的分析描述和截图，并处理差异冲突
+2.补充门禁Ac差异的分析描述和截图
+3.查看客户的反标结果"	"JR
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+补充普通、cfg和cfg2门禁分析描述和截图，处理差异标记冲突"	"CXY
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.分析门禁上反标客户结果失败的部分，
+i)发现对比脚本中有部分message未写到csv中，导致clk_info rst_info部分内容未反标成功，已经修改脚本。
+ii)发现客户Cfg1跑的结果 message与工具实际结果不符合，debug发现客户应该是用的上次交付包，已经给客户反馈
+iii）发现NAU_CAU_WRAP有漏抓的情况，debug发现是现场的load_file内容不全导致。已经重新生成新的load_file，确认无遗留
+2.修改批量反标的脚本"
