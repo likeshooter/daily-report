@@ -2,48 +2,56 @@
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
-日报：1.周六万林发现find_empty.csh脚本有bug，反标客户的csv后，部分csv并没有反标成功，但是脚本并没有找出来，尝试修复cshell脚本，没有修复成功，最后切换为python实现，可以正确找到没有反标成功的csv
-2.与何琦交接统计部分的脚本，并修复了部分统计的遗留bug
-3.跟进现场客户反标、门禁加上-top数据、新泛化状态及数据，以及新泛化差异截图的情况"	"HQ
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报："	"ZWL
+日报：1.负责新泛化HIS_TOP剩余Diff的差异截图，已完成
+2.熟悉统计相关脚本"	"HQ
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1、补充HIS_TOP的差异报告
-2、反标射频case，发现cfg1-1有漏抓的问题；修复之后重新跑没有问题；2拍的conv net有随机性问题，跑5次就复现出问题了；此外没有问题"	"LRF
+①和心雨说明runtool的代码逻辑和功能
+②更改performance脚本存在的bug，现在在任何路径下的csv都可以统计其performance
+③整理代码逻辑，简化runtool
+④回传performance表格"	"ZWL
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.补充Hi18XXE APP_CORE的差异截图"	"JR
+1、和李杰一起看gui的一些问题，包括部分增量原理图的优化，遗留问题DTS2025071606886（之前的CDC-4112 ）
+2、修改统计脚本，适配pass_、const等标记不算作误报漏报并统计数据"	"LRF
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.补充普通、cfg1和cfg2门禁分析描述和截图，处理差异标记冲突，修改不合理的差异，已完成；
-2.补充Hi18XXE APP_CORE的差异截图并修改不合理的差异"	"CXY
+1.检查USBC和BCP_TSS的csv是否正确
+2.补充Hi18XXE-HIS_TOP的差异截图"	"JR
+今日分析msg数：79
+今日发现issue数：
+今日回传case数：
+日报：
+1.检查merge后的门禁所有表格差异标记是否有误，截图是否完整；
+2.补充Hi18XXE TOP_LGC的差异截图;
+3.分析完成LIGHTV300 A0_SUB的builtin，ECDC和SG综合的不一样，ECDC综合出的是MUX，SG综合出的是与门，因为MUX的选择端不推reset，所以ECDC漏报了SetupRstPropagated，把cdc,infer_through_mux_sel这个参数打开后，ECDC和SG报的就一样了，请袁姐和李丹看了，袁姐会写一个新差异；
+4.分析客户跑出来的四条误报，最后发现是客户没有设置-TOP导致的"	"CXY
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1，和客户对接周六发现的反标问题。预交付包反标结果：1）门禁有三个case客户那边脚本有问题，导致多抓出setup_port和black_box的结果，客户正在检查中。
-2）和客户对齐增加了-top option。客户之前用的-elaborate_top，已经和客户对齐，会将-elaborate_top去掉，改成-top
-3）新泛化因为脚本在写csv时，会漏掉SetupClkInfer和SetupRstInfer的e_message导致部分内容反标不上。涉及7个case，脚本已经修改，正在重新跑csv结果
-2.重新从黄区下载门禁oldcsv，用最新的分析结果，重新跑预交付包门禁cfg2 csv"	"CJR
+1.回传现场的代码修改
+2.帮一航debug脚本问题
+3.整理现场的脚本，适配明天的develop包"	"CJR
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
-日报：1.撰写APP_CORE的差异报告
-2.和万林看射频cfg1_1的ac表格没抓到sg报的message问题，定位到可能原因是跑了两次不同包的比对，导致表格数据冲突导致。
-"	"TZQ
-今日分析msg数：
-今日发现issue数：
+日报：1.1.统计门禁数据结果
+2.分析LIGHT泛化模块HIPHY_SUB
+2.1 setup_bbox01(10条)：属于差异Diff174
+2.2 csv表格漏抓SetupRstNetUndefined：重新跑比对后能够正常抓取到。
+3.review HIS_TOP的csv"	"TZQ
+今日分析msg数： 
+今日发现issue数：1
 今日回传case数：
-日报：1.补充NFI_TOP的差异截图，并修改不合理的差异"	"TZB
+日报：1.review NFI_TOP的csv是否正确
+2.分析Lighting的NFI_PHYG，提了一个issue：DTS2507160015392，IntegrityClockConverge这个msg，我们报的跟A工具的conv点不同，且不是属于Diff162的场景，之前的版本我们报的conv net跟SG一致"	"TZB
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
@@ -51,67 +59,5 @@
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
-日报：
-1.在7.13develop上调试仅提常值的脚本，验证CDC-4111:
-1.1: CDC-4111验证通过
-1.2：调试remove_non_const proc完成，该proc执行已没有问题。提取出的case只有不到3000行。调试验证脚本过程中，出现提取case中的常值多余原设计常值的情况。原因是sdc的clock创建失败导致，为验证脚本添加处理逻辑。跑DDR_SUB,第一次验证没有问题，成功提取出全部的常值点。考虑其他case常值点特别多的情况，优化了验证流程中list为dict，但是在第二次验证的时候，脚本把工具带崩了。工具crash掉
-2.编写0715NFI_PHYG_TOP差异报告。"
-
-
-
-
-"XLL
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：1.负责新泛化HIS_TOP AC和Conv的部分差异截图，Ac部分已完成，Conv还有2个Diff待完成
-2.与心雨一起处理新泛化csv表格中enno_const部分的结果标记，处理为diff-enno_const"	"HQ
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：
-①回传performance表格"	"ZWL
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：
-1、关闭DTS2025060518958
-2、补充HIS_TOP的差异报告"	"LRF
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报："	"JR
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：
-1.补充Hi18XXE APP_CORE的差异截图;
-2.回归DTS单--DTS2025031460413；
-3.和王涵讨论Diff3脚本问题,因为case语句条件中rst[1]的位宽和case语句下面的1的位宽不匹配，导致SG综合出了MUX，而ECDC未综合出MUX，这个应该是差异Diff35,但是脚本却标记为了Diff3，把case语句下面的1改为1'b1，才是差异Diff3"	"CXY
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：
-1.准备交付给客户的csv，
-1）修改新泛化csv中的pass-new_diff标记
-2）新泛化人工分析的常值点和被影响的误报，大家分析时填写不规范，错误写法有：Diff-enno_const，enno_const，pass-enno_const，Diff-enno-const。以上写法与我们和客户定的常值分析流程不一致，将交付csv中统一改成diff-enno_const
-2.和何琦交接现场runtool脚本
-3.和家里王涵对接关于脚本diff3的issue的问题"	"CJR
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：1.review射频及泛化csv
-2.准备射频统计数据，及与430差异数据"	"TZQ
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：1.补充NFI_TOP的差异截图，并修改不合理的差异,目前NFI_TOP全部的差异截图已全部补充完成"	"TZB
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报："	"SYH
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：1.补充NFI_PHYG_TOP的差异截图，修改了不合理的差异，NFI_PHYG_TOP的全部差异截图已完成"
-
+日报：1.debug verify_all_const脚本，在DDR_SUB上流程已经打通。
+2.checkHIS_TOP的ac误报msg，发现是统计脚本导致的，已反馈万林"
