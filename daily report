@@ -3,25 +3,23 @@
 今日发现issue数：
 今日回传case数：
 日报：
-1、DTS2025071815835随机性问题
-2、检查FE_TSS和TSSC_WRAP的测试报告
-3、参加周会
-4、找客户确认本地未复现问题的步骤"	"LRF
-今日分析msg数：25
-今日发现issue数：1
+1、提gui的遗留问题和优化建议
+DTS2025072120622、DTS2025072120755、DTS2025072121230、DTS2025072121387、DTS2025072121532、DTS2025072121575、DTS2025072131571、DTS2025072158335、DTS2025072161216、DTS2025072161618、DTS2025072161764、DTS2025072161764、DTS2025072162443、DTS2025072162638、DTS2025072163093、DTS2025072164162、DTS2025072165378
+2、review新泛化已完成的测试报告
+3、和燕宁沟通未复现的问题-13，家里case无法复现，明天拉上开发和客户一起看看现场现象"	"LRF
+今日分析msg数：
+今日发现issue数：
 今日回传case数：
 日报：
-1.分析LIGHTV300 A0_SUB的ac，目前分析遇到一点阻塞，已提enhance
-a.CDC-4126 - 电路场景为Ac_sync:src -> dest[32:0],这条message所展示的增量原理图为src -> dest[32],从增量原理图中只能看出同步dest[32]
-的qualifier是哪一个，如果要单点的去看src -> dest[0]，去找到同步这条path的qualifier有点复杂，期望直接在symbol中标注同步dest的qualifier,或者有其它查看方法
-2.review USBC和BCP_TSS的差异报告"	"JR
-今日分析msg数：85
-今日发现issue数：4
+1.补充USBC的差异分析描述
+2.回归issue - DTS2025070910735"	"JR
+今日分析msg数：43
+今日发现issue数：
 今日回传case数：
 日报：
-1.分析LIGHTV300 A0_SUB的setup，
- 目前分析到的一部分是issue DTS2025071729484其他message是差异Diff246;
-2.检查门禁测试报告是否有问题，发现4个问题，已反馈且在测试报告中手动修改了，并在测试报告里补充了差异变化的原因"	"CXY
+1.补充门禁、TOP_LGC和APP_CORE测试报告中差异变化的原因，检查测试报告是否有问题；
+2.分析LIGHTV300 A0_SUB的setup，
+ 目前分析到的都是issue DTS2025071729484"	"CXY
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
@@ -29,14 +27,11 @@ a.CDC-4126 - 电路场景为Ac_sync:src -> dest[32:0],这条message所展示的�
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
-日报：1.分析HIPHY_SUB：
-1.1 conv01的漏报属于差异Diff156 
-1.2 分析SetupClkTiedToConst误报
-2.review射频测试报告"	"TZQ
+日报：1.review 7组射频测试报告，修改部分差异内容及统计信息有误的地方"	"TZQ
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
-日报："	"TZB
+日报：1.review NFI_TOP和HIS_TOP的测试报告"	"TZB
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
@@ -45,7 +40,10 @@ a.CDC-4126 - 电路场景为Ac_sync:src -> dest[32:0],这条message所展示的�
 今日发现issue数：
 今日回传case数：
 日报：
-1.review新泛化NFI_PHYG_TOP，NAU_CAU_WRAP，DDR_SUB测试报告，解释NAU_CAU_WRAP,DDR_SUB中的差异变化
-2.分析之前remove_non_const失败的原因，提了一个新issue
-2.1 CDC-4127：get_hdl_info提取sv的typedef strcut packed结构未提取，导致read_design失败
-3.pv周会"
+1.review DME_WRAP和BDP的测试报告，解释差异变化
+2.get_hdl_info测试
+2.1 reopen CDC-4082,出现了之前没有遇到的新情形，结构也是if()条件判断中的信号没有提取，已复现case并回传
+2.2 新issue，CDC-4128：module实例化时的特殊语法，get_hdl_info未提取
+SUB U_SUB [XXX:0] (.a(a)， .(b(b));
+如上的结构中，没有对XXX的来源进行提取。
+2.3 尝试周会上提到的用sed和awk方法加速remove_non_const proc执行，不理想，速度反而降低了。尝试将处理param和marco的proc融入，puts流程，减少循环次数"
