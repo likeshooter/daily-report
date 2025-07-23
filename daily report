@@ -1,25 +1,40 @@
-"ZWL
+"XLL
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：1.确认报告脚本的bug，不是bug的给出解释，是bug的进行修复。
+#13 CDC-GEN-N-443是1813 NFI_TOP的issue，但是统计到18XXE上了【已解决】
+#14 统计到了没有的差异变化【已Check】非报告脚本问题，需何琦check
+#15 NFI_TOP中有个issue没有被统计，经确认是所写的标题和label中均不带NFI_TOP字样，无法匹配。标题中有Hi813E-m010字样，脚本适配后已实现抓取此种形式的issue与对应case对应，新的报告中有统计到这里提到的issue
+#16 报告中多个msg id对应sg的一条rule时，遗留问题和diff的表格中，没有列出具体的msg id【已解决】
+2.之前run的1813的数据，NFI_TOP和HIS_TOP的Setup一直没有数据出来，重新run后，NFI_TOP的数据很快run号，HIS_TOP的Setup5个小时都没有run出来，怀疑是进程卡住，又重新run了，目前等待出结果"	"HQ
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："	"ZWL
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1、提gui的遗留问题和优化建议
-DTS2025072120622、DTS2025072120755、DTS2025072121230、DTS2025072121387、DTS2025072121532、DTS2025072121575、DTS2025072131571、DTS2025072158335、DTS2025072161216、DTS2025072161618、DTS2025072161764、DTS2025072161764、DTS2025072162443、DTS2025072162638、DTS2025072163093、DTS2025072164162、DTS2025072165378
-2、review新泛化已完成的测试报告
-3、和燕宁沟通未复现的问题-13，家里case无法复现，明天拉上开发和客户一起看看现场现象"	"LRF
+1、参加测试报告评审会议，为客户讲解新泛化和考训的测试报告
+2、和客户研发一起看未复现的问题-13，现场能精确复现，但不是所有case都会，因此可能是关联系，提DTS2025072220979；并发现read_design报错ModuleNotExist的问题DTS2025072221643
+3、修改统计脚本中，如果result列出现空的情况，使其不报错"	"LRF
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.补充USBC的差异分析描述
-2.回归issue - DTS2025070910735"	"JR
-今日分析msg数：43
-今日发现issue数：
+1.分析USBC的的新增
+a.setup - 差异未反标
+b.ac - 新增标记为Diff8
+c.conv - 新增标记为Diff229
+2.参加0715节点测试报告评审会"	"JR
+今日分析msg数：115
+今日发现issue数：1
 今日回传case数：
 日报：
-1.补充门禁、TOP_LGC和APP_CORE测试报告中差异变化的原因，检查测试报告是否有问题；
-2.分析LIGHTV300 A0_SUB的setup，
- 目前分析到的都是issue DTS2025071729484"	"CXY
+1.参加0715节点测试报告评审会，为CA客户讲解门禁测试报告；
+2.分析LIGHTV300 A0_SUB的setup，目前分析到的一部分是差异Diff24、Diff224、Diff249，还有一部分是issue DTS2025071729484；
+3.在分析过程中发现一个issue，原理图中有一个net的attributes不完整，在原理图中点击一个net，下方的attributes里没有is_data，但是attributes里有data_clock，所以没有is_data是不合理的，已提issue--DTS2025072215784"	"CXY
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
@@ -27,23 +42,22 @@ DTS2025072120622、DTS2025072120755、DTS2025072121230、DTS2025072121387、DTS2
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
-日报：1.review 7组射频测试报告，修改部分差异内容及统计信息有误的地方"	"TZQ
-今日分析msg数：
+日报：1.分析HIPHY_SUB：SetupPortFullyConstrained约束误报，已复现提单DTS2025072225672，DTS2025072226694
+3.参加测试报告评审会议，为CA客户讲解射频测试报告。"	"TZQ
+今日分析msg数：22
 今日发现issue数：
 今日回传case数：
-日报：1.review NFI_TOP和HIS_TOP的测试报告"	"TZB
+日报：1.分析NFI_TOP的conv中新增的msg，一个bus都是valid gate同步，但由于有一些是与门，有一些是或门导致我们报了DiffSyncScheme
+2.参加0715节点评审会"	"TZB
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报："	"SYH
-今日分析msg数：
-今日发现issue数：
+今日分析msg数：69
+今日发现issue数：1
 今日回传case数：
 日报：
-1.review DME_WRAP和BDP的测试报告，解释差异变化
-2.get_hdl_info测试
-2.1 reopen CDC-4082,出现了之前没有遇到的新情形，结构也是if()条件判断中的信号没有提取，已复现case并回传
-2.2 新issue，CDC-4128：module实例化时的特殊语法，get_hdl_info未提取
-SUB U_SUB [XXX:0] (.a(a)， .(b(b));
-如上的结构中，没有对XXX的来源进行提取。
-2.3 尝试周会上提到的用sed和awk方法加速remove_non_const proc执行，不理想，速度反而降低了。尝试将处理param和marco的proc融入，puts流程，减少循环次数"
+1.分析PG_SUB的ac误报漏报69条，涉及Diff171，Diff136，以及一个新issue
+1.1 DTS2025072226026:Enno误报QualMergesOtherSrc/QualMergesSameSrcm,对于src fanout出的多条path，qualifeir在第一次和src汇聚时未同步src，不满足Other/SameSrc的条件，但还是误报了。
+2.成功将get_dhl_info脚本param和marco的proc融入puts流程
+3.参加0715测试报告评审"
