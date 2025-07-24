@@ -1,13 +1,10 @@
 "XLL
-今日分析msg数：
+今日分析msg数：6
 今日发现issue数：
 今日回传case数：
-日报：1.确认报告脚本的bug，不是bug的给出解释，是bug的进行修复。
-#13 CDC-GEN-N-443是1813 NFI_TOP的issue，但是统计到18XXE上了【已解决】
-#14 统计到了没有的差异变化【已Check】非报告脚本问题，需何琦check
-#15 NFI_TOP中有个issue没有被统计，经确认是所写的标题和label中均不带NFI_TOP字样，无法匹配。标题中有Hi813E-m010字样，脚本适配后已实现抓取此种形式的issue与对应case对应，新的报告中有统计到这里提到的issue
-#16 报告中多个msg id对应sg的一条rule时，遗留问题和diff的表格中，没有列出具体的msg id【已解决】
-2.之前run的1813的数据，NFI_TOP和HIS_TOP的Setup一直没有数据出来，重新run后，NFI_TOP的数据很快run号，HIS_TOP的Setup5个小时都没有run出来，怀疑是进程卡住，又重新run了，目前等待出结果"	"HQ
+日报：1.分析了6条TOP_LGC 1813的Ac message，均为差异Diff59
+2.与何琦交接给测试报告用的解密数据的脚本，仅理论知识的交接，具体使用还需要实际使用，昨天尝试了使用，还没有走通，后面有时间继续
+3.接到统计diff数量及按rule统计各diff数量的需求，着手写脚本实现"	"HQ
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
@@ -16,25 +13,23 @@
 今日发现issue数：
 今日回传case数：
 日报：
-1、参加测试报告评审会议，为客户讲解新泛化和考训的测试报告；评审中发现FE_TSS双方工具的runtime一致，已修改；USBC缺少Setup数据，是原始数据未统计
-2、和客户研发一起看未复现的问题-13，现场能精确复现，但不是所有case都会，因此可能是关联系，提DTS2025072220979；并发现read_design报错ModuleNotExist的问题DTS2025072221643
-3、修改统计脚本中，如果result列出现空的情况，使其不报错"	"LRF
+1、解释客户对TSSC_WRAP、TOP_LGC的质疑点，器件发现Diff190和Diff237无法明确使用场景，导致脚本可能覆盖面过大，因此提了一个issue CDC-4134希望PE明确使用场景
+2、客户在使用过程中发现table键和shell命令不一样，所以提了DTS2025072329541；ls按table出来的内容有问题，提了CDC-4136"	"LRF
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.分析USBC的的新增
-a.setup - 差异未反标
-b.ac - 新增标记为Diff8
-c.conv - 新增标记为Diff229
-2.参加0715节点测试报告评审会"	"JR
-今日分析msg数：115
-今日发现issue数：1
-今日回传case数：
+1."	"JR
+今日分析msg数：86
+今日发现issue数：4
+今日回传case数：2
 日报：
-1.参加0715节点测试报告评审会，为CA客户讲解门禁测试报告；
-2.分析LIGHTV300 A0_SUB的setup，目前分析到的一部分是差异Diff24、Diff224、Diff249，还有一部分是issue DTS2025071729484；
-3.在分析过程中发现一个issue，原理图中有一个net的attributes不完整，在原理图中点击一个net，下方的attributes里没有is_data，但是attributes里有data_clock，所以没有is_data是不合理的，已提issue--DTS2025072215784"	"CXY
+1.解释客户提出的APP_CORE的差异质疑；
+2.分析0718develop包门禁新增误报漏报，提了4个issue：
+ 2.1 CDC-4131：之前ECDC报CmdFailedInvalidObjArg，能和SG报的SGDC_clock01 match，而现在ECDC报的是CmdFailedInvalidArgWithReason，不能和SG报的SGDC_clock01 match；
+ 2.2 CDC-4133：在SETUP_RESET_025--SGDC_reset_synchronizer06_011这个case中，因为TOP/clk在TOP/U_TOP2/U_TOP1/clk前面，所以TOP/clk往后面传播会覆盖TOP/U_TOP2/U_TOP1/clk，而在SETUP_CLOCK_002--Clock_info01_071这个case中，TOP/dout1_14在TOP/U_1/U_2/dout1_14的后面，但TOP/dout1_14却往前传播了，这是不合理的，且两个clock在同一条路径上，如果一个clock被另一个clock覆盖了，也不应该报错；
+ 2.3 CDC-4135：在ChyDiffSrcConv中，ECDC和SG报的qualifier的数量不一样，ECDC比SG多报了一个qualifier；
+ 2.4 CDC-4137：ECDC报了ChyDataBusDiffEnabe：TOP/path_begin_vld[1:0]-->TOP/U_TOP1/path_end[1:0]，而SG未报"	"CXY
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
@@ -42,22 +37,20 @@ c.conv - 新增标记为Diff229
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
-日报：1.分析HIPHY_SUB：SetupPortFullyConstrained约束误报，已复现提单DTS2025072225672，DTS2025072226694
-3.参加测试报告评审会议，为CA客户讲解射频测试报告。"	"TZQ
-今日分析msg数：22
+日报：1.解释客户对FE_TSS的质疑点
+2.解释客户对APP_CORE的质疑点"	"TZQ
+今日分析msg数：
 今日发现issue数：
 今日回传case数：
-日报：1.分析NFI_TOP的conv中新增的msg，一个bus都是valid gate同步，但由于有一些是与门，有一些是或门导致我们报了DiffSyncScheme
-2.参加0715节点评审会"	"TZB
+日报：1.解释客户对NFI_TOP的质疑点
+2.分析NFI_TOP的新增"	"TZB
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报："	"SYH
-今日分析msg数：69
-今日发现issue数：1
+今日分析msg数：150
+今日发现issue数：
 今日回传case数：
 日报：
-1.分析PG_SUB的ac误报漏报69条，涉及Diff171，Diff136，以及一个新issue
-1.1 DTS2025072226026:Enno误报QualMergesOtherSrc/QualMergesSameSrcm,对于src fanout出的多条path，qualifeir在第一次和src汇聚时未同步src，不满足Other/SameSrc的条件，但还是误报了。
-2.成功将get_dhl_info脚本param和marco的proc融入puts流程
-3.参加0715测试报告评审"
+1.完成BDP的tiedtoconst的新泛化模块差异分析质疑。
+2.分析PG_SUB的ac误报漏报均为差异涉及Diff1，Diff8"
