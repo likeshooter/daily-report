@@ -1,10 +1,8 @@
 "XLL
-今日分析msg数：6
+今日分析msg数：
 今日发现issue数：
 今日回传case数：
-日报：1.分析了6条TOP_LGC 1813的Ac message，均为差异Diff59
-2.与何琦交接给测试报告用的解密数据的脚本，仅理论知识的交接，具体使用还需要实际使用，昨天尝试了使用，还没有走通，后面有时间继续
-3.接到统计diff数量及按rule统计各diff数量的需求，着手写脚本实现"	"HQ
+日报：1.实现了以case为维度统计脚本标记和人工标记的diff数量，及每个diff对应的数量；以case和单个rule的维度，统计每个rule中每个diff的数量，以及每个rule中脚本标记和人工标记的Diff数量。输出了新泛化Hi18XXE和USBC的这些数据"	"HQ
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
@@ -13,44 +11,53 @@
 今日发现issue数：
 今日回传case数：
 日报：
-1、解释客户对TSSC_WRAP、TOP_LGC的质疑点，器件发现Diff190和Diff237无法明确使用场景，导致脚本可能覆盖面过大，因此提了一个issue CDC-4134希望PE明确使用场景
-2、客户在使用过程中发现table键和shell命令不一样，所以提了DTS2025072329541；ls按table出来的内容有问题，提了CDC-4136"	"LRF
+1、对客户对疑似漏报误报部分进行解释
+2、对测试报告进行添加客户新需要和整理所有报告给川皓归档
+3、修改DTS单标题"	"LRF
 今日分析msg数：
-今日发现issue数：
+今日发现issue数：2
 今日回传case数：
 日报：
-1."	"JR
-今日分析msg数：86
-今日发现issue数：4
-今日回传case数：2
+1.查看客户对差异标记提出的质疑,提了一个脚本的enhance
+a.CDC-4132 - BCP_TSS的常值误报标记，客户那边提出这样的质疑，sg漏报标的Diff212(sg和ecdc推的常值相反)，但是ecdc的误报是通过proc标的pass-Diff170
+2.分析LIGHTV300 A0_SUB的ac
+a.DTS2025072328751 - src和qualifier都连接到MUX的data input端，A tool报的是Gating logic not accepted:source and qualifier drive MUX data inputs,ecdc报的是ValidGate,漏报SrcMuxSelPin "	"JR
+今日分析msg数：211
+今日发现issue数：1
+今日回传case数：
 日报：
-1.解释客户提出的APP_CORE的差异质疑；
-2.分析0718develop包门禁新增误报漏报，提了4个issue：
- 2.1 CDC-4131：之前ECDC报CmdFailedInvalidObjArg，能和SG报的SGDC_clock01 match，而现在ECDC报的是CmdFailedInvalidArgWithReason，不能和SG报的SGDC_clock01 match；
- 2.2 CDC-4133：在SETUP_RESET_025--SGDC_reset_synchronizer06_011这个case中，因为TOP/clk在TOP/U_TOP2/U_TOP1/clk前面，所以TOP/clk往后面传播会覆盖TOP/U_TOP2/U_TOP1/clk，而在SETUP_CLOCK_002--Clock_info01_071这个case中，TOP/dout1_14在TOP/U_1/U_2/dout1_14的后面，但TOP/dout1_14却往前传播了，这是不合理的，且两个clock在同一条路径上，如果一个clock被另一个clock覆盖了，也不应该报错；
- 2.3 CDC-4135：在ChyDiffSrcConv中，ECDC和SG报的qualifier的数量不一样，ECDC比SG多报了一个qualifier；
- 2.4 CDC-4137：ECDC报了ChyDataBusDiffEnabe：TOP/path_begin_vld[1:0]-->TOP/U_TOP1/path_end[1:0]，而SG未报"	"CXY
+1.分析0718develop包门禁新增误报漏报，ac新增是因为脚本修复了Diff3的proc的bug，重新分析发现都是差异Diff35;
+2.解释客户提出的TOP_LGC的差异质疑；
+3.提了一个脚本问题，对于UDP，ECDC不可综合，综合出的是blackbox，而SG可综合的场景，脚本标的Diff190，但实际应该标Diff237--CDC-4138；
+4.在门禁和APP_CORE的测试报告里补充issue的类型；
+5.分析LIGHTV300 A0_SUB的setup，目前分析到的一部分是差异Diff224、Diff249，还有一部分是issue DTS2025071729484;
+6.分析Hi18XXE TOP_LGC最新csv中新增误报漏报，其中builtin新增五条误报是issue--CDC-4133，conv的csv没有反标上，手动merge后，没有新增误报漏报"	"CXY
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报："	"CJR
 今日分析msg数：
 今日发现issue数：
-今日回传case数：
-日报：1.解释客户对FE_TSS的质疑点
-2.解释客户对APP_CORE的质疑点"	"TZQ
+今日回传case数：1
+日报：1.23号包射频cfg1_1漏报Ac_conv04 CDC-4142
+2.对FE_TSS的质疑点添加描述及证明截图
+3.给客户对APP_CORE的质疑点添加描述及证明截图,及参加会议给客户解释"	"TZQ
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
-日报：1.解释客户对NFI_TOP的质疑点
-2.分析NFI_TOP的新增"	"TZB
+日报：1.解释NFI_TOP中客户提出的差异质疑
+2.跟客户开会说明NFI_TOP中Conv受常值影响部分
+3.在NFI_PHYG_TOP的测试报告中补充issue的类型"	"TZB
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报："	"SYH
-今日分析msg数：150
+今日分析msg数：31
 今日发现issue数：
 今日回传case数：
 日报：
-1.完成BDP的tiedtoconst的新泛化模块差异分析质疑。
-2.分析PG_SUB的ac误报漏报均为差异涉及Diff1，Diff8"
+1.完成了DME_WRAP中常值部分的差异质疑，并客户开会解释
+2.分析PG_TOP的ac误报漏报31条均为差异，涉及Diff147，Diff8
+3.补充DME_WRAP,DDR_SUB测试报告中的issue类型
+4.参加RDC分享会
+"
