@@ -2,7 +2,8 @@
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
-日报：1.实现了以case为维度统计脚本标记和人工标记的diff数量，及每个diff对应的数量；以case和单个rule的维度，统计每个rule中每个diff的数量，以及每个rule中脚本标记和人工标记的Diff数量。输出了新泛化Hi18XXE和USBC的这些数据"	"HQ
+日报：1、完成红区统计新泛化各case的误报、漏报、match、pass、unmatch的数量，不看标记，并输出到表格。经测试后，数据准确
+2、参加周会"	"HQ
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
@@ -11,53 +12,51 @@
 今日发现issue数：
 今日回传case数：
 日报：
-1、对客户对疑似漏报误报部分进行解释
-2、对测试报告进行添加客户新需要和整理所有报告给川皓归档
-3、修改DTS单标题"	"LRF
-今日分析msg数：
+1、参加周会
+2、跑PG_SUB的case，并分析Ar部分，发现是Diff502的差异"	"LRF
+今日分析msg数：108
+今日发现issue数：
+今日回传case数：
+日报：
+1.参加PV周会
+2.分析AO_SUB
+DTS2025072502842 - 10
+Diff32-diff5-dest_qualifier - 12 
+Diff240-diff50-merge_with_other_source - 24"	"JR
+今日分析msg数：79
 今日发现issue数：2
-今日回传case数：
+今日回传case数：1
 日报：
-1.查看客户对差异标记提出的质疑,提了一个脚本的enhance
-a.CDC-4132 - BCP_TSS的常值误报标记，客户那边提出这样的质疑，sg漏报标的Diff212(sg和ecdc推的常值相反)，但是ecdc的误报是通过proc标的pass-Diff170
-2.分析LIGHTV300 A0_SUB的ac
-a.DTS2025072328751 - src和qualifier都连接到MUX的data input端，A tool报的是Gating logic not accepted:source and qualifier drive MUX data inputs,ecdc报的是ValidGate,漏报SrcMuxSelPin "	"JR
-今日分析msg数：211
-今日发现issue数：1
-今日回传case数：
-日报：
-1.分析0718develop包门禁新增误报漏报，ac新增是因为脚本修复了Diff3的proc的bug，重新分析发现都是差异Diff35;
-2.解释客户提出的TOP_LGC的差异质疑；
-3.提了一个脚本问题，对于UDP，ECDC不可综合，综合出的是blackbox，而SG可综合的场景，脚本标的Diff190，但实际应该标Diff237--CDC-4138；
-4.在门禁和APP_CORE的测试报告里补充issue的类型；
-5.分析LIGHTV300 A0_SUB的setup，目前分析到的一部分是差异Diff224、Diff249，还有一部分是issue DTS2025071729484;
-6.分析Hi18XXE TOP_LGC最新csv中新增误报漏报，其中builtin新增五条误报是issue--CDC-4133，conv的csv没有反标上，手动merge后，没有新增误报漏报"	"CXY
+1.分析LIGHTV300 A0_SUB的conv相关message，提了2个issue：
+ 1.1 大部分是差异Diff106、Diff115和Diff156;
+ 1.2 DTS2025072528551：A工具和ECDC报的conv net的depth相同，但A工具报的conv net的linefile最小，因此ECDC报的conv net不是最优的，A工具报的conv net才是最优的；
+ 1.3 DTS2025072535072：ECDC报了ChySameSrcConvExcSeq，而A工具因为虚拟时钟vclk前面加了instance名，则把虚拟时钟vclk当作不同的clock，所以报的是ac_conv03；
+2.参加周会"	"CXY
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报："	"CJR
-今日分析msg数：
-今日发现issue数：
-今日回传case数：1
-日报：1.23号包射频cfg1_1漏报Ac_conv04 CDC-4142
-2.对FE_TSS的质疑点添加描述及证明截图
-3.给客户对APP_CORE的质疑点添加描述及证明截图,及参加会议给客户解释"	"TZQ
-今日分析msg数：
+今日分析msg数：85
+今日发现issue数：1
+今日回传case数：
+日报：1.分析HIPHY_SUB：分析SetupClkTiedToConst误报，对于触发器的CK端，A工具和ENNO都推了常值，但是A工具没有报clock_info03c,感觉是A工具BUG，已提单DTS2025072541380
+2.和研发讨论分析射频Ac_conv04漏报问题。
+3.解释FE_TSS客户质疑点
+"	"TZQ
+今日分析msg数：45
 今日发现issue数：
 今日回传case数：
-日报：1.解释NFI_TOP中客户提出的差异质疑
-2.跟客户开会说明NFI_TOP中Conv受常值影响部分
-3.在NFI_PHYG_TOP的测试报告中补充issue的类型"	"TZB
+日报：1.完成NFI_PHYG的ac和conv的误报漏报的分析，ac的全为Diff222，conv相关的有一个为Diff8，其他的都是issue DTS2507160015392
+2.参加周会"	"TZB
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报："	"SYH
-今日分析msg数：31
-今日发现issue数：
+今日分析msg数：283
+今日发现issue数：1
 今日回传case数：
 日报：
-1.完成了DME_WRAP中常值部分的差异质疑，并客户开会解释
-2.分析PG_TOP的ac误报漏报31条均为差异，涉及Diff147，Diff8
-3.补充DME_WRAP,DDR_SUB测试报告中的issue类型
-4.参加RDC分享会
-"
+1.分析完成PG_SUB的ac误报漏报，涉及差异Diff233，Diff147，Diff8，Diff136，Diff157新提了一个issue
+1.1 DTS2025072529970：存在other src，而且通过cluster查看为ungated，但Enno报VaildGate。
+2.验证CDC-4082,4127,4128,均已修复完成
+3.PV周会"
