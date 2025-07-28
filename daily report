@@ -1,3 +1,5 @@
+周五：
+
 "XLL
 今日分析msg数：
 今日发现issue数：
@@ -60,3 +62,36 @@ Diff240-diff50-merge_with_other_source - 24"	"JR
 1.1 DTS2025072529970：存在other src，而且通过cluster查看为ungated，但Enno报VaildGate。
 2.验证CDC-4082,4127,4128,均已修复完成
 3.PV周会"
+
+
+
+
+周六：
+
+"ZWL
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1、分析PG_SUB的ar部分，漏报ArSync都是Diff502，但误报ArSync疑似新问题，正在复现case"	"LRF
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："	"JR
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："	"CXY
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："	"CJR
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："	"TZQ
+今日分析msg数：183
+今日发现issue数：1
+今日回传case数：
+日报：1.分析NFI_PHYG的setup部分，都为差异Diff218和Diff234；目前NFI_PHYG已全部分析完毕
+2.分析NFI_TOP的conv的新增部分，发现了一个issue，DTS2025072623481：同一个bus的不同bit的Ac sync reason都为valid gate，ECDC报了ChyDataBusDiffSyncScheme，A工具没有报。交付包ECDC没有报这条msg，且这里给出的增量原理图有问题，原理图中看不出来source[45]是validgate的同步方式"
