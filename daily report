@@ -95,3 +95,64 @@ Diff240-diff50-merge_with_other_source - 24"	"JR
 今日回传case数：
 日报：1.分析NFI_PHYG的setup部分，都为差异Diff218和Diff234；目前NFI_PHYG已全部分析完毕
 2.分析NFI_TOP的conv的新增部分，发现了一个issue，DTS2025072623481：同一个bus的不同bit的Ac sync reason都为valid gate，ECDC报了ChyDataBusDiffSyncScheme，A工具没有报。交付包ECDC没有报这条msg，且这里给出的增量原理图有问题，原理图中看不出来source[45]是validgate的同步方式"
+
+
+
+
+周一：
+
+"XLL
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：1.继续完成数据从红区传出来后的解密过程实操
+2.完成新泛化分ac/ar/conv的match数据统计
+3.完成保存enable_ff_infer参数设置为false时，29个新泛化case的sg session"	"HQ
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："	"ZWL
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1、复现误报ArSync的case完成，提DTS2025072814668，场景大致为同一个dest的reset端连接了reset打拍链，同时d端也连接了reset/ac打拍链导致sg不报ArSync
+2、分析Reset_sync04，为差异Diff191、Diff85、Diff501"	"LRF
+今日分析msg数：386
+今日发现issue数：1
+今日回传case数：1
+日报：
+1.整理ac相关的算法差异
+2.分析AO_SUB
+DTS2025072814237 - 386
+clk[0]和clk[1]都是时钟域d0,clk[2]是时钟域d1,双方工具的source的clock都是clk[0],ecdc报告的destination的clock是clk[2],A tool报告的destination的clock中同时有clk[1]和clk[2](ac_unsync.csv中)，导致双方工具的结果无法匹配
+3.查看新跑出的USBC的csv,发现Setup的csv存在问题 - 已反馈给齐景烁
+4.分析客户对csv提出的差异标记质疑 - pass-false_bit的质疑
+ecdc:data[7:0] -> ""1""
+sg:data[7:3] - > ""0""/data[1] - > ""0""/data[0] - > ""0""/data[2] - > ""0"""	"JR
+今日分析msg数：57
+今日发现issue数：1
+今日回传case数：1
+日报：
+1.解释客户提出的APP_CORE的差异质疑，在最新的csv中修改不合理的差异；
+2.回归1个DTS单--DTS2025051627801；
+3.分析LIGHTV300 A0_SUB的conv和builtin相关message，提了1个issue：
+ 3.1 大部分是差异Diff106、Diff249;
+ 3.2 DTS2025072828663：对于在latch的reset pin汇聚的信号，SG会报Ar_converge01，而ECDC不会报IntegrityRstConvOnComb，已复现并提issue；
+ 3.3 CDC-4133：clock传播问题导致误报builtin相关message，之前提过的issue"	"CXY
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："	"CJR
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：1.分析HIPHY_SUB：分析受常值影响的setupport，复现case跑lec通过，且从电路逻辑看是应该推常值的，属于差异Diff192.
+2.分析射频新增，cfg1_2 SetupClkTiedToConst原来走的脚本proc现在没有走proc，且和3拍报的相同，3拍走了proc；为脚本问题。
+3.分析HIPHY_SUB新表，setup表格跑出来的结果有问题，正在重新跑一版。
+"	"TZQ
+今日分析msg数：42
+今日发现issue数：
+今日回传case数：
+日报：1.跑Hi1813的APP_CORE的对比
+2.分析Hi1813的APP_CORE的Ar部分，都是差异Diff85"
