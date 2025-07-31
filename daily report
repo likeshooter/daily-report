@@ -2,11 +2,11 @@
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
-日报：1.与景烁查看Nile平台相关流程，查看脚本层面的调用逻辑，待景烁进一步确认后开展后续工作
-2.与何琦交接Qor case中加入性能golden对比的脚本
-3.编写脚本获取Hi8XXE和USBC中所有报了的e message和s rule，生成表格
-4.参加rdc会议
-5.与何琦交接ocr脚本"	"HQ
+日报：1.解释HIS_TOP的差异质疑，我们报得是合理的，只是有些diff标得不够完整
+2.支持景烁对于Nile平台的需求
+1）对于old_csv优先获取case目录下的csv，不找包含其csv_files路径下的最新csv，经确认，这个功能在我最早写的查找old csv的脚本里已经实现
+2）在Nile平台批量run工具+比对时，期望每个case生成各自的log文件，目前已经是这样的实现
+3）在Nile平台上，目前运行后的结果总是显示“fail”，但其实没有失败，经定位确认是因为没按平台要求写一个result.json，景烁会在对应脚本里加上写result.json的内容供平台读取"	"HQ
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
@@ -15,34 +15,32 @@
 今日发现issue数：
 今日回传case数：
 日报：
-1、分析完Reset_sync02，为差异Diff191、Diff502
-2、分析完漏报的Reset_sync02，都为差异Diff85-report10-ar-01/02；ar部分分析完成
-3、分析Setup_blackbox01，提CDC-4147（message描述port，但报的是pin）；DTS2025072937159（bit位比sg多）
-4、验证CDC-GEN-N-505的随机性问题，跑了5次，没有发现随机性
-5、CmdFailedInvalidArgWithReason的message有误---CDC-4145
-6、解释客户觉得HIS_TOP ac漏报的msg；没有发现真的漏报"	"LRF
-今日分析msg数：169
+1、向客户解释疑似漏报部分，只需要更改一些误标的diff，增加diff来说明漏报原因即可；
+2、分析BDP和HIS_TOP的疑似误报，均无问题
+3、分析Setup_blackbox01，为差异Diff224、Diff174；issue DTS2025071729484"	"LRF
+今日分析msg数：87
+今日发现issue数：2
+今日回传case数：
+日报：
+1.分析AO_SUB的ac
+DTS2025073008410 -1 
+ecdc误报black box上只有时钟属性的pin的CDC问题,导致ecdc误报MissingSynchronizer
+CDC-4149  -8 
+sg的时钟名为bbox.clk,ecdc的时钟名为clk,脚本反馈这种情况脚本能直接匹配，但最新的结果还是未能match
+2.分析USBC的conv的新增
+Diff150(1)/Diff229(2)/Diff122(1)
+3.分析AO_SUB的ar - real reset的问题需关注并解决
+4.分析客户对BCP_TSS的差异标记提出的质疑"	"JR
+今日分析msg数：154
 今日发现issue数：2
 今日回传case数：1
 日报：
-1.分析客户对csv提出的差异标记质疑 - Diff192的质疑
-已附上LEC的截图
-2.分析AO_SUB
-DTS2025072814237 - 130
-DTS2025072927414 - 27
-reset一直生效时，寄存器dout的Q pin一直为常值""0"",A tool不报src -> dout之间的CDC问题，ecdc会误报src -> dout为Missinghronizer
-Diff18-irregular2-valk - 12
-3.提了一个脚本issue:CDC-4146 
-脚本Diff18-irregular2-vclk只标上了sg漏报的message，未标上对应的ecdc报告的message
-4.参加RDC培训
-5.查看USBC的新增的csv"	"JR
-今日分析msg数：425
-今日发现issue数：1
-今日回传case数：
-日报：
-1.分析完成LIGHTV300 A0_SUB的conv相关message，20条是Diff249，34条是脚本未match上导致的误报漏报，已提脚本问题；
-2.分析LIGHTV300 A0_SUB的setup相关message，317条是DTS2025071729484，56条是Diff224,13条是Diff249;
-3.分析Hi18XXE APP_CORE新增message，只有conv有新增误报漏报，1条是Diff150,38条是issue DTS2025072943210：所有source和destination都是报的valid gate，但是这些source和destination在ECDC中还报了ChyDataBusDiffSyncScheme，而在A工具中未报"	"CXY
+1.分析LIGHTV300 A0_SUB的setup相关message，提了2个issue：
+1.1 DTS2025073006375：若在顶层module的一个port约束了reset，这个port和blackbox的一个pin直连，则ECDC和SG中blackbox的这个pin在SetupBBoxPinFullyConstrained报的constraints都为reset，而如果顶层module的这个port和blackbox的这个pin之间多了一个例化层次，那么ECDC中blackbox的这个pin在SetupBBoxPinFullyConstrained报的constraints就会变为reset(propagated)；
+1.2 DTS2025073016204：对于SetupOutputMultiClkDriven，在ECDC中相同bus的bit是分开报的，而SG中相同bus的bit是合并报的，建议对于SetupOutputMultiClkDriven，ECDC也把相同bus的bit合并报成一条message；
+1.3 有一条SetupDataTiedToConst应该match但在csv里未match，已提脚本问题；
+1.4 还有一部分是因为ECDC合并报而SG分开报，且SG报的是虚拟时钟，所以标记为Diff147和Diff18;
+2.解释客户提出的TOP_LGC的差异质疑；"	"CXY
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
@@ -50,12 +48,53 @@ Diff18-irregular2-valk - 12
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
-日报：1.射频cfg1_2 SetupClkTiedToConst脚本问题，初步定位为引用old csv错误，更改后重新比对反标上了。
-2.分析FE_TSS常值误报：在触发器Q端不为常值的情况下，推导了与其相连的net或者pin为常值，导致误报；提单DTS2025072427522。
-3.发现HIPHY_SUB的ac表格里面存在大量的重复行，已记录在脚本问题表格。
-4.分析Hi813的FE_TSS：clock_info03b误报均属于Diff212；setupport受常值影响，属于差异Diff171及Diff-enno_const；setup_bbox属于差异Diff174"	"TZQ
-今日分析msg数：360
+日报：1.分析阐述客户质疑的泛化FE_TSS及APP_CORE
+2.分析最新LIGHTLING-HIPHY_SUB模块,全部分析完成
+3.统计泛化数据,跑Hi1813-HIS_TOP最新数据比对
+4.和艺豪说明脚本问题.
+5.帮景烁debug脚本问题"	"TZQ
+今日分析msg数：
 今日发现issue数：
 今日回传case数：
-日报：1.分析Hi1813的APP_CORE的Ar部分，302条全都为差异Diff85的01和04，目前Ar部分已全部分析完成；分析setup部分的setup_bbox01的58条都是Diff174
-"
+日报：1.解释客户对NFI_TOP标记的新质疑，发现确实有误标记的，已在最新的csv中修改，主要是之前Diff234没有评审时标的其他差异，现在评审了Diff234就属于这种场景了;其他的都是标记的没有问题，只需要跟客户说明一下，或者增加一些差异标记"
+
+
+
+
+"ZWL
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1、分析完Setup_blackbox01，新提issue DTS2025073113301，加上之前提的DTS2025071729484、DTS2025072937159共三个issue；剩下都是为Diff224、Diff174"	"LRF
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："	"JR
+今日分析msg数：78
+今日发现issue数：5
+今日回传case数：4
+日报：
+1.分析完成LIGHTV300 A0_SUB的setup相关message，提了3个issue：
+1.1 DTS2025073102969：对于SetupPortFullyConstrained，在ECDC中相同bus的bit是分开报的，而SG中相同bus的bit是合并报的，建议对于SetupPortFullyConstrained，ECDC也把相同bus的bit合并报成一条message；
+1.2 DTS2025073106523：ECDC报的SetupPortFullyConstrained的constraints和SG不一致，在SetupPortFullyConstrained中，对于dout，ECDC报的constraints是set_case_analysis(propagated)，abstract_port，reset，而SG报的constraints是set_case_analysis(propagated)和abstract_port，没有reset，已复现case；
+1.3 DTS2025073111852：dout是inout，当dout作为output时，报的是SetupPortNoConstraint，但实际应该报SetupPortFullyConstrained：inferred abstract_port，已复现case；
+1.4 DTS2025073115280：ECDC报了SetupRstNetUndefined，而SG未报，已复现case；
+1.5 DTS2025073118481：ECDC未报SetupConstraintConflict，而A工具报了Setup_check01:Both set_case_analysis and abstract_port constraints have been specified on 'TOP.dout'，已复现case；
+1.6 剩下的是差异Diff234；
+2.分析门禁新增误报漏报，都是差异Diff34、Diff51、Diff115、Diff125"	"CXY
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："	"CJR
+今日分析msg数：201
+今日发现issue数：
+今日回传case数：
+日报：分析PG_SUB（231条-》30条）:
+1.分析conv误报漏报.大部分为差异(Diff150,Diff156,Diff229,Diff171)
+2.脚本问题导致clock_glitch05 不匹配。已记录在脚本问题表格。"	"TZQ
+今日分析msg数：390
+今日发现issue数：
+今日回传case数：
+日报：1.与客户开会解释对方NFI_TOP中对方认为标记错误的差异，已解释清楚
+2.分析Hi1813的APP_CORE的setup部分,其中SetupBBOX相关的msg有388条属于Diff174；有一条是BBOX的inout port SG报constraint not required，ECDC报的no constraint"
