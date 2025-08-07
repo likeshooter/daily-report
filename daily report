@@ -1,36 +1,32 @@
+周二：
+
 "XLL
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
-日报：1.将批量并行运行新泛化比对的脚本合入runtool，可以通过run map调用
-2.分配并运行新泛化的比对，使用run map运行了Hi1813除NFI_TOP以外的case的比对
-3.修复了runGen.sh中对于getDesignInfo.tcl的写入有遗漏，导致跑比对时source getDesignInfo.tcl报错的问题
-4.比对运行中遇到了2个报错，疑似脚本问题，已提到现场脚本问题列表
-1）Failed to execute the  command: 'get_fanin'
-2）key ""file_path"" not known in dictionary
-5.修复了输入日期来获得对应工具版本脚本的bug，输入日期直接报错，找不到对应的包，目前已修复"	"HQ
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报："	"ZWL
+日报：1.检查昨日run包的结果，发现NAU_CAU_WRAP和PG_SUB run到setup和conv的比对时都会报错：key ""file_path"" not known in dictionary，艺豪怀疑是存的sg解析后的数据不适配最新的脚本，删除后重run，还是有这个问题，最后确定为工具问题，没有给SetupRstInferred file line的属性
+2.统计运行后的所有数据，将未清零的模块发出来，大家一起分析
+3.统计数据中没有AO_SUB数据，已修复
+4.检查误报漏报数据与误报漏报含const的数据，确认没有统计脚本问题，统计的数据正确"	"ZWL
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1、分析APP_CORE中客户认为是疑似漏报的51条msg，经过分析不是漏报，部分msg需要删掉diff63，增加Diff247；还有一个客户的疑问是Ar的打拍链后连接的blackbox不会multiflop合不合理，经过在sg中的测试，不报multiflop是合理的
-2、帮研发确认DTS2025072427522的现象，问题现象为daily包中加法器的input a0为常值，连接a0的net和a0的driver都不是常值；18号的包中加法器的input a0和连接a0的net为常值；但a0的driver不是常值"	"LRF
-今日分析msg数：76
+1、关单DTS2025071606886
+2、分析NFI_PHYG_TOP中客户认为疑似漏报的部分，原因是sg报src----dest[31:0]为qualifier not found，ecdc报src----dest[31:1]为MissingSynchronizer，src----dest[0]为QualMergesOtherSrc，这类场景，脚本会走Diff63；但客户在搜索第0bit时，没有在AcNoSyncScheme搜到，就认为我们没有报第0bit，因此可能需要实现能全局搜索obj在某个msgid里报还是不报；
+3、分析漏报SetupOutputMultiClkDriven并复现case，现象为多个clock汇聚后经过层级传到output则不会报SetupOutputMultiClkDriven，如果是同级汇聚后传到output则会报；DTS2025080617197
+4、分析1813e新增的msg，主要是因为标记掉了，常值的因为新的obj_list少了层大括号导致标记掉；"	"LRF
+今日分析msg数：32
 今日发现issue数：
 今日回传case数：
 日报：
 1.分析AO_SUB的Ar
-Diff73 - 5
-Diff85 - 12
-CDC-4150 - 59
-sg报的reset_sync02应该与ecdc报的MissingSynchronizer(ar)通过脚本match,但在csv中未能match
-2.用最新的develop包跑AO_SUB/HIPHY_SUB/NFI_PHYG/USBC的比对，并检查csv
-3.分析AO_SUB的新增
-Setup :Diff106 - 3 "	"JR
+Diff73 - 3
+Diff191 - 4
+2.协助RD查看CDC-4142的问题
+3.分析门禁的新增
+4.提了一个脚本issue
+CDC-4152:BitOrPartSelectOutOfRange比对脚本bug"	"JR
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
@@ -43,20 +39,116 @@ Setup :Diff106 - 3 "	"JR
 今日发现issue数：
 今日回传case数：
 日报："	"TZQ
-今日分析msg数：35
-今日发现issue数：1
+今日分析msg数：50
+今日发现issue数：
 今日回传case数：
-日报：1.用今天的包跑Lighting的PG_SUB
-2.分析Lighting的NFI_PHYG的新增，SetupClkUndefined这条msg中我们报的跟SG报的net不一致，但之前的交付包报的是一致的，已提issue
-3.分析Hi1813的APP_CORE，新增的也是SetupRstUndefined报的net与SG不一致"	"TZB
+日报：1.重新跑PG_SUB的对比
+2.分析Hi18XXE的NAU_CAU_WRAP的新增，其中有2条属于Diff212,1条属于Diff234，1条是false-bit，4条属于Diff170,4条属于Diff171
+3.分析Hi1813的APP_CORE的Setup部分，34条属于Diff174；Diff154"	"TZB
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报："	"SYH
+今日分析msg数：289
+今日发现issue数：
+今日回传case数：
+日报：
+1.分析Hi18XXE的NFI_PHYG_TOP和HIS_TOP的新增msg，涉及差异Diff8，Diff59，Diff170，Diff172，Diff133
+1.1 DTS2025080513845 同一个source fanout出多个path，其中的一条path被同步后与另一条path在或门i560汇聚，在后续的传播过程中，没有其他的source信号汇聚。Enno报VaildGate，A工具报QualMergeOtherSrc"
+
+
+
+周三：
+
+"XLL
 今日分析msg数：
 今日发现issue数：
 今日回传case数：
-日报：1/用8.4号的包跑Hi18XXE所有module，Hi1813中的NFI_TOP。
-1.1 分析NFI_PHYG_TOP的新增msg，涉及Diff115
-1.2 新提CDC-4151：双击SetupClkPropagated，Enno奔溃，没有报任何堆栈信息，稳定复现
-2.get_hdl_info跑出NAU_CAU_WRAP和TOP_LGC未复现的常值点未sdc命令设置不上，但是在TSSC_WRAP上遇到了bus error的问题，用valgrind重跑后，未发现内存泄漏问题"
+日报：1.现场使用Ranwu的磁盘空间满了，导致现场工作无法正常开展，发现公共目录的个人文件夹下存的session数据量有点大，且有冗余的现象。修改当前脚本逻辑，将Session存放到统一目录，不按个人去存，这样大家用同一个session，减少session占用的磁盘空间。修改了Ecdc和Sg的session存放和使用逻辑，且测试通过
+2.统计Hi18XXE NFI_TOP的数据，脚本有报错，经排查是写的csv内容中有逗号，导致列错乱，从而引发报错，已修复"	"ZWL
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1、分析客户HIS_TOP、APP_CORE疑似漏报的部分，结论未漏报，已向客户澄清
+2、发现一个常值二维未合并的情况CDC-4156"	"LRF
+今日分析msg数：
+今日发现issue数：2
+今日回传case数：
+日报：
+1.补充CDC-4152的case
+2.分析门禁的新增
+CDC-4154- 4
+CDC-4155- 48
+3.分析lint新rule的不匹配
+4.查看以下issue解决情况
+DTS2025072943210
+CDC-4142"	"JR
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："	"CXY
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："	"CJR
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："	"TZQ
+今日分析msg数：86
+今日发现issue数：
+今日回传case数：
+日报：1.由于磁盘空间不足导致PG_SUB的conv部分没有跑出数据，在清理之后重新跑setup部分的对比
+2.分析Hi1813的APP_CORE的conv部分，其中74条是conv net不一致属于Diff150;10条属于我们误报的qualifier是合理的属于Diff229；2条属于常值影响导致我们少报了两个qualifier，是Diff-dc"	"TZB
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："	"SYH
+今日分析msg数：16574
+今日发现issue数：1
+今日回传case数：
+日报：
+1.分析8.5号包的PG_SUB的Setup误报漏报，均为Diff213
+2.分析8.5号包HIS_TOP的Conv误报漏报，涉及Diff229，一个新issue。HIS_TOP,NFI_PHYG_TOP的新增msg均已分析完
+2.1：DTS2025080610366，两个src在path的传播过程中多次被同步又多次被不同步，最后均通过mux select同步结构同步。但是Enno报ChyDataBusDiffSyncScheme
+
+"
+
+
+周四：
+
+"ZWL
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1、复现generate中for序号生成的多bit被合到一条msg的case（只有二维会被合并），并提DTS2025080718153
+2、和研发一起看DTS2025072427522的问题，没找问题点，但会规避
+3、因为比对arm的需求增加了1813和lightv300的case，所以重新适配跑x86的脚本，并跑起来"	"LRF
+今日分析msg数：
+今日发现issue数：2
+今日回传case数：2
+日报：
+1.分析AO_SUB的ar
+DTS2025080704167 -  误报MultiFlop(ar) - 10
+DTS2025080711559 -  误报MissingSynchronizer(ar) - 3
+2.参加paython培训会"	"JR
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："	"CXY
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："	"CJR
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："	"TZQ
+今日分析msg数：50
+今日发现issue数：
+今日回传case数：
+日报：1.分析Hi1813的APP_CORE的conv部分，全都是差异，涉及到的有Diff-dc,Diff156,Diff229和Diff234
+2.与高强讨论DTS2507160015392，初步得出的结论是与flat net有关
+3.参加Python培训会议"
