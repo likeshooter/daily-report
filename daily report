@@ -3,10 +3,49 @@
 今日发现issue数：
 今日回传case数：
 日报：
-1、reopenDTS2025072120755；关闭DTS2025072121230、DTS2025072121387、DTS2025072121532、DTS2025072121575、DTS2025072131571、DTS2025072158335、DTS2025072161216、DTS2025072161618、DTS2025072161764、DTS2025072162368、DTS2025072162443、DTS2025071815835
-2、分析5888新泛化的漏报误报原因，具体现象是：
-Ac部分为source和dest的clock domain有相同的，sg会全部报出来，ecdc只会报crossing的clock，没有具体差异，但行为没有问题
-setup_port是因为sg在约束中用input、output命令去做约束，报的constraint就位output、input、而我们只有set_abstract_port命令做约束，因此我们的constraint就为abstract_port（之前没有遇见过sg有这样的约束，因此工具没有对应）；还有sg会推断虚拟时钟，ecdc会把ff的clock推断到port上去----Diff18
-Setup_blackbox01是选的instance不一样（Diff174）
-builtin是脚本有点问题，和约束转的有问题"
-1、
+1、回归DTS2025072937159
+2、新增DTS2025082518982、
+3、检查门禁sdc命令转换导致报错的case，发现CDC-4173（gui处使用reset，没有执行remove_cdc，导致执行run）、CDC-4174（报错WARN QualifierFailed后停止检查）
+4、参加CDC脚本比对例会"	"LRF
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.分析约束改变导致的误报漏报
+a.CDC-4172 - ecdc漏报path_begin[0] -> U_TOP2/path_end2 -- UserDefinedCell，并将其误报为InvalidSyncCell；在约束set_sync_cell未修改为set_cdc_sync_cell约束时，ecdc正常报path_begin[0] -> U_TOP2/path_end2 -- UserDefinedCell；确认是否约束set_cdc_sync_cell未生效
+2.参加CDC脚本比对例会"	"JR
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："	"CXY
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.整理回传现场的脚本修改，修改已经上库
+2.和万林，瑞风讨论最近新改动的约束在使用时发现的影响使用感的地方
+3.参加脚本讨论会
+4.适配现场门禁，新泛化，射频参数配置，将sg配置改为infer_enabled_flop fasle，将enno switch_constant_propagte_algorithm设置成mux_design_sdc_reset_d2q
+5.回传代码时发现setup_port01对于diff18的处理有bug，修复bug，测试无问题"	"CJR
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："	"TZQ
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："	"TZB
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1验证门禁builtin转换sdc的正确性
+2.参见CDC脚本对比会议"	"SYH
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.分析1813-NFI_TOP的conv误报漏报，涉及差异Diff150，Diff156，Diff229。conv部分分析完成
+2.验证门禁setup转换sdc的正确性
+2.1 CDC-4147：reset_synchronizer -reset ""rst[0] rst[1]""转sdc为set_reset_synchronizer -rst_design_obj [get_ports TOP/rst[0] rst[1]]。rst[1]不带TOP。
+3.CDC对比脚本覆盖率会议"
