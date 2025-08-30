@@ -1,2 +1,170 @@
-CDC-4178
-分析0826的epe——top，发现有脚本问题和blackbox上多报AcUnsync的情况
+周二：
+
+"ZWL
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1、分析Diff218是否可以用proc去做，由ppt发现，暂时无法做，因为现在的check_port_setup all，但ppt中没有说明
+2、参加对比脚本思路会议"	"LRF
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.询问心雨对比脚本的逻辑和脚本思路
+2.将Diff122的脚本集成到对比脚本中，并在小case上验证其正确性
+3.参加宽泛比对脚本会议"	"JR
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+"	"CXY
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.写现场用一个小测例调试对比脚本的方法，提供小脚本实现，脚本使用以及配置方法的文档放入群空间备份
+2.给瑞风讲对比脚本的逻辑和思路
+3，参加对比脚本思路会议
+4，写Diff59的宽泛对比脚本，完成脚本宽泛对比的框架"	"CJR
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："	"TZQ
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："	"TZB
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.思考Diff114比对思路，对于约束类的bbox和setup_port原本不比行号，之前是比文件名，如果文件名不同就会出现unmatch的情况，在约束类message一样的情况下，只需要比较行号，如果不一致就可以直接标记Diff114，这个diff已经做完
+2.分析常值算法改变后漏报的csv中，工具报的message是否合理"	"SYH
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.思考Diff234的对比思路编写伪代码：Diff234的验证点主要在于报fullyConstraint(set_case_analysis propagete)和unconstraint的output port,确保port相连的Dfff的q和d pin为常值，但是SG仅D pin为常值，Q pin不为常值。Enno和SG在D pin上的常值可以通过SetupDataTiedToCoonst/Clock_info03b确定。
+2.分析常值新算法下的DME_WRAP新增误报漏报，抽样验证均为loop结构的mux+dff，在dff的reset和mux的select不为常值的情况下，Enno不推 常值，SG常值，导致漏报
+"
+
+
+周三：
+
+"ZWL
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1、写case验证同一个blackbox BB实例化了多次；实例化用的pin各不相同，sg会把报blackbox的空pin也报出来，ecdc只会报实例化的pin name
+2、删除整理CDC_COMMON路径下的无用session，腾出运行空间
+3、参加宽松比对脚本会议"	"LRF
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.整理在门禁和泛化上标记Diff156的message,并尝试编写差异脚本
+a.门禁case上的场景较容易覆盖
+b.泛化case上的场景研究过后，没有办法编写脚本
+2.将Diff122的比对脚本在USBC上验证
+3.参加宽泛比对脚本会议"	"JR
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："	"CXY
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.完成Diff59宽泛对比的脚本
+2.完成脚本处理DIff147+Diff63综合场景的情况
+3.完成set_relate_clock转换脚本的测试，发现工具问题：set_related_clock是替换set_abstract_port的，但是工具行为却不一致：当对一个port反复进行约束时，原本的约束set_abstract_clock会都生效，新约束set_related_clock只有最后一条生效。提issue CDC-4177"
+
+
+
+周四：
+
+"ZWL
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1、提CDC-4178
+2、分析ChyAcSyncMultiTimes可以通过只比source做宽松比对；
+SetupClkUndefined/SetupRstUndefined/SetupClkNetUndefined/SetupRstNetUndefined只有一个obj，不用做宽松比对
+SetupAsyncClkConvOnComb/SetupAsyncClkConvOnMux:1、不区分clock_info05/05b
+2、e_clk_list包含s_clk_list
+3、对于multi mux的，我们会报多条，会有一条是报全部的clock，如果这条包含了s_clk_list，那这其他的msg也自动匹配"	"LRF
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.研究Ac_conv的宽泛比对策略
+①file比对 -- 误报漏报批量处理（由于Diff150的差异可能会导致file匹配率不高）
+*文件进行了去重处理，以下数据由文件去重后生成
+误报：78/153 =  50% 漏报：58/130= 44%
+②原理图比对 -- 只处理误报 
+比对思路背景：在conv的电路图中如果存在增量电路图有断连的情况，那么此conv的检查一定会有问题
+具体实现：RD提供conv的Pinlist,用display_incremental_schematic命令生成电路图，若能生成则正确，若不能生成则
+不正确
+风险：①symbol问题无法拦截②性能很差
+③具体Diff做相关宽泛比对 --  数据比较准确
+1.diff122 -- 已完成，耗费时间（性能优化需要高强提供命令）- 只针对误报(漏报需要人工分析)
+2.diff150 -- unmatchReason is conv_net (XXX) not equal - 误报漏报成对处理
+3.diff229 -- unmatchReason is that ecdc's qualfier is more than sg's qualifier(XXX) - 误报漏报成对处理
+2.参加宽泛比对脚本会议"	"JR
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："	"CXY
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.检查现场统计脚本的数据正确性
+2.对于使用常值新算法，和sg对比不上的情况，用脚本proc覆盖。目前只处理了1mux+ff的loop结构，在Hi18XXE的TOP_LGC覆盖78%的情况，APP_CORE上可以覆盖96%的情况。预计明天做完2mux+ff的loop结构，新算法对现场常值冲击会比较小
+3.参加CDC对比脚本思路会议"
+
+
+
+周五：
+
+"ZWL
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1、SetupClkMuxNotRcvClk：1、比mux net
+2、比文件名加行号
+3、只比文件名
+4、综合问题：用sg报的那个mux net在我们工具中去确认我们综合的是不是mux，如果不是则是综合问题
+5、证明我们是mux/verific mux module，mux out pin上有clock，但是我们报的mux data pin没有clock
+SetupConstraintConflict：主要是通配符（Diff104）的问题
+2、分析epe_top的漏报误报，发现DTS2025082928473、CDC-4180；其余为msg合并改变导致的漏报误报，都是差异
+3、参加周会，宽松对比自审会议"	"LRF
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.参加周会
+2.研究Ac_conv04、Ar_conv、clock_conv、clock_glitch的宽泛比对策略
+a.Ac_conv04、clock_conv、clock_glitch:场景较少，暂不做宽泛对比策略
+b.Ar_conv:
+①不比对行号，115/277=41.5%的message是因为行号未匹配(而且同时影响误报率和漏报率)
+Diff190/Diff124-diff20-reset_info01_07/Diff234-bug67/Diff117
+②Diff117可以做宽泛比对
+差异背景：同一个rst信号发散后有多次汇聚的行为，sg可能会报多条Ar_conv01,ecdc只会报最后的conv点
+同一个rst信号，如果ecdc报了IntegrityRstConvOnComb,sg也报了Ar_conv01(多条),就算pass
+
+3.研究0in的约束，并查看转换成的sgdc是否正确"	"JR
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报："	"CXY
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.参加周会
+2.完成常值新算法漏报处理的proc。目前APP_CORE由于新算法导致的漏报，proc可以完全覆盖，TOP_LGC有两条脚本无法覆盖原因是电路结构是3个mux+ff的loop结构，做loop结构判断时考虑到脚本性能，脚本只判断到2个mux的程度，3mux结构也比较少"
