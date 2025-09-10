@@ -1,72 +1,64 @@
-"XLL
-日报：
-1.脚本任务：
-1）实现了核心rule统计脚本的需求，当前满足计算核心rule和整体rule的总数、误报漏报数、误报漏报率、把const作为match、把宽比diff/rule作为match、把const及宽比diff/rule作为match的各种误报漏报数据，当前仅差与万林的脚本联调，联调部分交给万林
-2）实现现场提的需求：在run比对脚本时保存session，以便分析时使用run比对脚本的版本来协助分析"	"ZWL
+"ZWL
 
 日报：
-1.门禁/射频/Hi18XXE/Hi1813/LIGHTV300/USBC-xxx 新增xx条，剩余待分析xxx条，反弹原因：xxx
-2.新增分析issue
-新增/回归 issue号 影响了几条message case名 问题概述
-3.回归分析issue
-新增/回归 issue号 影响了几条message case名 问题概述
-4.脚本issue
-CDC-xxx xxx
-5.GUI issue或优化建议：
-CDC-GUI-xxx xxx
+
 6.脚本任务：
-完成自动生成所有case的统计数据，并整合到一个标上，并且自验证，完成进度100%
+完成了对encodeRule.py的优化，使其支持对新统计数据中的gen name和case name的进行脱敏转换
+使用新统计脚本统计数据，并验证其准确性
 7.其他
-和罗刚确认DTS2025072165378（利用设置Instance horizontal Space和Instance Vertical Space两个参数值来控制显示字符的长度；但无法自适应宽度；策略暂时标记develop，后续客户有疑问再具体看）、DTS2025080617857（把find object功能讲给客户，看客户怎么说）、DTS2025080723560（通过增加load/save_project命令来实现ui/gui的工程互通）"	"LRF
+统计DTS数据"	"LRF
 
 日报：
-1.Hi1813-HIS_TOP,共2334条，剩余待分析条，反弹原因：xxx
-Diff234 - 59
-Diff59 - 58
-Diff-enno_const - 7
-Diff63 - 6
-Diff172 - 6
-2.新增分析issue
-新增/回归 issue号 影响了几条message case名 问题概述
-DTS2025090829074 - 2
-3.回归分析issue
-回归 DTS2025073008410 1 case名 问题概述
-4.脚本issue
-CDC-xxx xxx
-5.GUI issue或优化建议：
-CDC-GUI-xxx xxx
-6.脚本任务：
-完成了xxx;
-优化了xxx:
-7.xxx"	"JR
-今日分析msg数：463
-今日发现issue数：
-今日回传case数：
+1.Hi1813 - HIS_TOP,ac共2109条,剩余待分析2002条
+Diff59 - 80/Diff233 - 5/Diff24 - 3
+Diff63 - 24/Diff172 - 20
+2.门禁builtin新增409条，待分析235条，反弹原因：issue CDC-4194;
+3.新增分析issue
+DTS2025090935267 28 Hi1813-HIS_TOP 漏报ValidGate 
+CDC-4194 门禁 message:The domain 'clka' specified by option -from_clk' is the same with that specified by option '-to_clk' in command 'set_sync_cell'报错中的""set_sync_cell""应该更改成""set_cdc_sync_cell""
+4.更改Builtin的约束
+5.确认Hi18XXE BCP_TSS、BDP和APP_CORE数据的正确性
+6.讨论get_conv用法"	"JR
+今日分析msg数：814
+今日发现issue数：3
+今日回传case数：1
 日报：
 1.分析部分：
-a.Hi1813-TOP_LGC ac新增949条，ac剩余待分析541条，反弹原因：其中144条是行号差异Diff229,264条是多比特合并差异Diff59;
-b.Hi18XXE-NAU_CAU_WRAP 新增55条，剩余待分析0条，反弹原因：脚本未反标上；
-2.脚本issue
-a.CGIC的结构是正确的，但是脚本却标记为Diff45;
-b.脚本未反标上；
-c.在宽松比对中，误报漏报的runningflag都有pass-suspect-Diff59,但只有误报标记了6，漏报没有标记6;"	"CXY
+a.Hi1813-TOP_LGC ac新增541条，ac剩余待分析471条，反弹原因：24条是常值导致的误报漏报，2条是算法差异导致的误报漏报，8条是pmos综合差异导致的漏报，34条是多比特合并导致的误报漏报，2条是issue DTS2025090926882；
+b.LIGHTV300-HIPHY_SUB新增744条，剩余待分析0条，反弹原因：ArUnsyncCtrlPath和ar_converge01在工具里没报，csv里却有；
+c.门禁builtin新增409条，待分析235条，反弹原因：issue CDC-4195和CDC-4199;
+2.新增分析issue：
+a.DTS2025090926882影响了2条message，case名：Hi1813-TOP_LGC，问题概述：对于src_ff-->dout，ECDC报的QualMergesOtherSrc，但这不符合QualMergesOtherSrc的电路结构，报QualMergesOtherSrc不合理，如果把电路中的mux去掉，让与门连接到dout/d，ECDC报的是MssingSynchronizer，期望报出一个更符合的message，或者给一个新差异，已复现case；
+b.CDC-4195影响了2条message，门禁，问题概述：SG报了QualifierSetup：'qualifier'constraint 'TOP.path3[7:0]' is not used to synchronize any crossing in the current design 'TOP',但ECDC未报对应message；
+c.CDC-4199影响了2条message，门禁，问题概述：SG报了SGDC_qualifier02a：Constraint 'qualifier':Clock name 'TOP.in3'specified in field ‘-from_clk’ is not a valid clock，和SGDC_qualifier03a：Constraint 'qualifier':Clock name 'TOP.in4'specified in field ‘-to_clk’ is not a valid clock，但ECDC未报对应message;
+3.回归分析issue：
+a.DTS2025073115280,case名：LIGHTV300-AO_SUB，问题概述：误报SetupRstNetUndefined；
+b.DTS2025073102969,case名：LIGHTV300-AO_SUB，问题概述：建议SetupPortFullyConstrained多比特合并报；
+c.DTS2025072828663,case名：LIGHTV300-AO_SUB，问题概述：漏报IntegrityRstConvOnComb；
+d.DTS2025072215784,case名：LIGHTV300-AO_SUB，问题概述：原理图中有net的attributes不完整；
+4.脚本issue
+a.脚本漏抓：LIGHTV300 AO_SUB 0905的csv里没有SG报的ac_conv01、ac_conv03和ar_converge01；
+b.ArUnsyncCtrlPath和ar_converge01在工具里没报，csv里却有;
+5.其他：
+a.确认Hi18XXE DDR_SUB、DME_WRAP和FE_TSS数据的正确性"	"CXY
 
 日报：
 1.门禁/射频/新泛化
-无
+a.Hi1813/DDR_SUB ac新增9条，ac误报漏报共515条。ac剩余待分析139条
 2.新增分析issue
-无
+1）CDC-4193:在使用工具命令get_ac_pair时发现该命令有时会在执行之后进行一次help -cus，并且是随机执行的
+2）CDC-4196：在使用工具get_ac_pair -all_src时发现返回值不正确，会遗漏部分src
+3）CDC-4197：工具的get_ac_pair -dest操作，有时返回的src和dest都没有链接关系，返回值不正确
 3.回归分析issue
 无
 4.脚本issue
-无
-5.GUI issue或优化建议：
-无
-6.脚本任务：
-1）写脚本实现新泛化结果批量merge的功能
-2）帮助景烁处理5号包跑出来的结果
-3）整理最近完成的Diff59，Diff150，Diff229的宽泛对比脚本代码。Diff251的proc代码，以及最近优化的代码内容，抄写代码，准备上库
-7.xxx"	"TZB
+关闭现场新泛化case上的issue，目前脚本issue只剩UDP相关Diff的proc还需要改进，但是UDP相关Diff差异PPT描述得不太清楚，脚本不清楚做法。有issue（CDC-4134）正在跟踪差异PPT修改
+5.脚本任务
+1）现场的脚本修改已经上库
+2）验证瑞风写的Diff122的宽泛对比，发现proc中用到的工具命令get_ac_pair有功能问题，暂时不能使用该proc。已提issueCDC-4193，CDC-4196，CDC-4197
+5.其他
+1）参加差异评审会
+2）帮景烁确认csv的状态，以及确认部分case的log结果是否正确"	"TZB
 
 日报：
 1.门禁/射频/Hi18XXE/Hi1813/LIGHTV300/USBC-xxx 新增xx条，剩余待分析xxx条，反弹原因：xxx
@@ -82,22 +74,25 @@ CDC-GUI-xxx xxx
 完成了xxx;
 优化了xxx:
 7.xxx"	"SYH
-
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
 日报：
-1.分析部分
-a.Hi18XXE-NFI_PGYH_TOP/NFI_TOPac共新增164条，剩余待分析0条，反弹原因：脚本掉标
-2.回归分析issue
-a.DTS2025031332374：射频性能
-b.DTS2025080610366：Hi18XXE-HIS_TOP,symbol判定有误
-c.DTS2025072626042：LIGHTV300-PG_SUB，CGIC结构识别
-d.DTS2025081212693：LIGHTV300-PG_SUB，flatnet问题
-3.导入case拆分
-a.了解导入case拆分需求，将HI1815ev100_top_100nl中APP_CORE提取出
-"	"MCH
+1.导入：
+a.和森林春豪讨论约束拆分策略，按能否通过sub name找出来的sgdc命令，能找出来的（sgdc指定的）通过定位与sub module相关的domain，clock。进而找出来其他的约束，不能找出来的（电路连接关系infer的）通过找pin-port连接关系找到其他sgdc
+b.完成了上述导入case拆分策略，能够按sub module name 找出sgdc的脚本，现已生成所有sub module的sgdc文件。用现有sgdc跑sub module"	"MCH
 
 日报：
 1.导入：
-1-1.shuixing-100NL：拆分的case P512，使用0905的daily包去run这个单独的模块，ecdc的runtime约为26h，三方工具跑这个单独的case约为2h，今天在用20250908-cdc_develop_202509的包重新跑该case。
-1-2.shuixing-100NL：把P512设置为blackbox，该case没有跑出结果，目前也是用20250908-cdc_develop_202509的包重新跑该case。
-1-3.1815E-95NL：把其中的一个模块APP_CORE单独拆分出来，该模块的instance为127840649。目前正在执行check_cdc步骤。
-1-4.使用0908的daily包跑ipe和epe的数据，epe有4条新增，ipe有12条新增，初步分析是和Bus合并有关。"
+1-1.ipe和epe：
+分析0908的daily包跑出来的数据，ipe新增8条误报(DTS2025090519997)，epe没有新增，当前误报漏报率如下：
+ipe:
+误报率：0.16%
+漏报率：0.04%
+epe:
+误报率：0.0%
+漏报率：0.04%
+1-2.shuixing-100NL:
+当前跑通的模块有CCTS_R、CCTS_L、P512_CLST.P512用时较久，跑完需要25h。
+1-3.shuixing95-95NL:
+前哥负责拆分，当前跑通的模块有CCTS_R、DDRS、P512_CLST"
