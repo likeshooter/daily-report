@@ -1,78 +1,86 @@
-"ZWL
+"LRF
 
 日报：
-1.1813 FE_TSS，setup未分析共56条，剩余待分析0
-2.新增分析issue
-新增：DTS2025091201787（综合不一致导致误报SetupRstNetUndefined）
-DTS2025091130149（ecdc报在了虚拟点位上）
-"	"LRF
-
-日报：
-1.Hi1813-HIES_TOP,ac共1906条，剩余待分析1604条
+1.Hi1813-HIES_TOP,ac共1490条，剩余待分析1351条
 DIff:
-Diff32 - 86/Diff172 - 68/Diff171-6/Diff63 - 16/Diff59 - 28
-2.新增分析issue
-DTS2025090935267 影响了76条message Hi1813-HIES_TOP 漏报ValidGate 
-DTS2025091120831 影响了10条message Hi1813-HIES_TOP 误报NoDestMuxDataPin
-DTS2025091132923 影响了18条message Hi1813-HIES_TOP 误报MultiFanout
-DTS2025091128685 影响了4条message Hi1813-HIES_TOP 漏报QualMergesOtherSrc
+Diff172 - 22/Diff59 - 12/Diff32 - 38/Diff233 - 58
+issue:
+DTS2025090935267，影响了24条message - 漏报ValidGate
+2.协助现场RD/PE搭建环境并指导相应操作步骤,并协助分析
 "	"JR
-今日分析msg数：385
+今日分析msg数：813
 今日发现issue数：1
-今日回传case数：1
-日报：
-1.分析部分：
-a.Hi1813-TOP_LGC ac新增463条，ac剩余待分析78条，反弹原因：原因1是误报QualMergesOtherSrc，初步分析是symbol有误导致的，原因2是常值导致source和destination断连从而导致漏报，原因3是多比特合并导致的误报漏报；
-
-2.新增分析issue：
-a.DTS2025091115268 影响了128条message case名:Hi1813-TOP_LGC 问题概述：对于src_ff1-->dout，ECDC报的是QualMergesOtherSrc，而A工具报的是Mux-select sync，已复现出case"	"CXY
-今日分析msg数：135
-今日发现issue数：2
 今日回传case数：
 日报：
-1.Hi1813/DDR_SUB ac分析完成，conv部分分析完成，ar部分分析完成
+1.分析部分：
+a）LIGHTV300-HIPHY_SUB 新增744条，剩余待分析0条，反弹原因：12条是同一条ArUsyncCtrlPath:MssingSynchronizer报了两次，这个reset既连在了DFF的rst pin也连在了set pin，issue：DTS2025091506539，732条是因为ECDC在客户平台跑的时候多读了.v，导致多报了message；
+b）LIGHTV300-AO_SUB 新增172条，剩余待分析103条，反弹原因：6条是差异Diff240，1条是差异Diff150，1条是差异Diff156，1条是差异Diff250，60条是Diff249;
+2.新增分析issue：
+a）DTS2025091506539 影响了12条message case名：LIGHTV300-HIPHY_SUB 问题概述：同一条ArUsyncCtrlPath:MssingSynchronizer报了两次，这个reset既连在了DFF的rst pin也连在了set pin；"	"CXY
+今日分析msg数：53
+今日发现issue数：
+今日回传case数：
+日报：
+1.Hi1813/APP_CORE的conv部分53条，剩余98条未分析。53条都是差异，属于Diff150+Diff122，Diff150+Diff122+常值，Diff122差异
+2.脚本issue
+发现现场LIGHTV300-HIPHY_SUB在平台上跑的session，ecdc工具读入了一些在nile平台路径下的.v文件，检查其他case，均无该现象。预计明天景烁回到现场之后，debug平台跑case的方法，检查一下这些文件是如何被错误读入的
+3.其他
+a）帮王涵，海洋熟悉现场环境
+b）帮蒋旺跑包
+c)修改现场的sdc文件中的set_case_analysis为set_constant，帮应康哥在门禁，射频上跑约束修改的测试包"	"CJR
+今日分析msg数：1386
+今日发现issue数：
+今日回传case数：
+日报：
+1.Hi1813
+1.1 Hi1813-TOP_LGC
+ar:299条属于Diff85；232条属于综合问题，在Hi18XXE里面同一个module设置了黑盒，但是Hi1813没有设置为黑盒，导致和SG综合不同导致漏报（需要加上黑盒设置，重新比对验证）;825条属于综合差异Diff51；24条在现版本里面报出；6条Diff191；
+
 2.新增分析issue
-a.DTS2025091120010 影响18条message，case名：Hi1813-DDR_SUB;问题描述对于DDR_MD0-->q1_out_int，A工具报告的是qualifier not found，ECDC漏报
-DDR_MD0是一个inout口。小case上，ECDC报告和A工具一致
-b.DTS2025091124116 影响9条message，case名：Hi1813-DDR_SUB：问题描述：ECDC报IntegrityClockConverge，A工具未报，疑似A工具bug。已复现出case
+新增/回归 issue号 影响了几条message case名 问题概述
+
 3.回归分析issue
-无
+回归 DTS2025091204705 8条 Hi1813-TOP_LGC
+属于差异Diff115，但是差异ppt里没有搜索到类似场景，希望能够添加此场景到差异PPT。
+
 4.脚本issue
-1）修复新泛化上发现的ac对比时没有抓到sg的告警级别导致unmatch的问题，今日新泛化脚本问题已清零
+CDC-xxx xxx
+
 5.GUI issue或优化建议：
-无
+CDC-GUI-xxx xxx
+
 6.脚本任务：
-无
-7.xxx"	"CJR
-今日分析msg数：291
+完成了xxx;
+优化了xxx:
+7.脚本建议：
+"	"TZQ
+今日分析msg数：1116
 今日发现issue数：1
-今日回传case数：1
+今日回传case数：
+日报：
+1.Hi1813-HIS_TOP
+ar:1116条，其中972条属于综合问题，DTS2025091522996；144条属于报的reset source与SG不同，与Diff85-report01类似。剩余484条，大致分析与Diff80和Diff85-report02和03有关
+2.新增分析issue
+a.DTS2025091522996 影响了972条msg case名：Hi1813-HIS_TOP 问题概述:verilog中的原语pullup()，SG工具综合成常值1，ECDC综合成leaf，ECDC多报了这个leaf/o的ArUnsyncCtrlPath"	"TZB
+
+日报：
+1.Hi1813-HIS_TOP的conv未分析408条，剩余待分析172条，反弹原因：1).存在宽泛比对标记疑似Diff的,需要确认分析；2).常值原因：存在ecdc工具报某些ff为常值，就导致报的ff比sg少；还存在sg和ecdc都报了某个ff datatiedtoconst，但是sg并没有将ff/d的常值传在ff/q端导致我们也会比sg少报ff；3).sg将在mux/data汇聚也报出来，标记Diff156；4)存在我们比sg多报ff，且Sg报的ff在我们报的子集里，分析确认标记为diff229；Hi1813-BCP_TSS的Ar新增26条，剩余待分析0条，反弹原因：主要是我们和sg报的dest src不一样,经分析属于diff85
+"	"SYH
+今日分析msg数：320
+今日发现issue数
+今日回传case数：
 日报：
 1.分析部分：
-1.1 Hi1813-NFI_PHYG_TOP 
-ar新增34条，全都属于DTS2025091116945；
-ac新增204条，68条属于Diff59及Diff63；85条属于Diff59；34条属于Diff222，；17条属于Diff80；
-conv新增34条，全都属于差异Diff150。
-除setup、builtin全部分析完成
-1.2 Hi1813-TOP_LGC
-conv：其中2条属于Diff150，16条属于Diff112，1条属于Diff156；剩余63条待分析；
-
-2.新增分析issue
-2.1 DTS2025091116945 影响了ArUnsyncCtrlPath 34条 case名：Hi1813-NFI_PHYG_TOP  问题概述：dest为latch则会漏报ArUnsyncCtrlPath，可能violation没有包含此场景，已复现回传。
-
-3.回归分析issue
-新增/回归 issue号 影响了几条message case名 问题概述
-
-4.脚本issue
-CDC-xxx xxx
-
-5.GUI issue或优化建议：
-CDC-GUI-xxx xxx
-
-6.脚本任务：
-完成了xxx;
-优化了xxx:
-7.xxx"	"TZQ
+a）Hi1813-APP_CORE，ac部分320条，剩余待分析27条，涉及差异Diff147，Diff59，Diff63，Diff171,一个已知问题DTS2025090933417
+b)Hi18XXE-HIS_TOP/APP_CORE/BDP, 新增msg54条，剩余待分析0条。反弹原因：setupo部分确认是两次对比使用不同对比脚本导致，9.12版本的脚本更新了对bus bit的处理方式。conv部分在9.5号版本的已经被分析，但是犹豫误删了9.5版本数据，后续版本中也均为分析
+2.issue：
+a)和应哥袁洁讨论了DTS2025090522827，暂不关注unsync/sync的reason是否满足，使用Diff233标记此issue
+b)关单DTS2025080513845
+c）reviewDiff218新描述
+2.新增分ssue：
+3.导入部分
+a)交接执行脚本给森林
+"	"MCH
 
 日报：
 1.门禁/射频/Hi18XXE/Hi1813/LIGHTV300/USBC-xxx 新增xx条，剩余待分析xxx条，反弹原因：xxx
@@ -87,30 +95,22 @@ CDC-GUI-xxx xxx
 6.脚本任务：
 完成了xxx;
 优化了xxx:
-7.xxx"	"TZB
-
+7.xxx"	"CHY
 日报：
-1.门禁/射频/Hi18XXE/Hi1813/LIGHTV300/USBC-xxx 新增xx条，剩余待分析xxx条，反弹原因：xxx
-2.新增分析issue
-新增/回归 issue号 影响了几条message case名 问题概述
-3.回归分析issue
-新增/回归 issue号 影响了几条message case名 问题概述
-4.脚本issue
-CDC-xxx xxx
-5.GUI issue或优化建议：
-CDC-GUI-xxx xxx
-6.脚本任务：
-完成了xxx;
-优化了xxx:
-7.BCP_TSS AR 20 Diff85-01/02
-DME ac 60"	"SYH
-
+1.脚本任务：
+完成了：
+熟悉现场工作环境
+搭建builtin自对比脚本工作环境
+调整部分msg建key逻辑：obj-file-line
+跑全量case，建golden
+优化了：
+自对比脚本部分命令需要help ae的问题"	"WH
+今日分析msg数：28
+今日发现issue数：
+今日回传case数：
 日报：
-1.导入："	"MCH
 
-日报：
-1.导入：
-1-1.shuixing100NL:
-拆分出来的7个模块已经全部跑通sg和ecdc的，尝试跑了DDRS这个case的比对，Setup部分已经跑完，用时较短，Ar的比对用时11.5h，Ac的还在run，目前已经超过20h.各个模块的runtime和mem还在收集
-1-2.shuixing95NL：
-模块和对应的约束已经拆分好，用和shuixing100NL同一个包跑了DDRS，也尝试跑了比对，结果同shuixing100NL的DDRS差不多，Setup用时较快，Ar用时11.7h，Ac目前还在run，用时超过17h。"
+1.分析门禁builtin msg的数量28条
+2.熟悉提过的issue
+3.熟悉现场工作环境
+"
