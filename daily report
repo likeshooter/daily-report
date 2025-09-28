@@ -2,22 +2,40 @@
 
 日报：
 1.脚本任务：
-1）完成了增量比对脚本性能数据的收集功能，进度100%
-2）完成了Core rule统计脚本中把高中低优先级的数据加上，分为了三个sheet，分别展示高中低message的数据情况，并测试完成，进度100%
-3）修改run analysis脚本，统计现场未分析的case、未分析的模块、未分析的message数量，实现能直观看出数据与模块 case等的对应关系，进度100%"	"ZWL
+修复增量脚本遇到message量很大时内存crash的问题，待测试;
+2.导入case 1815E
+所有Case的Sg性能数据和session均已归档
+BCP_TOP：95NL Ecdc和Sg都 已运行完成并归档session和性能数据
+DAS_TOP、DDR_SUBSYS、APP_CORE三个case运行Ecdc完成，但由于磁盘满了，session没有存成功，得重新run
+3.其他
+参加周会"	"XLL
 
 日报：
-1.分析1813-TOP_LGC比对失败原因，x86修改过set_blackbox，未同步到arm，同步后比对成功
-分析LIGHTV300 HIPHY_SUB对比失败原因，x86新添加了一个design文件，arm环境未修改，修改后比对成功
-LIGHTV300 NFI_PHYG的SetupClkMuxNotRcvClk存在随机性CDC-4217 
-2.回归：DTS2025080723560（ui/gui的工程互通，save/load_project可以实现）
-DTS2025082518982（read_design/cdc失败后会删除导入的文件，已修改逻辑）
-新增：CDC-4220 （load/save_project问题）
-CDC-4217 （SetupClkMuxNotRcvClk存在随机性,同DTS2507160013374）
-3.脚本
-和心雨一起解决CDC-4150的脚本问题
-4.其他
-帮罗刚debug arm包无法打开gui的问题，使用最新的arm可以打开GUI"	"LRF
+2.新增分析issue
+新增：DTS2025092632008（LIGHTV300-AO_SUB mem大于3倍）
+7.其他
+参加周会
+磁盘被占满，统计并清理不需要的数据，整理已注销账户占用内存情况，反馈给丹姐让其帮忙申请清理
+跑0925的arm包"	"LRF
+
+日报：
+1.USBC-HIUSBC3XV100_TOP 新增12条 剩余待分析0条 反弹原因：Setup有5条为脚本问题，已修复;ac_conv有7条的conv_net有变动，已标记差异Diff229
+2.参加PV周会"	"JR
+今日分析msg数：211
+今日发现issue数：1
+今日回传case数：1
+日报：
+1.分析部分：
+a）LIGHTV300-HIPHY_SUB lint分析265条，剩余待分析76条，原因：189条是差异Diff37；
+b）Hi18XXE-BCP_TSS 新增5条，剩余待分析0条，反弹原因：都是差异Diff212；
+c）Hi18XXE-FE_TSS 新增5条，剩余待分析0条，反弹原因：都是差异Diff212；
+d）Hi18XXE-TOP_LGC 新增5条，剩余待分析0条，反弹原因：都是差异Diff51；
+e）LIGHTV300-AO_SUB 新增4条，剩余待分析0条，原因：都是差异Diff111；
+f）Hi18XXE-APP_CORE 新增3条，剩余待分析0条，反弹原因：2条是差异Diff212，1条是差异Diff171；
+2.新增分析issue：
+a）DTS2025092630179 影响了56条message Hi1813-TOP_LGC 问题概述：误报AcSyncDataPath:ValidGate，对于src_ff[3:0]->dout[3:0]，A工具和ECDC都报了QualMergesOtherSrc，但对于src_ff[2:1]->dout[2:1]，ECDC还报了AcSyncDataPath:ValidGate，实际上ECDC报的是合理的，因为在ECDC中，src_ff[2:1]->dout[2:1]报的QualMergesOtherSrc是指src_ff[1]->dout[1]和src_ff[2]->dout[2]，src_ff[2:1]->dout[2:1]报的AcSyncDataPath:ValidGate是指src_ff[1]->dout[2]和src_ff[2]->dout[1]，但是ECDC这样报会导致用户误认为src_ff[2:1]->dout[2:1]既报了同步又报了不同步，已复现case并回传；
+3.其他：
+a）参加周会"	"CXY
 
 日报：
 1.门禁/射频/Hi18XXE/Hi1813/LIGHTV300/USBC-xxx 新增xx条，剩余待分析xxx条，反弹原因：xxx
@@ -32,70 +50,54 @@ CDC-GUI-xxx xxx
 6.脚本任务：
 完成了xxx;
 优化了xxx:
-7.xxx"	"JR
-今日分析msg数：23
-今日发现issue数：2
-今日回传case数：1
-日报：
-1.分析部分：
-a）Hi18XXE-APP_CORE 新增2条，剩余待分析0条，反弹原因：ECDC报的一些lint rule在SG跑CDC的时候未报，但是单独跑SG lint时会报，而现场在对比lint rule时不会单独跑SG lint，因此导致一些lint rule match不上；
-2.新增分析issue：
-a）DTS2025092209461 影响了21条message Hi18XXE-FE_TSS/NAU_CAU_WRAP 问题概述：SetupDataTiedToConst报的常值和实际相反，DFF dout[3:0][1:0]的data pin是常值1，但是SetupDataTiedToConst报的DFF dout[3:0][1:0]的data pin是常值0，已复现case并回传；
-3.回归分析issue：
-a）DTS2025090519997 LIGHTV300-HIPHY_SUB 问题概述：AcSyncDataPath:RecirculationMux中多比特未合并--已修复；
-b）回归Hi18XXE-FE_TSS/NAU_CAU_WRAP csv中的issue，DTS2025090215860已经修好了，但是在csv中的漏报还有标记，重新分析发现是因为工具行为改变而新增的issue DTS2025092209461；
-4.GUI issue或优化建议：
-a）CDC-GUI-4216 问题概述：当message summary中的表格下方有进度条且进度条在最左边时，第一次ctrl+f在message summary中打开搜索框，表格的进度条会自动跳转到最右边；"	"CXY
-
-日报：
-1.脚本任务：
-验证康凯的Diff214 proc在苏黎分支包上的结果。验证结果：在门禁和新泛化上均会出现对于sg的漏报没有写到csv中的情况。原因是：proc的位置放在了对比流程单独处理false和missing的逻辑之后，并不合理。修改建议：将Diff214的逻辑放到find_diff_setup中，通过isDiffsetup去调用proc，这样子可以减少遍历list的次数，且逻辑更加清晰，find_diff_setup中本来就有逻辑记录list是否pass，再判断list是否需要写出，删除，不容易出现重复记录，漏记录的问题
-"	"CJR
-今日分析msg数：80
+7.xxx"	"CJR
+今日分析msg数：
 今日发现issue数：
 今日回传case数：
 日报：
-1.Hi1813
-1.1 Hi1813-TOP_LGC setup_port01的约束不同是由于复位优先级推断差异导致，属于Diff124-diff20-reset_info01_07。
-1.2 Hi1813-NFI_PHYG ar误报漏报68条属于Diff85
-2.新增分析issue
-新增/回归 issue号 影响了几条message case名 问题概述
-3.回归分析issue
-回归 DTS2025081229128 影响了12条message Hi1813-TOP_LGC 优先级的问题，sg没有把优先级识别出来属于差异Diff124-diff20-reset_info01_07 
-回归 DTS2025091116945 影响了68条message Hi1813-NFI_PHYG dest为latch，enno也能报出arunsync了"	"TZQ
-今日分析msg数：119
-今日发现issue数：1
+1.HI1813
+1.1 DDR_SUB 分析常值：4条属于Diff212；2条属于Diff-dc
+
+1.2 TOP_LGC 分析常值：6条常值推断相反属于差异Diff212
+setup：2条常值漏报输出Diff212；4条SetupAsyncClkConvOnComb误报属于DTS2025092553703。
+
+2.其他
+2.1  用苏黎分支包验证DTS2025092536979 signal type传递问题，没有误报SetupClkMuxNotRcvClk/SetupAsyncClkConvOnComb/SetupAsyncClkConvOnMux了
+2.2 参加周会
+"	"TZQ
+今日分析msg数：70
+今日发现issue数：１
 今日回传case数：
 日报：
 1.Hi1813
-a.HIS_TOP setup部分，SetupRstNetUndefined的119条属于ECDC报的SetupRstNetUndefined和SG报的在原理图中的net位置不一样，SG报的net是和set/reset pin直连的net，Diff235;该msg剩余44条未分析，setup部分其余剩下常值相关msg
+a.HIS_TOP的常值部分，68条属于Diff171,Diff172或者Diff170;2条属于信号与自己的非相与，ECDC推了常值。，SG没有推，SG的BUG。
 2.新增分析issue
-DTS2025092241129，SetupRstNetUndefined增量原理图显示问题 "	"TZQ
-今日分析msg数：158
-今日发现issue数：1
-今日回传case数：
-日报：
-1.Hi1813 HIS_TOP setup的常值漏报部分，大多数是因为对于pullup()，A工具综合成常值1，ECDC综合成leaf，会导致漏报常值，还有些属于DIFF212
-2.门禁46条，这个主要是改了sdc约束导致的
-3.新增分析issue
-CDC-4222：set_cdc_sync_cell的-to_clk_design_obj [get_ports {TOP/clk[1]} {TOP/clk[2]}]工具未报告任何报错信息，未停止检查，sg -to_clk clk[1] clk[2]会报SGDCSTX_006，不允许跟多个值，
-"	"SYH
+新增DTS2025092638312 影响2条msg Hi1813-HIS_TOP 问题概述：信号与自己的非相与，ECDC推了常值０，A工具没有，希望写一个对应的差异或者如果是版本差异请附上高版本截图
+3.其他
+参加周会"	"TZB
 
 日报：
-今日分析msg数：2
-今日发现issue数：1
-今日回传case数：0
-1.分析部分
-a)Hi1813-APP_CORE，新增conv2条，剩余待分析0条，反弹原因：新增误报ChyDataBusDiffEnable2条
-2.新增分析issue
-a)DTS2025092239807:Hi1813-APP_CORE；同一个qualifier在两个不同的comb cloud（Select_212，Select_213）中被同步，reason都是VaildGated，但是Enno误报了ChyDataBusDiffEnable，认为是不同的qualifier；影响2条msg
-3.脚本部分
-a)重构get_hdl.tcl脚本适配家里环境
-4.其他
-a)帮开发确认DTS2025091630781，开发正在更改。DTS2025090513353，复现小case失败。"	"今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报："	"MCH
+1.Hi1813
+HIS_TOP的常值部分，多数场景是属于常值ff是从前面的常值ff传播过来，标记Diff171/Diff172
+2.回归分析issue
+DTS2025091745625
+DTS2025091840800
+3.
+a.帮助研发验证DTS2025091749215，问题已解决
+b.参加周会"	"XLL
+
+日报：
+1.导入部分
+a)1815e
+NFI_PHYG_TOP_V：95和100Ecdc和Sg都已运行完成并归档session和性能数据
+NFI_TOP_WRAP_H:100的Ecdc和sg已运行完成并归档session和性能数据，95的sg和Enno均正在执行
+NFI_TOP_WRAP_V:95的sg和Enno均正在执行
+2.回归分析issue
+a）DTS2025090513353：1.clk pin的被推为常值后不报D pin的常值情况。2.由于多个DFF共用一条clk net我们和Sg报告的clktiedtoconst的pin也会不同。此issue可以标记Diff171
+b）
+3.其他
+a)参加周会
+"	"MCH
 
 日报：
 1.门禁/射频/Hi18XXE/Hi1813/LIGHTV300/USBC-xxx 新增xx条，剩余待分析xxx条，反弹原因：xxx
@@ -112,21 +114,14 @@ CDC-GUI-xxx xxx
 优化了xxx:
 7.xxx"	"CHY
 今日分析msg数：
-今日发现issue数：1
-CHY
+今日发现issue数：
 日报：
-1.脚本任务：
-自对比脚本增加自动刷golden功能，增加命令行操作，减少修改脚本的操作
-添加10个大泛化个case的子module的golden
-"	"WH
-今日分析msg数：
-今日发现issue数：2
-今日回传case数
-日报：
-
-1.分析门禁builtin msg的
-1）set_cdc_sync_cell-from_clk指定时，参数不存在工具报错并停止检查，-from_clk_design_obj参数不存在时或不带有clock，工具未报告任何信息，未停止检查
-2）使用get_nets/pins/ports/instances等时，只有一个参数且并不存在时工具会报告2次同样的错误
+1.分析shuixing：
+DDRS，由于session过期无法启动gui，先重跑session
+soffiec无法使用，在想办法解决
+2.跑1815E:
+HIS_TOP由于case较大ecdc还在跑，其余基本跑通"	"WH
+1.分析门禁9-25的builtin msg的csv
+1）SyncCellFailled应该是约束设置成功但是没有被使用才报告这条，而前面报告了约束中的值找不到，这条约束应该是没有设置上才对，感觉不该报告（CDC-4227）
 2.脚本任务
-回传修改的转换脚本，适配门禁失败的case
-"
+回传常值验证proc"
