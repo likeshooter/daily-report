@@ -2,6 +2,145 @@
 
 日报：
 1.脚本任务：
+优化增量比对脚本，将ac、ar、conv、setup的数据按rule拆分成不同的文件来存，再求差，再用差值列表做比对，进度50%，还需要调试
+2.导入case：
+1）发现TOP_LGC的AR没有数据，排查后是脚本中有两行代码未注释影响；再次运行Ar，有报dict element in braces followed by """",""False"" instead of space。跟海洋一起排查后发现是增量比对跟比对脚本有定义相同的proc名字，但是功能不同导致，已解决
+2）run出了BDP_WRAP的比对，且更新了数据"	"ZWL
+
+日报：
+1.门禁/射频/Hi18XXE/Hi1813/LIGHTV300/USBC-xxx 新增xx条，剩余待分析xxx条，反弹原因：xxx
+2.新增分析issue
+新增/回归 issue号 影响了几条message case名 问题概述
+3.回归分析issue
+新增/回归 issue号 影响了几条message case名 问题概述
+4.脚本issue
+CDC-xxx xxx
+5.GUI issue或优化建议：
+CDC-GUI-xxx xxx
+6.脚本任务：
+完成了xxx;
+优化了xxx:
+7.xxx"	"LRF
+
+日报：
+1.门禁/射频/Hi18XXE/Hi1813/LIGHTV300/USBC-xxx 新增xx条，剩余待分析xxx条，反弹原因：xxx
+2.新增分析issue
+新增/回归 issue号 影响了几条message case名 问题概述
+3.回归分析issue
+新增/回归 issue号 影响了几条message case名 问题概述
+4.脚本issue
+CDC-xxx xxx
+5.GUI issue或优化建议：
+CDC-GUI-xxx xxx
+6.脚本任务：
+完成了xxx;
+优化了xxx:
+7.xxx"	"JR
+今日分析msg数：565
+今日发现issue数：1
+今日回传case数：
+日报：
+1.分析部分：
+a）Hi18XXE-TOP_LGC 新增18条，剩余待分析0条，反弹原因：误报CheckAsyncRSFirst和ErrorSynthesisBBox，SG单独跑lint也没有报出相应的msg；
+b）LIGHTV300-HIPHY_SUB  新增76条，剩余待分析0条，反弹原因：误报ModDeclWithSameName，跑了sg lint但是还是没有报出与ModDeclWithSameName对应的rule STX_VE_589；
+c）LIGHTV300-PG_SUB  新增76条，剩余待分析0条，反弹原因：误报ModDeclWithSameName，跑了sg lint但是还是没有报出与ModDeclWithSameName对应的rule STX_VE_589；
+d）Hi18XXE-APP_CORE 新增136条，剩余待分析0条，反弹原因：都是差异Diff8；
+e）Hi18XXE-BDP 新增19条，剩余待分析0条，反弹原因：都是差异Diff8；
+f）Hi18XXE-HIS_TOP 新增240条，剩余待分析0条，反弹原因：238条是差异Diff8，2条是差异Diff63；
+2.新增分析issue：
+a）CDC-4232 影响了56条message 门禁 问题概述：SG报了SGDC_qualifier02a：Constraint 'qualifier':Clock name 'TOP.clk1[7:0]'specified in field ‘-from_clk’ is not a valid clock，和SGDC_qualifier03a：Constraint 'qualifier':Clock name 'TOP.clk2[7:0]'specified in field ‘-to_clk’ is not a valid clock，但ECDC未报对应message；
+3.回归分析issue：
+a）CDC-4199 门禁 问题概述：漏报SGDC_qualifier02a和SGDC_qualifier03a -- 已修复；"	"CXY
+
+日报：
+
+1.其他
+统计数据
+run新包"	"CJR
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.HI1813/Hi18XXE
+1.1 HI1813-APP_CORE lint误报VarInSensModified，跑sg lint报了W415，属于lint-pass；剩余0条待分析。
+1.2 Hi18XXE-NFI_PHYG_TOP 新增16setup，分支包已修复；剩余0条待分析。
+1.3 TOP_LGC 误报CheckAsyncRSFirst和ErrorSyncthesisBBox，SG  lint没有报。
+
+2.回归分析issue
+回归 DTS2025091927617 影响了2条message hi813-TOP_LGC 问题概述：属于差异Diff260-diff56-abstract_port 
+"	"TZQ
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.Hi1813/Hi18XXE
+a.Hi1813-HIS_TOP conv新增5条，有一条是ECDC报了两种sync方式，SG只报了一种属于Diff119;有两条属于destination影响了qualifier导致SG没有报sync，属于Diff32;有两条属于ECDC推了常值导致没有报sync，导致漏报conv04，属于Diff172
+2.回归分析issue
+a.DTS2025092638312,信号与自己的非相与，ECDC推了常值0，SG没有，通过LEC验证后，属于Diff192
+3.其他
+a.帮森林复现.f文件中同时出现`define和`undefine时，SG会综合成黑盒，ECDC不会的情况"	"TZB
+
+日报：
+1.Hi1813 
+a.FE_TSS的Setup常值部分没有反标上，已经标上了标记DTS2025072427522
+b.APP-core,conv新增，分析后都属于差异标记Diff229
+2.门禁
+分析Setup和ac新增，ac是属于之前工具报sync现在报unsync，算法差异导致标记Diff32，setup是reset_synchronizer后面option跟多值sg报错ecdc不报错，标记Diff259。
+3.回归CDC-4196： ecdc误报port TOP/in2 fullyconstrained(set_case_analysis),在sdc文件并没有对这个input port下约束,只是对与其相连接的inst pin进行了set_case_analysis约束, 这个issue在家里跑上库的case是修复了的，但是在现场还存在，已经确认对于sdc里set_case_analysis option跟的值在现场是get_pins，在家里是get_nets，就导致现场问题还存在，前哥和我说在现场手动将get_pins改成get_nets，然后对于get_pins问题还存在，在家里reopen作为内部issue后续修复"	"SYH
+
+日报：
+1.门禁/射频/Hi18XXE/Hi1813/LIGHTV300/USBC-xxx 新增xx条，剩余待分析xxx条，反弹原因：xxx
+2.新增分析issue
+新增/回归 issue号 影响了几条message case名 问题概述
+3.回归分析issue
+新增/回归 issue号 影响了几条message case名 问题概述
+4.脚本issue
+CDC-xxx xxx
+5.GUI issue或优化建议：
+CDC-GUI-xxx xxx
+6.脚本任务：
+完成了xxx;
+优化了xxx:
+7.xxx"	"MCH
+
+日报：
+1.门禁/射频/Hi18XXE/Hi1813/LIGHTV300/USBC-xxx 新增xx条，剩余待分析xxx条，反弹原因：xxx
+2.新增分析issue
+新增/回归 issue号 影响了几条message case名 问题概述
+3.回归分析issue
+新增/回归 issue号 影响了几条message case名 问题概述
+4.脚本issue
+CDC-xxx xxx
+5.GUI issue或优化建议：
+CDC-GUI-xxx xxx
+6.脚本任务：
+完成了xxx;
+优化了xxx:
+7.xxx"	"CHY
+
+日报：
+1.Hi1815E
+NFI_PHYG_TOP_H跑的数据会卡住, 已同步给刘玲
+分析IMU_TOP, 发现同一条path 我们的100(MissingSync+SrcConv)比95(MissingSync)多了个reason, 看起来是有点问题（CDC-4231）
+IMU_TOP存在diff59的情况"	"WH
+1.分析门禁9-30的builtin msg的csv
+1）部分新增为差异Diff259-diff55-wildcard
+2）工具的messag格式变化导致未抓取到RstSynchronizerNotInFanoutPath
+2.脚本任务
+1)写get_constant_causation的常值差异流程图
+2)分析前面提到的转换sgdc的domain问题，sg的domain以前调研的行为domain与-name后的名字一样，现有个case会加上top层，转换脚本没法兼顾两种场景，在对比脚本中处理"
+
+
+
+
+
+
+
+
+"XLL
+
+日报：
+1.脚本任务：
 1）在导入case的当前脚本中合入自动寻找csv的脚本，将其作为old csv传入比对
 2）跟海洋一起定位比对时工具crash的问题，也是报“max size for a Tcl value exceeded”，调研发现是因为ac的rpt有7个多G，比对脚本读取时是使用read命令将文件内容读入，会超出内存限制。解决方法是逐行读入文件内容;
 2.导入case
