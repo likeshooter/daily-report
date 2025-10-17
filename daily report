@@ -2,54 +2,170 @@
 
 日报：
 1.脚本任务：
-1）完成了统计脚本对新的导入case的适配，已出了一版数据
-2）开始适配导入case的runtool，进度20%
-2.导入case
-DDR_SUBSYS和CPU_CLUSTER的比对已经run完；
-BDP_WRAP：95的比对pass，100比对有报错，需定位
-BCP_TOP：95和100的比对均导致工具crash，需定位
-DAS_TOP：比对运行中
-APP_CORE：比对待运行"	"ZWL
+1）完成了新泛化按rule汇总的数据统计脚本的实现，并基于10月14号的数据统计了一版给正前和川皓，用于查看当前各case各type的达标情况
+2）优化增量比对脚本，并修改runtool，新增了load数据版本，以方便根据ecdc版本与存的版本相比，脚本自动判断是否重新存load数据
+3）解决大家run增量比对时遇到的疑似脚本问题，目前除了一个max tcl size的crash，其他均不是脚本问题，由于需要优先投入lint分析工作中，这个crash容后处理。"	"ZWL
+
+日报：
+1.分析Hi1813-HIS_TOP中标记clk_const的msg，为差异Diff213和Diff171；标记DTS2025091130149漏报SetupRstNetUndefined的msg，复现case，复现的结构已经和泛化中的一致，但和sg报的是一致的，现象不符合DTS2025091130149，因此新提issue DTS2025101523467
+2.新增分析issue
+新增：DTS2025101523467（Hi1813-HIS_TOP，漏报SetupRstNetUndefined）
+7.其他
+统计数据
+8.使用工具体会
+①、message summary无法直观看全整条msg，只能通过鼠标点击msg才能看全；但用户想通过滑动鼠标方式想查看其他msg时，目前就不能满足用户这个需求，例如在查看AcNoSyncScheme时，想通过滑动方式查看其他source、file、clock等，就不能使用此方式，也看不全已经展示的其他msg中是那个obj、file的问题点；建议显示全msg、file/lineno"	"LRF
+日报：
+1.其它：
+1.1 编写get_bus_connect脚本来获取source和bus之间的各bit的实际连接关系 -- 编写中
+1.2 回传lint case共51个"	"JR
+今日分析msg数：91
+今日发现issue数：1
+今日回传case数：93
+日报：
+1.分析部分：
+a）导入H1815-TOP_LGC 新增7318条，剩余待分析7227条，反弹原因：6条是issue ，85条是差异Diff140；
+2.新增分析issue：
+a）DTS2025101510312 影响了6条message 导入H1815-TOP_LGC 问题概述：在AcNoSyncScheme:MissingSynchronizer中，对于TOP/U_BBOX/din，ECDC报的clock是TOP/clk1，而A工具报的clock是TOP.U_BBOX.clk，已复现case并回传；
+3.其他：
+a）回传lint case共92个"	"CXY
+
+日报：
+1.脚本
+a）修改现场run脚本，在交付期间默认现场跑最新交付分支的包
+b）发现Hi1813/HIS_TOP中有重复的sg的message，debug发现非脚本问题，是sg报告本身就有两条重复的内容"	"CJR
+今日分析msg数：5019
+今日发现issue数：
+今日回传case数：
+日报：
+1.分析部分
+1.1 分析导入DDR_SUBSYS ac存在11155条误报漏报，剩余6818待分析（包括宽泛比对1141条）
+（1）4456条漏报SrcConverge，因为从黑盒出来的信号的时钟信息经过buf后缺失了，导致漏报SrcConverge。此问题在新包已修复。
+（2）340条漏报MissingSynchronizer，与上述问题相同。
+（3）41条srcconverge误报漏报属于Diff59；SG不会按照对应bit生成多路选择器，而是整条bus全部连接到多路选择器输入，导致分析路径时，SG会比ECDC多报出违例路径。
+（4）182条误报漏报：SG报srcconverge，ENNO报MissingSynchronizer，由于crossing中缺少其他的时钟信息导致，同（1）
+1.2 分析导入 CPU_CLUSTER ac存在2139漏报，2条误报。"	"TZQ
 
 日报：
 1.门禁/射频/Hi18XXE/Hi1813/LIGHTV300/USBC-xxx 新增xx条，剩余待分析xxx条，反弹原因：xxx
 2.新增分析issue
 新增/回归 issue号 影响了几条message case名 问题概述
 3.回归分析issue
-回归：DTS2025091130149（修改msg格式）
+新增/回归 issue号 影响了几条message case名 问题概述
 4.脚本issue
 CDC-xxx xxx
 5.GUI issue或优化建议：
 CDC-GUI-xxx xxx
 6.脚本任务：
-调试宽比统计脚本，加强encodeRule.py的对应关系；加强GenJiaoFuData_v2.py中对file为空报错，对多种文件名进行统一处理；已完成对导入数据的统计
+完成了xxx;
+优化了xxx:
+7.xxx"	"TZB
+
+日报：
+1.门禁/射频/Hi18XXE/Hi1813/LIGHTV300/USBC-xxx 新增xx条，剩余待分析xxx条，反弹原因：xxx
+2.新增分析issue
+新增/回归 issue号 影响了几条message case名 问题概述
+3.回归分析issue
+新增/回归 issue号 影响了几条message case名 问题概述
+4.脚本issue
+CDC-xxx xxx
+5.GUI issue或优化建议：
+CDC-GUI-xxx xxx
+6.脚本任务：
+完成了xxx;
+优化了xxx:
+7.xxx"	"SYH
+
+日报：
+1.导入部分
+a.1815E环境崩溃，重新跑NFI_TOP_WRAP_V的sg session，总出现ac_license缺失问题，且新起的集群不稳定，反复崩溃了3次。
+2.其他抄写70个lintcase"	"MCH
+
+日报：
+1.门禁/射频/Hi18XXE/Hi1813/LIGHTV300/USBC-xxx 新增xx条，剩余待分析xxx条，反弹原因：xxx
+2.新增分析issue
+新增/回归 issue号 影响了几条message case名 问题概述
+3.回归分析issue
+新增/回归 issue号 影响了几条message case名 问题概述
+4.脚本issue
+CDC-xxx xxx
+5.GUI issue或优化建议：
+CDC-GUI-xxx xxx
+6.脚本任务：
+完成了xxx;
+优化了xxx:
+7.xxx"	"MCH
+
+日报：
+1.抄case
+抄70个lint的case
+2.脚本任务
+验证大case load tcl文件时报tcl字符串超出大小限制的错误"	"WH
+
+日报：
+1.分析门禁
+1)ac,ar无新增，built新增几条已分析完，setup的分析中
+2.新增分析issue
+1）uninfer的场景使用set_constant在pin上面设置常值，port上无该常值信息，却报告SetupPortFullyConstrained（CDC-4244）
+2）SetupPortFullyConstrained报告的约束命令未更改，约束命令set_case_analysis已经改成set_constant,该message中仍然报告的set_case_analysis（CDC-4245）"
+
+
+
+
+
+
+
+"XLL
+
+日报：
+1.脚本任务：
+ecdc的runtool工具中加入了启动elint gui和输出elint case对应的case id的功能，方便分析lint时快速启动gui和拿到case id。
+2.lint分析
+分析lint 27个case，涉及100条msg，提了9个issue。"	"ZWL
+
+日报：
+1.泛化Hi18XXE-NFI_PHYG_TOP setup新增51条，1813-DDR_SUB setup新增4条，LIGHTV300-AO_SUB/NFI_PHYG setup新增18条；以上setup新增均为脚本proc Diff214的优化，已经和心雨一起分析优化；1813-HIS_TOP conv新增一条，为反标问题
+2.新增分析issue
+新增：CDC-4246（Doc Browser的优化建议）
 7.其他
-分析arm包比对情况：1813-APP_CORE的conv01存在随机性
-1813-HIS_TOP的conv04报msg中的instance比对不上，怀疑存在随机性，使用x86的1011包和arm的1009包分别跑100次验证是否存在随机性"	"LRF
+森林反馈Ar脚本应该match的msg，但还是漏报误报，复现case供心雨debug；最后发现是导入的脚本需要优化
+8.使用工具体会
+①、Doc Browser中无法搜索，单独打开这个terminal为空，提了一个优化建议CDC-4246"	"LRF
 
 日报：
 1.分析部分
-1815E-MATA_WRAP/95NL ac共16条待分析 剩余待分析0条 差异主要是Dif59
-
+lint门禁 6条rule共13个case
+1.1 
+2.新增issue(lint)
+DTS2025101624510/DTS2025101624227/DTS2025101623856
+DTS2025101625287/DTS2025101631827/DTS2025101632538
+DTS2025101634516
+3.其它：
+3.1 参加bus比对讨论会
 "	"JR
-今日分析msg数：121
-今日发现issue数：1
+今日分析msg数：400
+今日发现issue数：5
 今日回传case数：
 日报：
 1.分析部分：
-a）导入H1815E-TOP_LGC ac新增15467条，剩余待分析15346条，反弹原因：112条在10.10的develop包中已修复，6条是差异Diff59，3条误报是因为source在ECDC中比在SG中多了两个data clock，导致在ECDC中有crossing，而在SG中没有crossing，从而多报了acunsync reason；
-2.GUI issue或优化建议：
-a）DTS2025101111644 H1813-TOP_LGC 问题概述：在CmdFailedInvalidObjOption中open in source，找到是错误路径的sdc文件，导致打不开sdc文件；
-3.其他：
-a）今天花费时间最多的地方是遇到source （input port）在ECDC中比在SG中多了两个data clock，确认多的这两个data clock是从哪里传播来的，只能在原理图中把source的所有fanout展示出来，然后一个一个确认，希望能有一个命令可以打印出这个source的所有data clock分别来自哪个时序逻辑，这样就不需要把所有的fanout 展开手动去找"	"CXY
-今日分析msg数：
-今日发现issue数：1
-今日回传case数：
+a）导入H1815-TOP_LGC 新增7227条，剩余待分析7147条，反弹原因：80条是差异Diff75；
+b）lint门禁分析5个rule：E0022、E0027、E0028、E0034和E0036，共分析320条rule，提了5个issue：DTS2025101608974、DTS2025101617418、DTS2025101619804、DTS2025101632177和DTS2025101632715；
+2.新增分析issue：
+a）DTS2025101608974 lint门禁 问题概述：误报E0022；
+b）DTS2025101617418 lint门禁 问题概述：误报E0027；
+c）DTS2025101619804 lint门禁 问题概述：漏报E0027；
+d）DTS2025101632177 lint门禁 问题概述：漏报E0036；
+e）DTS2025101632715 lint门禁 问题概述：漏报E0036；"	"CXY
+
 日报：
 1.脚本
-a）处理Diff59宽泛对比未标记上的情况，发现是在获得信号名时，脚本使用get_net xxx -bus，这个命令不能去掉二维信号的bus，因此脚本无法判断二维信号的Diff59的情况。已经提issue CDC-4236。同是脚本中换成通过正则的方式去掉信号的bit信息用于对比
-b）优化Diff59的proc，修改代码时发现之前的代码只判断了src一致，dest bit位属于Diff59的情况，未覆盖完Diff59的情况。补充代码内容，将src和dest的bit判断独立
-c）增强脚本，对于由于常值影响的Diff59的情况，脚本在csv中除了打上Diff59的标记，还会打出不一致的bit中被enno判断为常值的bit"	"CJR
+a）修复DDR_SUB上发现的setup_port01脚本重复写的问题，原因是Diff214proc比较时没有考虑到关于port的direction的对比，所以在循环中出现了sg一条和enno两条对应上的情况。
+在debug脚本时发现，关于enno报告的SetupPort相关的message的attribute信息用的key是String1 String2这种格式，并且不同SetupPort的String表示内容不一样，如SetupPortFully的Sting2表示port的约束来源，String4表示port的方向；但是SetupPortNoConstrain的String2表示port的方向。这种展示方式我觉得不太友好，首先SetupPortFullyConstrain和SetupPortNoConstrain都是报告port的约束情况，msg格式统一会更加清楚，并且attribute中的String2、String3、String4含义表达不清楚，建议换成更能表达内容的key，如Constrain、Domain、Direction之类的。已提issueCDC-4249
+b）修复Hi1813/HIS_TOP上发现的脚本bug
+c）完成宽泛对比proc框架：在enno和sg报告的ac相关msg中，如果信号名相同，sync、unsync推断一致，只有bus不同的情况下，在csv中做出标记
+2.其他
+a）用CA给的for_英诺达Lint映射表和enno自己的Elint_当前特性说明表，整理出CA-ENNO_Lint映射表
+b)参加ELint映射表反标讨论会
+c）参加Multi-bits-Merge会议"	"CJR
 
 日报：
 1.门禁/射频/Hi18XXE/Hi1813/LIGHTV300/USBC-xxx 新增xx条，剩余待分析xxx条，反弹原因：xxx
@@ -82,22 +198,19 @@ CDC-GUI-xxx xxx
 7.xxx"	"TZB
 
 日报：
-1.LIGHTV300:
-AO_SUB/HIPHY_SUB/NFI_PHYG/PG_SUB这些moudle的lint都是属于ECDC误报ModDeclWithSameName，已经标记CDC-4235:现场泛化case上SG打开了allow_module_override这个参数导致SG没有报STX_VE_589 ，这个参数关闭可能会对ac setup等结果造成影响，分析lint误报需要给出解决此问题的方法
-2.Hi1813 
-a.分析HIS-TOP conv 3条，反标问题，APP-CORE conv 1条标记Diff229， lint 2条 误报VarInSensModified 标记Diff-CDC_Lint-run_stage， DDR_SUB lint 误报WireMultiAssign 2条  标记Diff-CDC_lint-run_stage
-b.分析Hi18XXE APP-CORE lint 2条 误报VarInSensModified 标记Diff-CDC_Lint-run_stage"	"SYH
-
-日报：
-1.导入部分
-a.1815E:NFI_PHYG_TOP对比95 pass，100出现脚本bug。NFI_TOP_WRAP_H的对比95 pass，100出现tcl变量太大，超过tcl变量存储上限带崩工具的情况，待解决。NFI_TOP_WRAP_V的95对比正在执行，100对比pass，RING_WRAP的对比均pass
-b.1815E-RING_WRAP:新增待分析53条，剩余待分析53条，RING_WRAP的增量csv中仅存在53条msg，打开保存的session后sg中却报read_design处错误，修改文件后重跑sg，依然如此。怀疑是seesion保存有误。
-c.shuixing，DTS2025092825055：和AE确认，此问题是由于和CA的配置不同导致的，暂时搁置。
-2.其他
-在家里环境下调试get_hdl_info脚本，现已可在家中环境使用
-
-
-"	"MCH
+1.门禁/射频/Hi18XXE/Hi1813/LIGHTV300/USBC-xxx 新增xx条，剩余待分析xxx条，反弹原因：xxx
+2.新增分析issue
+新增/回归 issue号 影响了几条message case名 问题概述
+3.回归分析issue
+新增/回归 issue号 影响了几条message case名 问题概述
+4.脚本issue
+CDC-xxx xxx
+5.GUI issue或优化建议：
+CDC-GUI-xxx xxx
+6.脚本任务：
+完成了xxx;
+优化了xxx:
+7.xxx"	"SYH
 
 日报：
 1.门禁/射频/Hi18XXE/Hi1813/LIGHTV300/USBC-xxx 新增xx条，剩余待分析xxx条，反弹原因：xxx
@@ -115,152 +228,29 @@ CDC-GUI-xxx xxx
 7.xxx"	"MCH
 
 日报：
-1.1815E
-增部分Ar的msg没有Message的关键字导致脚本报错，完成一版修改跑门禁case发现新增误报漏报较多，需要刘玲那边修改增量脚本ar的部分的建key逻辑
-NFI_PHYG_TOP_H：更新数据并分析，发现漏报误报为diff59"	"WH
-
-日报：
-1.分析10.11跑的新case门禁 builtin，新增误报
-1）误报QualNameInvalid，set_cdc_qualifier指定的net 存在，工具报告QualNameInvalid，9.30的包无该问题，10.9之后的包有该问题（CDC-4234）"
-
-
-
-
-
-
-
-
-
-
-
-"XLL
-
-日报：
-1.脚本任务：
-1）定位run增量比对时遇到的crash和脚本报错问题，crash是因为message数量很大，脚本中直接以字符串打印，内存就崩掉了，已解决；另一个问题还未分析（terminal崩掉了2次）
-2）解决大家分析和run比对脚本时遇到的疑似脚本问题，其中一个问题定位中，其他问题为非脚本问题
-3）实现导入case 1815E的runtool，功能为①runtool 用最新包跑ecdc工具，case和阶段都自行选择
-②runtool 0922 用0922的包跑ecdc工具
-③runtool gui 最新的包打开session
-④runtool 0922 gui 用0922的包打开session
-⑤runtool sg 运行sg
-⑥runtool sg gui 打开sg的session
-⑦runtool comp 用最新的包run工具和比对
-⑧runtool 0922 comp 用0922的包run工具和比对
-⑨runtool comp sess用最新的包打开session并run比对
-⑩runtool comp 0922 sess用0922的包打开session并run比对
-2.导入case
-经过了两次terminal的崩溃，没有跑出新的比对"	"ZWL
-
-日报：
-1.Hi1813-APP_CORE，ac反弹181条，未分析0条；反弹原因：心雨在准备proc资料时，发现csv中的msg在sg中搜不到，最后发现csv中的内容为infer_enabled_flop为false的结果；sg综合mux+ff和en+ff时，常值报的不同导致ac新增；之前没发现的具体原因可能是之前有一版数据是说，要求现场全部用infer_enable设置为false跑，然后出了一版数据，大家分析之后一直留作oldcsv的内容
+1.门禁/射频/Hi18XXE/Hi1813/LIGHTV300/USBC-xxx 新增xx条，剩余待分析xxx条，反弹原因：xxx
 2.新增分析issue
-新增：CDC-4237（1813-HIS_TOP ChyDataBusDiffEnable存在随机性）
-CDC-4240（【Hi1813】【APP_CORE】缺少对应reason）
+新增/回归 issue号 影响了几条message case名 问题概述
+3.回归分析issue
+新增/回归 issue号 影响了几条message case名 问题概述
+4.脚本issue
+CDC-xxx xxx
+5.GUI issue或优化建议：
+CDC-GUI-xxx xxx
 6.脚本任务：
-优化统计脚本，增加统计diff_basis列为pass_clock_reset_info标记；增加统计CmdFailedInvalidObjOption的msg
-7.其他
-统计DTS数据
-8.使用工具体会
-①、Ac的算法差异，source和dest之间存在qualifier，但因为算法原因，qualifier无法gate住source信号，导致ecdc报MissingSynchronizer；设计者知道source和dest之间是存在qualifier，又报了MissingSynchronizer，但MissingSynchronizer的spec中描述为链路中没有同步打拍或者同步约束才报MissingSynchronizer；对此，用户可能会质疑
-②、搜索同一个一个obj报了什么rule再violation tree上需要来回反复的搜索多次；在find objects里可以先find出所有msg，再从msg中搜索对应obj，可以搜到报的对应msg，但无法右键open incremental schematic；并且直接把所有的msg直接全部展示出来比在find object中再去搜索一遍更好"	"LRF
+完成了xxx;
+优化了xxx:
+7.xxx"	"CHY
 
 日报：
-1.分析部分：
-1815E-WATA_WRAP/100NL ac共280条需分析 剩余待分析0条 主要不匹配原因：差异（Diff233/Diff59）,issue(DTS2025101314679 )
-2.新增issue:
-DTS2025101314679 1815E-WATA_WRAP/100N 影响2条message 误报MissingSynchronizer 问题概述：
-对于pair①:src[0] -> dout[0];pair②:src[1] -> dout[1]。从电路结构上来看，pair①符合""SrcConverge"",pair②符合""MissingSynchronizer""。但在message report上A tool和ecdc存在区别。A tool报告src[1:0] -> dout[1:0]为""SrcConverge"",ecdc报告src[1:0] -> dout[1:0]为""SrcConverge MissingSynchronizer""
-3.其它：
-1.File了一个tool crash的issue
-CDC-4238 - 在GUI界面点击Fit in按键时，tool crash"	"JR
-今日分析msg数：236
-今日发现issue数：2
-今日回传case数：1
-日报：
-1.分析部分：
-a）导入-1815E-TOP_LGC 新增15346条，剩余待分析15110条，反弹原因：5条是issue DTS2025101312352，31条在新develop包已修复，200条是差异Diff59；
-2.新增分析issue：
-a）DTS2025101312352 影响了5条message 导入-1815E-TOP_LGC 问题概述：ECDC报了AcNoSyncScheme:MissingSynchronizer：TOP/din-->TOP/dout，但A工具未报，原因是ECDC中的TOP/din比A工具中的TOP/din多了两个data clock：TOP/U_BBOX2/out和TOP/clk，已复现case并回传；
-3.GUI issue或优化建议：
-a）CDC-GUI-4239 问题概述：在原理图中如果一个子module中有3个port画的比较近，这3个port对应3个pin，那么这三个pin的名字就会显示在这3个port的上方，这样第一个port就会在第1个pin name和第2个pin name之间，大概率会导致只能选中第1个pin name和第2个pin name，而选不中第1个port，所以期望在原理图中pin/port/net/instance的name是选不中的，只有选中pin/port/net/instance时，对应的pin/port/net/instance的name才会和pin/port/net/instance一样被选中，在SG中也是这样的；
-4.其他：
-a）今天花费时间较多的地方是复现DTS2025101312352的case"	"CXY
+1.lint
+分析11个lint rule，提了6个dts单"	"WH
 
 日报：
-1.修改射频case的约束文件，将set_case_anlysis替换成set_constant
-2.对应约束的修改，适配红区、隔离区脚本
-3.修复统计脚本在builtin统计时的bug
-4.准备宽泛对比Diff59以及被常值影响的ac的资料，写流程图，找对应场景"	"CJR
-今日分析msg数：488
-今日发现issue数：1
-今日回传case数：
-日报：
-1.分析部分
-1.1 分析导入 MATA_DDR_WRAP
-(1)Ac误报漏报：
-4条漏报Ac_unsync02：ECDC也是报了的，但是表格没有，待确认是工具版本问题（正在跑1009版本ECDC），还是脚本漏抓了。
-
-(2)2条误报AcNoSyncScheme：由于SG所报的2条msg走了脚本proc Diff18，标了pass，导致ENNO误报的两条无法配对。实际上，SG和ENNO所报的内容是属于完全配对的情况，应该两两配对。不应该对SG所报的内容走proc。如果直接判断信号的data clock domain里面存在虚拟时钟直接走此proc则过于宽泛了，因此需要首先考虑配对情况，再走此PROC。
-
-1.2 分析导入DDR_SUBSYS
-（1）68条漏报SrcConverge，由于误推常值导致漏报SrcConverge.在触发器的Q pin不为常值的情况下，与其相连的net为常值，与issue DTS2025072427522相似。
-（2）218条漏报SrcConverge，因为从黑盒出来的信号的时钟信息经过buf后缺失了，导致漏报SrcConverge。此问题在新包已修复。
-（3）32条误报漏报SrcConverge：sg的src报在了black box的net上，ENNO报在pin上,属于差异DIff71.
-（4）18条误报漏报SrcConverge：sg报dest的bus，实际上并不是全都存在连接关系；且sg和ENNO的dest clk都是clock list（时钟均相同），所以应该属于Diff59.
-（5）146条误报漏报SrcConverge：sg报dest的bus，实际上并不是全都存在连接关系；属于差异Diff59.
-
-2.脚本问题
-2.1 Diff18需优化。问题如上述分析部分1.1(2)所阐述。
-
-3.回归issue
-回归 DTS2025092516642 HI1813-DDR_SUB 多驱动情况下，没有推常值了。
-
-3.脚本任务
-帮助景烁优化门禁统计数据脚本
-
-"	"TZQ
-今日分析msg数：78
-今日发现issue数：1
-今日回传case数：1
-日报：
-1.分析部分
-a.Hi18XXE-HIS_TOP lint部分 62条，剩余分析0条，原因：当SG设置set_option stop XXX后，SG不会报XXX及下层的lint msg，但ECDC还是会报，已提issue:DTS2025101314266
+1.分析门禁10/15的setup,分析门禁10/16跑的结果
+1)大部分为反标丢失，小部分为新增差异，均已重新标记;几条结果需评差异
 2.新增分析issue
-a.DTS2025101314266 影响78条msg Hi18XXE-HIS_TOP 问题概述：当A工具用set_option stop TEST2后SG不会去检查TEST2及TEST2下层的lint，但ECDC用了set_blackbox TEST2后，ECDC还是会检查TEST2及TEST2后的lint，导致ECDC误报了lint的msg，已复现case并回传
-3.其他
-今天花费最多时间是找出lint误报的原因，并复现DTS2025101314266"	"TZB
-
-日报：
-1.分析部分
-a.Hi18XXE-TOP_LGC lint部分 18条，剩余分析0条，原因：当SG设置set_option stop XXX后，SG不会报XXX及下层的lint msg，但ECDC还是会报，智强已提issue:DTS2025101314266
-
-"	"SYH
-今日分析msg数：2333
-今日发现issue数：0
-今日回传case数：0
-日报：
-1.导入部分
-a.1815E：NFI_PHYG_TOP_V的100已跑完对比，分析95的对比结果时，发现sg的session存在ac_license缺失，需要重跑一个95的sg session。NFI_TOP_WRAP_H的95也存在相关问题。一并重跑sg session，NFI_TOP_WRAP_V的95对比脚本出现bug，已反馈刘玲修改。
-b.分析NFI_PHYG_TOP_V的95ac部分对比结果，共2982条，剩余待分析647条，其中Diff59涉及2333条，Diff71涉及16条，已知问题DTS2025101017707涉及267条。
-2.其他
-a.今天花费最多时间的确认1815Emodule的对比结果的正确性，确认错误原因，反馈脚本问题并重跑对比"	"MCH
-
-日报：
-1.导入部分
-a.跑通了1815E的SPU_DS_TOP和TSFC_WRAP的所有flow，SPU_DS_TOP的runtime是sg的3.43倍，TSFC_WRAP的runtime是sg的7倍左右。
-b.run SPU_DS_TOP和TSFC_WRAP的增量比对，一开始是同时run的，但是可能是由于占用的资源太多，同时run会导致集群被kill，目前已经改成串行的，正在run TSFC_WRAP的。
-c.UCP_TOP的100阶段,ecdc run这个case已经超过28h未出结果，用的包是1010_develop。sg的runtime为120.21min，peakmem为31234.16MB。
-d.整理现在导入已经跑通的case的宽比对数据。"	"CHY
-
-日报：
-1.脚本
-修复脚本报fold_bus_bits错误问题
-修复写出/读取大文件时报错问题"	"WH
-
-日报：
-1.脚本
-1）常值推断增加了获取需人工确认源头的proc
-2）修改验证常值计算结果的逻辑，改为查表的方式
-2.其他
-修改约束命令set_case_analysis改成set_constant"
+1）误报SetupPortFullyConstrained，在同一个port上create_clock又create_reset时，以前不报告，现在报告，需评审差异
+2）漏报QualNameInvalid，set_cdc_qualifier指定对象上的时钟和-from clk选项指定的时钟信号不一致，未报告；form_clk，to_clk指定的时钟不存在，也未报告相关rule，1015的包是有报告的（CDC-4248）
+3.lint
+分析3条rule,一个DTS"
