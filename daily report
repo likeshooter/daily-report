@@ -1,79 +1,16 @@
-"XLL
+"门禁
+DTS2025102032757 误报6条，时序逻辑不该报
+DTS2025102039278：对象不匹配4条msg
+DTS2025102053473 elint漏报.v中""data3 = data1 ^ data2 ;""这一行的 E0205的报错
+DTS2025102053452 ELINT报了E0236，但A工具未报，rst2是input，因此ELINT不应该报E0236
+DTS2025102052226 task中的data1，不会被综合，但是Elint报告E0320，Atool不报
+DTS2025102050332 dive in function “prand_inst1” 内的diff信号，返回到function“prand_inst0”的diff信号所在行
+DTS2025102049663 ELINT报了E0236：The asynchronous reset or set signal 'TOP/n7' to the output port 'out1' of the flip-flop is not connected to the input in the module 'TOP'，但A工具未报，且从rtl看rst1和rst2才是异步reset，因此ELINT不应该报E0236
 
-日报：
-1.脚本任务：
-1）完成了runtool适配shuixing，且适配运行全量比对
-2）run Ar全量比对时，遇到比对脚本报错，定位报错原因，sg rpt重新run之后，出来的rpt不能直接被read和按行split处理，经定位后，修改为gets和foreach的方式，可以正确按行获取内容，现全量比对中
-3）开周会"	"ZWL
 
-日报：
-1.1813 APP_CORE setup新增是由于1015的old csv只有常值部分，用1010的csvmerge后清零
-1813 TOP_LGC ar新增因为反标问题，从1015的csv中是能搜索到这条msg的；使用merge脚本也能成功merge
-7.其他
-参加周会"	"LRF
+泛化：
+DTS2025102013762：elint漏报.v中""clken_div_pow""信号的""BusDiffBitDrivenInDiffSeq""的告警,并误报为""BusDiffBitDrivenInDiffComb"",从.v中看,""clken_div_pow""信号应该是在不同的时序块中被驱动
 
-日报：
-1.门禁/射频/Hi18XXE/Hi1813/LIGHTV300/USBC-xxx 新增xx条，剩余待分析xxx条，反弹原因：xxx
-2.新增分析issue
-新增/回归 issue号 影响了几条message case名 问题概述
-3.回归分析issue
-新增/回归 issue号 影响了几条message case名 问题概述
-4.脚本issue
-CDC-xxx xxx
-5.GUI issue或优化建议：
-CDC-GUI-xxx xxx
-6.脚本任务：
-完成了xxx;
-优化了xxx:
-7.xxx"	"JR
-今日分析msg数：125
-今日发现issue数：2
-今日回传case数：
-日报：
-1.分析部分：
-a）lint新泛化H18XXE-FE_TSS 分析125条，反弹原因：42条是issue DTS2025101714653，83条是sg的bug；
-2.新增分析issue：
-a）DTS2025101714528 lint门禁 问题概述：漏报E0036；
-b）DTS2025101714922 lint门禁 问题概述：误报E0036；
-3.其他：
-a）参加周会；"	"CXY
-
-日报：
-1.参加PV周会
-2.处理何琦账号下的公共文件
-3.维护现场脚本，处理现场脚本bug"	"SYH
-今日分析msg数：596
-今日发现issue数：5
-今日回传case数：
-日报：
-1.分析部分
-a）lint门禁部分：分析了一条lint rule E0321,涉及596条msg，98个case。提了5个issueDTS2025101721521，DTS2025101720777，DTS2025101718684，DTS2025101717713，DTS2025101717059
-2.新增分析issue：
-DTS2025101721521：task误报E0321
-DTS2025101720777：被综合优化的net误报E0321
-DTS2025101718684：误报不存在的net为E0321
-DTS2025101717713：误报E0321
-DTS2025101717059：漏报E0321 "	"MCH
-
-日报：
-1.门禁/射频/Hi18XXE/Hi1813/LIGHTV300/USBC-xxx 新增xx条，剩余待分析xxx条，反弹原因：xxx
-2.新增分析issue
-新增/回归 issue号 影响了几条message case名 问题概述
-3.回归分析issue
-新增/回归 issue号 影响了几条message case名 问题概述
-4.脚本issue
-CDC-xxx xxx
-5.GUI issue或优化建议：
-CDC-GUI-xxx xxx
-6.脚本任务：
-完成了xxx;
-优化了xxx:
-7.xxx"	"CHY
-
-日报：
-1.lint
-分析10个lint rule，提了4个dts单"	"WH
-
-日报：
-1.构思inferred clock/reset的对比方案，解析report_clock/reset的信息，处理后添加该list到
-2.常值验证的"
+DTS2025102023446：elint对于object ""dly""( reg [1:0]dly)报了2条相同的""NotAllArrayElemAreRead""meassge,区别在于报的obj分别是""dly""和""dly[1:0]"",A tool报的是""dly[1:0]""
+DTS2025102037812：https://dts-szv.clouddragon.huawei.com/DTSPortal/ticket/DTS2025102037812#:~:text=6%E6%9D%A1%E6%BC%8F%E6%8A%A5%E7%9A%84message%EF%BC%8C%E4%BD%86%E6%98%AF%E5%8D%95%E7%8B%AC%E8%B7%91%E6%8A%A5%E9%94%99%E7%9A%84%E9%82%A3%E4%B8%AAcase%E6%98%AFpass%E7%9A%84%EF%BC%8C%E5%8F%AA%E6%98%AF%E6%8A%A5%E9%94%99%E8%A1%8C%E5%8F%B7%E4%B8%8D%E4%B8%80%E8%87%B4%EF%BC%8C%E6%88%91%E4%BB%AC%E7%9A%84%E8%A1%8C%E5%8F%B7%E6%9B%B4%E5%90%88%E7%90%86%EF%BC%8C%E9%9C%80%E8%A6%81RD%E6%88%96%E8%84%9A%E6%9C%AC%E7%A1%AE%E8%AE%A4%E9%97%AE%E9%A2%98%E5%85%B7%E4%BD%93%E5%87%BA%E7%8E%B0%E5%9C%A8%E5%93%AA%E9%87%8C
+"
