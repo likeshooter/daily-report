@@ -1,16 +1,247 @@
-"门禁
-DTS2025102032757 误报6条，时序逻辑不该报
-DTS2025102039278：对象不匹配4条msg
-DTS2025102053473 elint漏报.v中""data3 = data1 ^ data2 ;""这一行的 E0205的报错
-DTS2025102053452 ELINT报了E0236，但A工具未报，rst2是input，因此ELINT不应该报E0236
-DTS2025102052226 task中的data1，不会被综合，但是Elint报告E0320，Atool不报
-DTS2025102050332 dive in function “prand_inst1” 内的diff信号，返回到function“prand_inst0”的diff信号所在行
-DTS2025102049663 ELINT报了E0236：The asynchronous reset or set signal 'TOP/n7' to the output port 'out1' of the flip-flop is not connected to the input in the module 'TOP'，但A工具未报，且从rtl看rst1和rst2才是异步reset，因此ELINT不应该报E0236
+"XLL
+
+日报：
+1.脚本任务：
+整理报告交付数据的格式和内容，并开发生成这部分内容的脚本，进度30%
+7.lint分析
+分析了5个case，涉及误报292条，漏报1条，均为差异diff_b"	"ZWL
+
+日报：
+1.分析Hi1813-HIS_TOP，conv新增2条，为随机性
+分析普通门禁ac新增2条，为差异Diff104
+2.新增分析issue
+回归：DTS2025060507072、DTS2025072623481（Diff264-diff57-conv04）
+DTS2025092551750(增量原理图已修复）
+分析：DTS2025101020668（设置lint.check_cell_define true验证，还未出结果，但出结果后是设置默认为true还是修改cfg呢？）
+DTS2025101314266（家里状态为new，现场状态为测试回归，两者状态对不上，无法回归）
+7.其他
+帮db debug DTS2025092632008性能问题需要的一些信息，分别跑三次db.minimum_ram_size为2000000、1000000、500000、250000、125000、50000、20000、10000、4096时，read_design的mem
+8.花费时间统计
+①、在理解QualNameInvalid（QualifierFailed）描述时花费时间较多，在判断为什么会无效/错误时，光从把的message（Object 'TOP/clk1' specified in command set_cdc_qualifier is an invalid qualifier in constraint，）中只知道这条命令有错外，没有任何其他有用信息，因此需要去做以下判断：1.理解这个msgid是什么意思？发现两个点，1.1 set_cdc_qualifier obj -from_clk clk1 -to_clk clk2约束中obj上的data clock要和-from_clk clk1存在crossing；1.2 存在crosisng且必须要用选项-crossing；2.根据理解去原理图中确认obj是否和-from_clk存在crossing；3.根据第二步的判断，如果存在crossing则需要跟-crossing。存在crossing不跟-crossing或者不存在crossing则都会报这个msgid；"	"LRF
+
+日报：
+1.分析部分
+1.1 门禁/lint 分析24条 分析结论：5条sgbug，19条elint bug
+2.新增issue
+2.1 DTS2025102110962 门禁/lint 漏报E0240
+2.2 DTS2025102126835 门禁/lint 漏报E0240
+2.3 DTS2025102142579 门禁/lint 漏报E0240
+3.其它
+3.1 了解lint rule-E0240的检查规则，发现elint spec中无对应案例，只有rule简介
+3.2 协助调试get_non_const_path的脚本
+4.今天花费时间较多的环节
+4.1 了解lint rule-E0240检查规则
+"	"JR
+今日分析msg数：160
+今日发现issue数：2
+今日回传case数：2
+日报：
+1.分析部分：
+a）lint门禁 分析160条，反弹原因：140条是对象差异，6条是sg的bug，12条是综合差异，1条是issue DTS2025102113209，1条是issue DTS2025102121104；
+2.新增分析issue：
+a）DTS2025102113209 影响了1条message lint门禁 问题概述：误报E0239；
+b）DTS2025102121104 影响了1条message lint门禁 问题概述：漏报E0241；
+3.其他：
+a）花费时间最多的地方是用proc实现CDC-4243:
+proc is_from_source {pin src_pin} {
+    if {$pin == $src_pin} {
+        return 1
+    }
+    return 0
+}
+proc is_on_const {pin} {
+    if {[[get_attributes [get_pins $pin] -attributes inferred_constant] == ""0""] || [[get_attributes [get_pins $pin] -attributes inferred_constant] == ""1""]} {
+        return 1
+    }
+    return 0
+}
+proc is_on_clock {pin src_clock} {
+    if {[get_attributes [get_pins $pin] -attributes data_clock] == ""$src_clock""} {
+        return 1
+    }
+    return 0
+}
+proc get_non_const_path {src_pin dest_pin src_clock} {
+    get_fanin -to [get_pins $dest_pin] -through [get_pins [[is_from_source @@ $src_pin] && ![is_on_const @@]]] -on [get_clocks [is_on_clock @@ $src_clock]]
+}
+，结果pin在proc is_from_source的值是@@，导致get_fanin失败，还在调试中"	"CXY
+今日分析msg数：98
+今日发现issue数：2
+今日回传case数：1
+日报：
+1.分析门禁cfg1的ac，builtin部分，回归门禁issue.
+2.分析过程中发现两条issue：CDC-4257，
+约束写法：set_cdc_sync_cell TEST -from_clk_design_obj [get_ports {TOP/clk[2]}] -to_clk_design_obj [get_ports {TOP/clk[1]}
+set_cdc_sync_cell TEST -from_clk_design_obj [get_ports {TOP/clk[0]}] -to_clk_design_obj [get_ports {TOP/clk[2]}
+其中clk[2]在design中有定义，但是未被约束指定为时钟，design中也未被当成时钟使用。
+工具只对下面一条约束报了SyncCellFailed。应该对两条约束都报出buitlin的msg才合理；
+CDC-4258：acpath已经被用户定义的sync cell同步了，之后约束的set_cdc_qualifer应该是无效的，但是工具未报QualifierFailed。并且qualifier约束位置没有crossing，但是工具未报任何builtin相关msg
+3.给瑞风讲解代码，讲解工具中关于@@的用法和含义
+4.花费时间比较多的地方
+在分析builtin时，发现约束中使用“-from_clk”和使用“-from_design_clk”工具报法会不太一样，但是用户指定的clk信息在design和约束中指定的名字是一样的，所以需要花时间去理解要使用“-from_clk”还是“-from_design_clk”。同时因为工具还有bug，所以还得去分析“-from_clk”还是“-from_design_clk”行为不一致是工具bug，还是现场的约束写得不对。分析时拿到一个case就需要即分析误报、漏报是否为差异，又得判断约束中的option是否用得合理，还得区分约束中两个相同功能的option使用时得到的结果不一致是bug还是意图情况。"	"SYH
+
+日报：
+1.lint分析部分
+a.分析lint门禁5条rule，涉及5个case，提了一个新issueDTS2025102114329
+b.汇总门禁DTS和家里DTS对不上的地方，并补充涉及case，现场pv等信息。
+2.新增分析issue
+a.DTS2025102114329：代码明文仅存在能从prand_local_seed0 = prand_local_seed0 * 48'h5deece66d + 48'd11;处看出latch回路。但是从增量原理图上看，elint综合优化掉了prand_local_seed0[15:0]，报prand_local_seed0[47:16]存在E0260，atool报告prand_local_seed0[47:0]存在E0260。
+3.关闭分析issue
+a.DTS2025090226177:同一个qualifier误报ChyDataBusDiffEnable
+b.DTS2025090226177:误报ChyDataBusDiffSyncSchem
+4.其他
+a.同步最新差异ppt
 
 
-泛化：
-DTS2025102013762：elint漏报.v中""clken_div_pow""信号的""BusDiffBitDrivenInDiffSeq""的告警,并误报为""BusDiffBitDrivenInDiffComb"",从.v中看,""clken_div_pow""信号应该是在不同的时序块中被驱动
+"	"MCH
 
-DTS2025102023446：elint对于object ""dly""( reg [1:0]dly)报了2条相同的""NotAllArrayElemAreRead""meassge,区别在于报的obj分别是""dly""和""dly[1:0]"",A tool报的是""dly[1:0]""
-DTS2025102037812：https://dts-szv.clouddragon.huawei.com/DTSPortal/ticket/DTS2025102037812#:~:text=6%E6%9D%A1%E6%BC%8F%E6%8A%A5%E7%9A%84message%EF%BC%8C%E4%BD%86%E6%98%AF%E5%8D%95%E7%8B%AC%E8%B7%91%E6%8A%A5%E9%94%99%E7%9A%84%E9%82%A3%E4%B8%AAcase%E6%98%AFpass%E7%9A%84%EF%BC%8C%E5%8F%AA%E6%98%AF%E6%8A%A5%E9%94%99%E8%A1%8C%E5%8F%B7%E4%B8%8D%E4%B8%80%E8%87%B4%EF%BC%8C%E6%88%91%E4%BB%AC%E7%9A%84%E8%A1%8C%E5%8F%B7%E6%9B%B4%E5%90%88%E7%90%86%EF%BC%8C%E9%9C%80%E8%A6%81RD%E6%88%96%E8%84%9A%E6%9C%AC%E7%A1%AE%E8%AE%A4%E9%97%AE%E9%A2%98%E5%85%B7%E4%BD%93%E5%87%BA%E7%8E%B0%E5%9C%A8%E5%93%AA%E9%87%8C
-"
+日报：
+1.门禁/射频/Hi18XXE/Hi1813/LIGHTV300/USBC-xxx 新增xx条，剩余待分析xxx条，反弹原因：xxx
+2.新增分析issue
+新增/回归 issue号 影响了几条message case名 问题概述
+3.回归分析issue
+新增/回归 issue号 影响了几条message case名 问题概述
+4.脚本issue
+CDC-xxx xxx
+5.GUI issue或优化建议：
+CDC-GUI-xxx xxx
+6.脚本任务：
+完成了xxx;
+优化了xxx:
+7.xxx"	"CHY
+
+日报：
+1.lint
+分析1个lint rule，总共48个case，1120条msg，已经分析800条，提了1个dts单
+回归4个lint rule，总共8个case"	"MCH
+
+日报：
+1.门禁/射频/Hi18XXE/Hi1813/LIGHTV300/USBC-xxx 新增xx条，剩余待分析xxx条，反弹原因：xxx
+2.新增分析issue
+新增/回归 issue号 影响了几条message case名 问题概述
+3.回归分析issue
+新增/回归 issue号 影响了几条message case名 问题概述
+4.脚本issue
+CDC-xxx xxx
+5.GUI issue或优化建议：
+CDC-GUI-xxx xxx
+6.脚本任务：
+完成了xxx;
+优化了xxx:
+7.xxx"
+
+
+
+
+
+"XLL
+
+日报：
+1.脚本任务：
+完成了报告交付数据的脚本开发任务，并测试通过，进度100%。等与客户评审后，如果还需要修改，再投入此工作
+2.其他
+参加与客户的测试报告评审会议"	"ZWL
+
+日报：
+1.分析arm比对结果，1813-APP_CORE/HIS_TOP为随机性问题；1813-TOP_LGC、1813e-TOP_LGC、LIGHTV300-AO_SUB为ClockIgnored报的是相对路径（CDC-4256）
+2.新增分析issue
+新增：CDC-4256（ClockIgnored报的是相对路径）
+7.其他
+跑俊鸿的debug包分析CDC-4237的随机性，是存储容器的顺序改变
+帮子奇跑debug报分析CDC-4253的随机性，也发debug信息给他
+跑DTS2025101523467的debug包，分析结果为漏报清除，误报报在了pullup连的那个net上，应该是常值，因此误报不对；并且常值有问题，pullup连的net不是常值，但是receiver却是常值，issue CDC-4261"	"LRF
+
+今日分析rule数：2
+今日分析msg数：34
+今日发现issue数：2
+日报：
+1.分析部分
+1.1 Hi18XXE/TOP_LGC E0023/E0065共2条rule,34条message,涉及25条误报，9条漏报
+2.新增issue
+2.1 DTS2025102220237 Hi18XXE/TOP_LGC 影响2条误报 误报E0023
+2.2 DTS2025102226019 Hi18XXE/TOP_LGC 影响23条误报 误报E0065
+3.其它
+3.1 E0065的2种漏报场景已初步定位，待复现case中
+4.今日最费时问题
+4.1 elint的GUI卡顿，影响分析进程
+4.2 复现case"	"JR
+今日分析msg数：
+今日发现issue数：
+今日回传case数：
+日报：
+1.其他：
+a）参加差异评审会；
+b）找分别含有枚举、结构体、联合体和interface的case，用于测试报告编写；
+c）review测试报告，并反馈有问题的地方；
+d）参加ECDC测试方案文档review会议"	"CXY
+
+日报：
+1.分析
+a）分析门禁cfg1，cfg2的builtin的新增以及回归issue
+2.脚本
+a）测试王涵写的clock/rset_info的对比脚本，和王涵一起修改脚本bug，优化脚本
+b）测试工具的report_clock/report_reset"	"SYH
+
+日报：
+今日分析rule数：1
+今日分析msg数：49
+今日发现issue数：2
+1.分析部分
+a.lint：分析TOP_LGC的E0344，涉及13条msg，除一个新提的issue外DTS2025102233613，其余都是diff_b.
+b.cdc：分析门禁builtin，共分析36条msg，提了一个均为新issueCDC-4626
+2.新增分析issue
+a.DTS2025102233613:loop结构漏报E0344
+b.CDC-4262:误报QualifierFailed。sdc中定义的qualifier在三拍中的第一拍，第三拍出去后经与门同步src，但是Enno误报了QualifierFaild
+其他
+a.准备测试报告中需要的符合2005verilog标准的小case，自己写了一个包括全部操作符的case。
+b.排查已提的DTS单
+
+4.今日最费时问题
+4.1 elint的GUI卡顿，影响分析进程
+4.2 构造包含全操作符号的小case。"	"MCH
+
+日报：
+1.门禁/射频/Hi18XXE/Hi1813/LIGHTV300/USBC-xxx 新增xx条，剩余待分析xxx条，反弹原因：xxx
+2.新增分析issue
+新增/回归 issue号 影响了几条message case名 问题概述
+3.回归分析issue
+新增/回归 issue号 影响了几条message case名 问题概述
+4.脚本issue
+CDC-xxx xxx
+5.GUI issue或优化建议：
+CDC-GUI-xxx xxx
+6.脚本任务：
+完成了xxx;
+优化了xxx:
+7.xxx"	"MCH
+
+日报：
+1.门禁/射频/Hi18XXE/Hi1813/LIGHTV300/USBC-xxx 新增xx条，剩余待分析xxx条，反弹原因：xxx
+2.新增分析issue
+新增/回归 issue号 影响了几条message case名 问题概述
+3.回归分析issue
+新增/回归 issue号 影响了几条message case名 问题概述
+4.脚本issue
+CDC-xxx xxx
+5.GUI issue或优化建议：
+CDC-GUI-xxx xxx
+6.脚本任务：
+完成了xxx;
+优化了xxx:
+7.xxx"	"MCH
+
+日报：
+1.门禁/射频/Hi18XXE/Hi1813/LIGHTV300/USBC-xxx 新增xx条，剩余待分析xxx条，反弹原因：xxx
+2.新增分析issue
+新增/回归 issue号 影响了几条message case名 问题概述
+3.回归分析issue
+新增/回归 issue号 影响了几条message case名 问题概述
+4.脚本issue
+CDC-xxx xxx
+5.GUI issue或优化建议：
+CDC-GUI-xxx xxx
+6.脚本任务：
+完成了xxx;
+优化了xxx:
+7.xxx"
+
