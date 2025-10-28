@@ -2,192 +2,68 @@
 
 日报：
 1.脚本任务：
-完成了1030测试报告数据脚本的新需求开发（在read_design结束之后不走read和check cdc，只需判断read_design是否出错，未出错就pass，否则fail）
-2.分析lint
-分析E0338的message 21条，都是之前提的issue DTS2025102334247。
-3.其他
-参加周会"	"ZWL
+1)修复了run mem报语法错误的问题
+2)实现增量比对新需求，增量比对后未比对上的msg再走全量比对。
+①实现方案：增量比对时存下非增量的msg，增量比对完之后，将未比对上的msg与存的这部分非增量的msg走比对，最后也写入csv，针对这部分msg打上标记表明是走全量匹配比对上的。
+②实现情况：目前已实现保存非增量msg，且测试通过。收集增量比对ac时未比对上的msg，已实现，待测试。"	"ZWL
 
 日报：
-1.新增分析issue
-新增：CDC-4265（【GUI】setting下的三个Configure弹窗没有最小化按钮）
-CDC-4266（【GUI】非violation的msgid展示被展示在ERROR/WRAN/INFO中）
-2.其他
-在泛化中验证GUI功能，发现以下疑问及问题：
-①、Cross Domain Checker用户手册的第57行的表17后的内容不一致，一个是Configure Filters，一个是Configure Waivers；已告知亚娟修改
-②、3.8支持配置规则集文件design.setup的解析和读取，但实际工具默认导入导出的文件名为rules_config.tcl
-③、非violation的msgid等级为Info/Warn/Error,但在GUI中展示在INFO/WARN/ERROR标签中，这两者是否需要区分---CDC-4266"	"LRF
+1.分析新门禁新增msg，为差异Diff134，Diff197和sdc文件中set_case_analysis未修改为set_constant
+2.新增分析issue
+新增：CDC-4271（【Hi1813】【DDR_SUB】SetupRstNetUndefined选择的对象需要优化）
+CDC-4272（read_design的选项hdl_sort未在help信息中）
+DTS2025102836653（read_design失败后未停止检查）
+3.验证lint gui流程
+4.统计数据
+今日最费时问题:熟悉lint check流程"	"LRF
 
 日报：
-CDC:
-1.参加周会
-2.构建小case测试builtin rule-""ObjectIsBlackBox"" - 相关问题已反馈给研发
-3.继续准备测试报告需要的case
-LINT:
-1.Hi18XXE/TOP_LGC/lint E0154共1条rule,4条message,涉及1条误报，3条漏报
-DTS2025102013762 - 2条
-Diff-o - 1条
-2.1024的比对csv中无E0089的误报 - 反馈给春豪
-3.回归issue时发现表格中的issue编号与case名对不上 - 已反馈给凯阳
-4.E0065的9条漏报任然未能复现出小case - 待提issue
-"	"JR
-今日分析msg数：
-今日发现issue数：
-今日回传case数：
-日报：
-1.回归分析issue：
-a）DTS2025101312352 导入-H1815-TOP_LGC 问题概述：误报AcNoSyncScheme:MissingSynchronizer--新差异Diff265-bug74-abstract_port，已在csv中修改；
-2.其他：
-a）参加周会；
-b）用今天的develop包验证DTS2025101111644，DTS2025101111644已修好；
-c）写测试报告builtin部分；
-d）帮燕宁造了一个case；
-e）继续准备测试报告需要的case"	"CXY
-
-日报：
-1.分析新泛化Hi1813/TOP_LGC的report reset info的漏报。
-发现如果要点开电路检查电路的话，十分麻烦，因为大case上电路结构很复杂。对于这条msg的漏报，开发建议：根据enno的spec，对于ff的rst和set任意一端有效的情况下，enno将之前推断的reset传播过来，所以针对漏报的derived reset属于这种情况，都属于差异。针对这种简单结构判断，写了简单的脚本，在Hi1813/TOP_LGC上可以完全覆盖漏报
-2.因为覆盖率太高，接着进行抽样分析，发现enno的attribute中的relate_resets和sg的gui显示的reset的信息一致。于是在sg的log文件中查找到一个reset_sig.csv文件，里面记录了reset的名字，类型和driver，尝试解析该文件和enno对比
-3.参加周会"	"SYH
-
-日报：
-今日分析msg数：27
-今日发现issue数：2
-今日回传case数：2
 1.分析部分
-a.分析TOP_LGC的rule E339，共27条msg，新提了两个issue，DTS2025102438456，DTS2025102438365
-2.新增分析issue
-a.DTS2025102438456:module中定义了多个参数，但其中部分参数是通过运算获得，ELINT不报E0339，Atool报，
-b.module共存在有3个parameter，但仅parameter A是独立定义的，parameter B是parameter A通过位宽拼接定义的。当此module被实例化时，仅传了一个parameter A，ELINT误报E0339，Atool没报。从实际代码上看，Atool不报似乎是功能上的更进一步。没什么问题
-3.回归分析issue：
-a.CDC-4262：已修复
-b.CDC-4209：issue中未提及-to/from_clk_design_obj的问题，需要reopen
-c.CDC-4234:已修复
-d.CDC-4248:仍误报，需要reopen
-e.CDC-4254：1024仍误报
-f.CDC-4258：1024仍漏报
-4.其他
-a.pv周会
-"	"MCH
+1.1 Hi18XXE/TOP_LGC/lint,E0065/E0186/E0261/E0281共4条rule,495条message
+2.新增issue
+2.1 DTS2025102719603 E0261报告内容优化 elint报告的""E0261""的messgae内容为""The clock of latch with the output pin 'XXX' is gated or internally generated"",报告内容中的'XXX'的类型为'Net'而不是'Pin'
+2.2 DTS2025102741368  Hi18XXE/TOP_LGC/lint 误报E0281
+3.其它
+3.1 和凯阳说issue回归的相关事项
 
-日报：
-1.门禁/射频/Hi18XXE/Hi1813/LIGHTV300/USBC-xxx 新增xx条，剩余待分析xxx条，反弹原因：xxx
-2.新增分析issue
-新增/回归 issue号 影响了几条message case名 问题概述
-3.回归分析issue
-新增/回归 issue号 影响了几条message case名 问题概述
-4.脚本issue
-CDC-xxx xxx
-5.GUI issue或优化建议：
-CDC-GUI-xxx xxx
-6.脚本任务：
-完成了xxx;
-优化了xxx:
-7.xxx"	"CHY
-
-日报：
-1.门禁/射频/Hi18XXE/Hi1813/LIGHTV300/USBC-xxx 新增xx条，剩余待分析xxx条，反弹原因：xxx
-2.新增分析issue
-新增/回归 issue号 影响了几条message case名 问题概述
-3.回归分析issue
-新增/回归 issue号 影响了几条message case名 问题概述
-4.脚本issue
-CDC-xxx xxx
-5.GUI issue或优化建议：
-CDC-GUI-xxx xxx
-6.脚本任务：
-完成了xxx;
-优化了xxx:
-7.xxx"	"WH
-
-日报：
-1.门禁/射频/Hi18XXE/Hi1813/LIGHTV300/USBC-xxx 新增xx条，剩余待分析xxx条，反弹原因：xxx
-2.新增分析issue
-新增/回归 issue号 影响了几条message case名 问题概述
-3.回归分析issue
-新增/回归 issue号 影响了几条message case名 问题概述
-4.脚本issue
-CDC-xxx xxx
-5.GUI issue或优化建议：
-CDC-GUI-xxx xxx
-6.脚本任务：
-完成了xxx;
-优化了xxx:
-7.xxx"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-"XLL
-
-日报：
-1.门禁/射频/Hi18XXE/Hi1813/LIGHTV300/USBC-xxx 新增xx条，剩余待分析xxx条，反弹原因：xxx
-2.新增分析issue
-新增/回归 issue号 影响了几条message case名 问题概述
-3.回归分析issue
-新增/回归 issue号 影响了几条message case名 问题概述
-4.脚本issue
-CDC-xxx xxx
-5.GUI issue或优化建议：
-CDC-GUI-xxx xxx
-6.脚本任务：
-完成了xxx;
-优化了xxx:
-7.xxx"	"ZWL
-
-日报：
-1.分析验证门禁新增msg， 现存CDC-4209, CDC-4269, CDC-4268，CDC-4267，CDC-4270
-2.新增分析issue
-回归：CDC-4243（Diff500-diff-built_in-012）
-CDC-4254（Diff500-tcl-built_in-050）
-CDC-4262（Diff500-diff-built_in-017）
-reopen：CDC-4209（未修改也未给差异）
-"	"LRF
-
-日报：
-1.准备测试报告需要的case
-2.Hi18XXE/TOP_LGC/lint E0085 复现的小case会导致工具异常退出，已提issue - DTS2025102522054
-3.今日最费时问题：无"	"JR
-今日分析msg数：308
-今日发现issue数：1
-今日回传case数：1
+今日最费时问题:了解lint检查详细规则"	"JR
+今日分析msg数：233
+今日发现issue数：3
+今日回传case数：3
 日报：
 1.分析部分：
-a）lint Hi18XXE-TOP_LGC 分析1条rule E0092，共308条误报，反弹原因：86条都是issue DTS2025102521823，222条是综合差异；
+a）分析lint rule E0093，共12条误报，其中4条是issue DTS2025102521823，8条是综合差异；
+b）分析lint rule E0087，共18条误报，都是sg的bug；
+c）分析lint rule E0088，共8条误报，都是对象差异；
+d）分析lint rule E0191，共194条漏报，都是issue DTS2025102727623；
+e）分析lint rule E0209，共1条误报，是issue DTS2025102741152；
 2.新增分析issue：
-a）DTS2025102521823 影响了308条message Hi18XXE-TOP_LGC 问题概述：ELINT报了E0092：out，但A工具未报，A工具因为综合不出pmos，所以综合出来的是blackbox，和ELINT有综合差异，但是rtl和原理图中都没有三态值Z，所以根据doc来看ELINT不应该报E0092，已复现case并回传；
+a）DTS2025102710318：E0087的doc中，默认命名规则中的只包含大写字母，应该改为只包含小写字母；
+b）DTS2025102727623：如果把TOP指定为顶层module，ELINT不会报E0191，而如果把TOP1指定为顶层module，则ELINT会报E0191，但在A工具中，不管TOP是顶层module，还是TOP1是顶层module，A工具都会报E0191，这说明在ELINT中只有在顶层module里import了package，ELINT才会检查package，而A工具是都会检查，从而导致ELINT漏报E0191，已复现case；
+c）DTS2025102741152：ELINT报了E0209，但A工具未报，从rtl看不应该报E0209，已复现case；
 3.其他：
-a）在门禁case中为message找合适的case，用于测试报告编写，除了一些builtin的message在门禁中没有报，其他都已完成；
-b）在找case的过程中发现reference manual中builtin的message有重复的，已反馈"	"CXY
+a）今日花费时间最多的是和凯阳一起复现DTS2025102727623的case，因为不了解package的用法，且需要根据每一次复现的现象去发现真正的问题所在，所以在复现的过程中需要去摸索，因此花费时间比较多"	"CXY
 
 日报：
-1.优化reset info对比脚本proc，加入对sg的解析再进行对比。完成后在Hi1813/TOP_LGC上基本覆盖完全，脚本未标记的属于enno reset传播上的bug，已提DTS单 DTS2025102505016
-2.跑门禁的reset_report,clock_report的对比结果，检查脚本proc未覆盖到的情况"	"SYH
-
+1.和客户对齐泛化case的cfg，log位置等，准备预交付
+2.整理现场的对比脚本，抄写完成，准备回传"	"今日分析msg数：520
+今日发现issue数：5
+今日回传case数：5
 日报：
-1.门禁/射频/Hi18XXE/Hi1813/LIGHTV300/USBC-xxx 新增xx条，剩余待分析xxx条，反弹原因：xxx
-2.新增分析issue
-新增/回归 issue号 影响了几条message case名 问题概述
-3.回归分析issue
-新增/回归 issue号 影响了几条message case名 问题概述
-4.脚本issue
-CDC-xxx xxx
-5.GUI issue或优化建议：
-CDC-GUI-xxx xxx
-6.脚本任务：
-完成了xxx;
-优化了xxx:
-7.xxx"	"MCH
+1.lint分析部分
+a.分析rule E0070，共46条，其中36条是DTS2025102738644，10条是差异；
+b.分析rule E0085，67条，均为DTS2025102734678；
+c.分析rule E0296，共322条，均为DTS2025102743075；
+d.分析rule E0306，共85条，12条差异，41条DTS2025102730089，32条DTS2025102713370；
+2.新增分析issue：
+a.DTS2025102743075:疑似Atool bug，漏报E0269
+b.DTS2025102738644:运算符与系统函数的常数误报E0070
+c.DTS2025102734678:命名规则检查未覆盖function内信号
+d.DTS2025102730089:误报E0306
+e:DTS2025102713370:param传递不影响E0306
+  
+
+今日最费时问题：每个DTS感觉都可以复现,的确也都复现出来了，所以比较花时间"	"MCH
 
 日报：
 1.门禁/射频/Hi18XXE/Hi1813/LIGHTV300/USBC-xxx 新增xx条，剩余待分析xxx条，反弹原因：xxx
@@ -205,31 +81,16 @@ CDC-GUI-xxx xxx
 7.xxx"	"CHY
 
 日报：
-1.门禁/射频/Hi18XXE/Hi1813/LIGHTV300/USBC-xxx 新增xx条，剩余待分析xxx条，反弹原因：xxx
-2.新增分析issue
-新增/回归 issue号 影响了几条message case名 问题概述
-3.回归分析issue
-新增/回归 issue号 影响了几条message case名 问题概述
-4.脚本issue
-CDC-xxx xxx
-5.GUI issue或优化建议：
-CDC-GUI-xxx xxx
-6.脚本任务：
-完成了xxx;
-优化了xxx:
-7.xxx"	"WH
+1.门禁
+分析门禁infer reset，目前发现3种差异
+1）、sdc里创建了rst，sg推，我们不推
+2）、上一级ff传过来的rst，sg推，我们不推
+3）、综合差异导致负载中没有ff"	"WH
 
 日报：
-1.门禁/射频/Hi18XXE/Hi1813/LIGHTV300/USBC-xxx 新增xx条，剩余待分析xxx条，反弹原因：xxx
-2.新增分析issue
-新增/回归 issue号 影响了几条message case名 问题概述
-3.回归分析issue
-新增/回归 issue号 影响了几条message case名 问题概述
-4.脚本issue
-CDC-xxx xxx
-5.GUI issue或优化建议：
-CDC-GUI-xxx xxx
-6.脚本任务：
-完成了xxx;
-优化了xxx:
-7.xxx"
+1.分析门禁inferred clock,目前分析到4种场景行为和三方不一致
+1）input端口，例化module时传给output，再使用该端口接在触发器的时钟端
+2）前面有约束的时钟传过来，三方也推断了
+3）约束过的时钟与未声明时钟的端口进行组合逻辑，三方推断，我们不推断
+4）触发器的时钟使用声明的net类型，不给driver,三方推断，我们不推断
+2.尝试使用脚本排除有约束过的时钟传递过来的场景"
