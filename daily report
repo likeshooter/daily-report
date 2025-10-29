@@ -2,68 +2,79 @@
 
 日报：
 1.脚本任务：
-1)修复了run mem报语法错误的问题
-2)实现增量比对新需求，增量比对后未比对上的msg再走全量比对。
-①实现方案：增量比对时存下非增量的msg，增量比对完之后，将未比对上的msg与存的这部分非增量的msg走比对，最后也写入csv，针对这部分msg打上标记表明是走全量匹配比对上的。
-②实现情况：目前已实现保存非增量msg，且测试通过。收集增量比对ac时未比对上的msg，已实现，待测试。"	"ZWL
+1）测试ac未比对上的message list，之前的比对脚本中没有收集未比对上的message list，在相应位置加了之后，发现有些message走了diff没有从list中删掉，导致这部分message也被我写的list收集到了，先做了过滤，仅对没有runningFlag或runningFlag不以pass-开头的message做收集
+2）川皓给了3个交付的case集，试运行了一下用例集数据，发现有些case的名字与其.v .sdc的名字不一致，有些是有无uninfer的区别，有些是-和_的区别，有些是不止一个.v文件；有无uninfer的脚本已经适配，-和_的也已经请海洋改了"	"ZWL
 
 日报：
-1.分析新门禁新增msg，为差异Diff134，Diff197和sdc文件中set_case_analysis未修改为set_constant
+1.分析门禁新增msg，为差异pass-s-outside_spec、Diff500、Diff34；新增CDC-4275（现场先规避），CDC-4276
 2.新增分析issue
-新增：CDC-4271（【Hi1813】【DDR_SUB】SetupRstNetUndefined选择的对象需要优化）
-CDC-4272（read_design的选项hdl_sort未在help信息中）
-DTS2025102836653（read_design失败后未停止检查）
-3.验证lint gui流程
-4.统计数据
-今日最费时问题:熟悉lint check流程"	"LRF
+新增：DTS2025102817753（lint 误报InvalidArg）
+DTS2025102825006（直接check_lint未报错）
+CDC-4273（【GUI】check_cdc执行命令和打印命令不一致）
+CDC-4275/CDC-4276（误报QualifierFailed）
+3.回归分析issue
+回归：DTS2025102001852（漏报QualNameInvalid）
+7.其他
+lint的参考文档417、418页出现了check_dft，已经请亚娟排查
+运行arm包
+小case上测试lint gui创建工程流程、规则配置（修改）的导入导出
+今日最费时问题：lint gui在使用open in source会卡顿，影响GUI测试"	"LRF
 
 日报：
-1.分析部分
-1.1 Hi18XXE/TOP_LGC/lint,E0065/E0186/E0261/E0281共4条rule,495条message
-2.新增issue
-2.1 DTS2025102719603 E0261报告内容优化 elint报告的""E0261""的messgae内容为""The clock of latch with the output pin 'XXX' is gated or internally generated"",报告内容中的'XXX'的类型为'Net'而不是'Pin'
-2.2 DTS2025102741368  Hi18XXE/TOP_LGC/lint 误报E0281
+1.分析部分：
+1.1 LIGHTV300-AO_SUB-LINT
+a.分析rule E0027共37条msg,分析结论：ELINT BUG:DTS2025102819638(37)
+b.分析rule E0055共1条msg,分析结论：SG BUG(1)
+c.分析rule E0057共1条msg,分析结论：ELINT BUG:DTS2025102835452(1)
+2.1 射频-CDC,Ac_conv04的7条漏报
+2.新增issue:
+2.1 LIGHTV300-AO_SUB-LINT
+a.DTS2025102819638,影响漏报37条,漏报E0027 
+b.DTS2025102835452,影响误报1条,误报E0057
 3.其它
-3.1 和凯阳说issue回归的相关事项
+3.1 E0319/E0317:ELINT的help manual无spec
+3.2 分析客户反标的内容，反馈有问题的地方
+3.3 整理Builtin中无case的rule
+今日最费时问题：通过ELINT报告的message无法快速的定位到相关信号在原理图中的位置，在工具SG的verilg代码中选中相应信号右键，出现的菜单中有""Copy Hierarchical Path""的选项，能获取选中信号的Hierarchical Path，便于在原理图中搜索，希望ELINT(所有工具)能够实现此功能"	"JR
+今日分析msg数：69
+今日发现issue数：2
+今日回传case数：2
+日报：
+1.分析部分：
+a）分析lint rule E0026，共37条漏报，都是issue DTS2025102816263；
+b）分析lint rule E0033，共6条obj匹配不上，都是对象差异；
+c）分析lint rule E0065，共11条误报，都是issue DTS2025102226019；
+d）分析lint rule E0339，共15条，都是issue DTS2025102438456；
+2.新增分析issue：
+a）DTS2025102816263：ELINT未报E0026:out，但A工具报了E0026:out，从rtl看out确实没有被使用，因此应该报E0026:out，已复现case；
+b）DTS2025102821581：在ELINT的E0033的message summary中，ctrl+f打开搜索框，去搜索一条E0033的message，结果搜到了两条一模一样的message，file和行号也完全相同；
+3.其他：
+a）分析客户反标的内容，反馈有问题的地方；
+b）今日最费时问题：在分析E0339时，需要找module的定义，而在泛化中module的例化和module的定义有时不在一个文件中，这样找module的定义就比较费时，但是在SG的Verilog文件中module例化的位置，选中instance的名字，右键的第一个选项会有scope、definition、loads和drivers等选项，而definition的下方就会显示具体module的定义，点击显示的module的定义就会跳转到module定义的具体位置，这样对于分析E0339提供了很大的帮助，期望工具能实现这个功能；
+c）E0029：InoutPortUsed按照SG的spec不应该命名为InoutPortUsed，而应该命名为InoutPortExisted，已向RD反馈，确认命名有问题，后面会修改"	"CXY
 
-今日最费时问题:了解lint检查详细规则"	"JR
-今日分析msg数：233
+日报：
+1.预交付，反标客户跑出来的log，
+a）反标发现的问题：客户给的csv文件中有SetupClkInferred和SetupResetInferred，已经和客户反馈，他们会修改脚本
+b）Hi1813的APP_CORE有一条Ac_conv01的随机性问题，导致反标不上客户脚本。预计29号的包修复随机性问题
+2、回传现场的对比脚本上库，改golden
+3.今日最费时的问题：抄现场的对比脚本修改，上库之后要regolden家里原本的golden文件"	"SYH
+今日分析msg数：782
 今日发现issue数：3
 今日回传case数：3
 日报：
-1.分析部分：
-a）分析lint rule E0093，共12条误报，其中4条是issue DTS2025102521823，8条是综合差异；
-b）分析lint rule E0087，共18条误报，都是sg的bug；
-c）分析lint rule E0088，共8条误报，都是对象差异；
-d）分析lint rule E0191，共194条漏报，都是issue DTS2025102727623；
-e）分析lint rule E0209，共1条误报，是issue DTS2025102741152；
-2.新增分析issue：
-a）DTS2025102710318：E0087的doc中，默认命名规则中的只包含大写字母，应该改为只包含小写字母；
-b）DTS2025102727623：如果把TOP指定为顶层module，ELINT不会报E0191，而如果把TOP1指定为顶层module，则ELINT会报E0191，但在A工具中，不管TOP是顶层module，还是TOP1是顶层module，A工具都会报E0191，这说明在ELINT中只有在顶层module里import了package，ELINT才会检查package，而A工具是都会检查，从而导致ELINT漏报E0191，已复现case；
-c）DTS2025102741152：ELINT报了E0209，但A工具未报，从rtl看不应该报E0209，已复现case；
-3.其他：
-a）今日花费时间最多的是和凯阳一起复现DTS2025102727623的case，因为不了解package的用法，且需要根据每一次复现的现象去发现真正的问题所在，所以在复现的过程中需要去摸索，因此花费时间比较多"	"CXY
+1.分析部分
+a.分析rule E0170，10条msg，均为DTS2025102829084
+b.分析rule E0233，2条msg，均为DTS2025102834809
+c.分析rule E0061，765条msg，均为diff_b
+d.分析rule E0336，4条msg，均为DTS2025102838232
+e.分析rule E0059，1条msg，为DTS2025101805321
+2.新怎分析issue
+a.DTS2025102829084:十六进制转换/补位后匹配算法有误导致误报E0170，已复现并回传
+b.DTS2025102834809:可变位宽声明中误报E0223，已复现并回传
+c.DTS2025102837232:误报E0336，已复现并回传
 
-日报：
-1.和客户对齐泛化case的cfg，log位置等，准备预交付
-2.整理现场的对比脚本，抄写完成，准备回传"	"今日分析msg数：520
-今日发现issue数：5
-今日回传case数：5
-日报：
-1.lint分析部分
-a.分析rule E0070，共46条，其中36条是DTS2025102738644，10条是差异；
-b.分析rule E0085，67条，均为DTS2025102734678；
-c.分析rule E0296，共322条，均为DTS2025102743075；
-d.分析rule E0306，共85条，12条差异，41条DTS2025102730089，32条DTS2025102713370；
-2.新增分析issue：
-a.DTS2025102743075:疑似Atool bug，漏报E0269
-b.DTS2025102738644:运算符与系统函数的常数误报E0070
-c.DTS2025102734678:命名规则检查未覆盖function内信号
-d.DTS2025102730089:误报E0306
-e:DTS2025102713370:param传递不影响E0306
-  
-
-今日最费时问题：每个DTS感觉都可以复现,的确也都复现出来了，所以比较花时间"	"MCH
+今日最费时间问题：对DTS2025102829084的提取过程，这个issue表现的特征不明显。不容易看出来实际问题。找出问题关键点和提取合适的case耗费了比较多的时间。但是感觉是一个比较底层的bug。应该挺有价值"	"MCH
 
 日报：
 1.门禁/射频/Hi18XXE/Hi1813/LIGHTV300/USBC-xxx 新增xx条，剩余待分析xxx条，反弹原因：xxx
@@ -81,16 +92,19 @@ CDC-GUI-xxx xxx
 7.xxx"	"CHY
 
 日报：
-1.门禁
-分析门禁infer reset，目前发现3种差异
+
+1.分析门禁infer reset，已分析完成，存在以下三种情况：
 1）、sdc里创建了rst，sg推，我们不推
 2）、上一级ff传过来的rst，sg推，我们不推
-3）、综合差异导致负载中没有ff"	"WH
+3）、综合差异导致负载中没有ff，我们不推"	"WH
 
 日报：
-1.分析门禁inferred clock,目前分析到4种场景行为和三方不一致
-1）input端口，例化module时传给output，再使用该端口接在触发器的时钟端
-2）前面有约束的时钟传过来，三方也推断了
-3）约束过的时钟与未声明时钟的端口进行组合逻辑，三方推断，我们不推断
-4）触发器的时钟使用声明的net类型，不给driver,三方推断，我们不推断
-2.尝试使用脚本排除有约束过的时钟传递过来的场景"
+1.分析门禁inferred clock，新增场景
+1)常值推断的差异，导致clock的推断的差异
+2）约束中明确约束的
+2.脚本处理标记漏报的clock
+1)报告的对象被推断为常值的场景
+2)报告的对象有在约束文件中被约束为时钟
+3)报告的对象连接的ff的clk端，有其他的路径是有是明确声明的clk
+3.其他
+三方的infer_clock01可能和我们工具的inferred_clock的理解不太一样，三方的infer_clock01感觉像是指的设计所有的可能的时钟，包括了约束中声明的，我们的是除去是约束声明，推断可能的时钟"
