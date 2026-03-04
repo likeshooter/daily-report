@@ -1,2 +1,8 @@
-1、分析完FE_TSS的HangingInstOutput，发现是sg的bug，hanging的output没有报
-2、分析FE_TSS的LhsGreaterThanRh，发现DTS2026010829343(误报LhsGreaterThanRhs，左移右移改变了位宽)、DTS2026010830218（高位拼接为0 ，是否计算位宽，如果算则是误报，不算则是差异）
+"1、分析射频2拍3拍误报，共发现三个问题：
+①是有qualifier，并且gate，但是报的是MissingSynchronizer；CDC-4280
+②是之前报的SrcConverge，现在报的QualMergesOtherSrc，经过分析发现报QualMergesOtherSrc也能说明问题，但增量原理图未画出other src，并且src和dest也没有连接；CDC-4281
+③是QualMergesOtherSrc的增量原理图中的打拍链处于断开；CDC-4279
+2、分析HIXXE的APP_CORE，发现以下问题和区别：
+①、漏报误报Enable Based Synchronizer和RecirculationMux，在之前版本是走的proc diff147，get_nets跟一个二维数组没有返回值导致，#51518
+②、误报AcUnsync，为旧算法报MissingSynchronizer，新算法识别到src和其他src汇聚后再和qualifier汇聚会报QualMergesOtherSrc；qualifier在mux的输入，src在mux的sel端会报SrcMuxSelPin；但其中src未和其他src汇聚，直接和qualifier汇聚，但qualifier经过了异或门，导致不能gate住src，这种情况还是报MissingSynchronizer
+"
