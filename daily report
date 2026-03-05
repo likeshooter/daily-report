@@ -1,8 +1,9 @@
-"1、分析射频2拍3拍误报，共发现三个问题：
-①、有qualifier，并且gate，但是报的是MissingSynchronizer；CDC-4280
-②、之前报的SrcConverge，现在报的QualMergesOtherSrc，经过分析发现报QualMergesOtherSrc也能说明问题，但增量原理图未画出other src，并且src和dest也没有连接；CDC-4281
-③、QualMergesOtherSrc的增量原理图中的打拍链处于断开；CDC-4279
-2、分析HIXXE的APP_CORE，发现以下问题和区别：
-①、漏报误报Enable Based Synchronizer和RecirculationMux，在之前版本是走的proc diff147，get_nets跟一个二维数组没有返回值导致，#51518
-②、误报AcUnsync，为旧算法报MissingSynchronizer，新算法识别到src和其他src汇聚后再和qualifier汇聚会报QualMergesOtherSrc；qualifier在mux的输入，src在mux的sel端会报SrcMuxSelPin；但其中src未和其他src汇聚，直接和qualifier汇聚，但qualifier经过了异或门，导致不能gate住src，这种情况还是报MissingSynchronizer
-"
+"1、分析LIGHTV300-PG_SUB漏报误报840条
+    ①、漏报Enable Based Synchronizer和误报RecirculationMux，在之前版本是走的proc diff147，get_nets跟一个二维数组没有返回值导致，#51518影响4条
+    ②、误报ValidGate和漏报MergeSameSrc，之前报ecdc报MergeSameSrc是match，当前误报是为算法差异，只要qualifier和src在最后汇聚时能gate住，就会被认为是同步，影响12条
+    ③、剩下的824条则为算法差异，标记diff8和diff32
+2、分析LIGHTV300-AO_SUB误报58条，都是算法差异
+3、分析LIGHTV300-HIPHY_SUB误报264条，都是算法差异，其中有64条为新增src
+4、分析USBC漏报误报33条，#51518影响2条，CDC-4280影响22条，其他为算法差异
+5、分析Hi1813-TOP_LGC误报58条，都是算法差异
+6、分析Hi1813-NFI_TOP误报211条，#51518影响106条，CDC-4280影响6条，其余为算法差异"
